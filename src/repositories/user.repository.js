@@ -96,5 +96,17 @@ class UserRepository {
       [user_id],
     );
   }
+  static async changePasswordByUserId(user_id, newpassword) {
+    const hashedPassword = await bycrypt.hash(newpassword, 10);
+    const q = `UPDATE users 
+    SET user_password = $1
+    WHERE user_id = $2
+    RETURNING user_id,user_fullname,user_email,
+    user_role,user_phone,user_is_active
+    `;
+    const params = [hashedPassword, user_id];
+    const { rows } = await pool.query(q, params);
+    return rows[0] ? mapUser(rows[0]) : null;
+  }
 }
 module.exports = UserRepository;

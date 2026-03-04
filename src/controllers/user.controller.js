@@ -55,5 +55,17 @@ class UserController {
       res.status(500).json({ error: e.message });
     }
   }
+  static async changeUserPassword(req, res) {
+    try {
+      const { newpassword } = req.body;
+      const result = await UserService.changeUserPassword(
+        req.params.id,
+        newpassword,
+      );
+      res.status(200).json({ message: "Password changed successfully" });
+    } catch (e) {
+      res.status(500).json({ error: e.message });
+    }
+  }
 }
 module.exports = UserController;

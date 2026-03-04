@@ -3,6 +3,7 @@ const UserController = require("../controllers/user.controller");
 
 const router = express.Router();
 
+router.put("/password/:id", UserController.changeUserPassword);
 router.delete("/:id", UserController.deleteUser);
 router.get("/email/:email", UserController.getUserBYEmail);
 router.put("/:id", UserController.UpdateUser);

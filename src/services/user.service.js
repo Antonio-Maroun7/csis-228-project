@@ -85,5 +85,17 @@ class UserService {
     await UserRepository.deleteUserById(user_id);
     return "User deleted successfully";
   }
+
+  static async changeUserPassword(userIdParam, newPassword) {
+    const user_id = Number(userIdParam);
+    if (!Number.isInteger(user_id) || user_id <= 0) {
+      throw new createHttpError(400, "user_id must be a positive integer");
+    }
+    const user = await UserRepository.findUserById(user_id);
+    if (!user) {
+      throw new createHttpError(404, "user not found");
+    }
+    return await UserRepository.changePasswordByUserId(user_id, newPassword);
+  }
 }
 module.exports = UserService;
