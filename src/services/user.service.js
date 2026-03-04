@@ -68,10 +68,11 @@ class UserService {
 
     const user = await UserRepository.findUserByEmail(user_email);
     if (!user) {
-      throw new createHttpError(404, "user not found");
+      return null;
     }
     return user;
   }
+
   static async deleteUser(userIdParam) {
     const user_id = Number(userIdParam);
     if (!Number.isInteger(user_id) || user_id <= 0) {

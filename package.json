@@ -21,6 +21,7 @@
   },
   "homepage": "https://github.com/Antonio-Maroun7/csis-228-project#readme",
   "dependencies": {
+    "bcrypt": "^6.0.0",
     "cors": "^2.8.6",
     "dotenv": "^17.3.1",
     "http-errors": "^2.0.1",

@@ -1,5 +1,6 @@
 const pool = require("../db/pool");
 const { mapUser } = require("../dto/user.dto");
+const bycrypt = require("bcrypt");
 
 class UserRepository {
   static async findAllUsers() {
@@ -28,6 +29,7 @@ class UserRepository {
     user_phone = null,
     user_is_active = true,
   }) {
+    const hashedPassword = await bycrypt.hash(user_password, 10);
     const q = `INSERT INTO users
       (user_fullname,user_email,user_password,user_role,user_phone,user_is_active)
       values
@@ -37,7 +39,7 @@ class UserRepository {
     const params = [
       user_fullname,
       user_email,
-      user_password,
+      hashedPassword,
       user_role,
       user_phone,
       user_is_active,
@@ -65,6 +67,7 @@ class UserRepository {
       user_is_active,
       user_id,
     ];
+
     const { rows } = await pool.query(q, params);
     return rows[0] ? mapUser(rows[0]) : null;
   }
@@ -85,12 +88,13 @@ class UserRepository {
     return rows[0] ? mapUser(rows[0]) : null;
   }
 
-  static async deleteUserById(user_id){
+  static async deleteUserById(user_id) {
     const { rows } = await pool.query(
       `DELETE 
       FROM users 
-      WHERE user_id = $1`,[user_id]
-    )
+      WHERE user_id = $1`,
+      [user_id],
+    );
   }
 }
 module.exports = UserRepository;

@@ -19,6 +19,10 @@ class UserController {
 
   static async createUser(req, res) {
     try {
+      const user = await UserService.getUserByEmail(req.body.user_email);
+      if (user) {
+        return res.status(409).json({ error: "Email already exists" });
+      }
       const result = await UserService.createUser(req.body);
       res.status(201).json(result);
     } catch (e) {
@@ -28,7 +32,9 @@ class UserController {
   static async UpdateUser(req, res) {
     try {
       const result = await UserService.UpdateUser(req.params.id, req.body);
-      res.status(200).json(result);
+      res
+        .status(200)
+        .json({ message: "User updated successfully", data: result });
     } catch (e) {
       res.status(500).json({ error: e.message });
     }
