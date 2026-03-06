@@ -35,6 +35,22 @@ class StaffServiceService {
     );
   }
 
-  static async getStaffServices(staffIdParam) {}
+  static async getStaffServices(staffIdParam) {
+    const staff_id = Number(staffIdParam);
+    if (!Number.isInteger(staff_id) || staff_id <= 0) {
+      throw new createHttpError(400, "staff id must be a positive integer");
+    }
+
+    const staff = await UserRepository.findUserById(staff_id);
+    if (!staff) {
+      throw new createHttpError(404, "staff not found");
+    }
+
+    if (staff.user_role !== "staff") {
+      throw new createHttpError(400, "this user is not a staff member");
+    }
+
+    return await staffServiceRepository.findStaffServices(staff_id);
+  }
 }
 module.exports = StaffServiceService;

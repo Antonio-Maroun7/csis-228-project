@@ -18,5 +18,15 @@ class StaffServiceController {
       res.status(500).json({ error: e.message });
     }
   }
+
+  static async getStaffServices(req, res) {
+    try {
+      const { staff_id } = req.params;
+      const result = await staffServiceService.getStaffServices(staff_id);
+      res.json(result);
+    } catch (e) {
+      res.status(500).json({ error: e.message });
+    }
+  }
 }
 module.exports = StaffServiceController;

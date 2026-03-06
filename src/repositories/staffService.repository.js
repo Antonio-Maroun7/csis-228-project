@@ -18,7 +18,7 @@ class StaffServiceRepository {
     return mapStaffService(rows[0]);
   }
 
-  static async getStaffServices(staff_id) {
+  static async findStaffServices(staff_id) {
     const q = `SELECT *
     FROM staff_services 
     WHERE staff_id = $1
