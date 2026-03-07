@@ -41,7 +41,15 @@ class StaffServiceRepository {
     return rows.map(mapUser);
   }
 
-  static async removeServiceFromStaff(staff_id, service_id) {}
+  static async removeServiceFromStaff(staff_id, service_id) {
+    const q = `DELETE 
+    FROM staff_services
+    WHERE staff_id = $1 AND service_id = $2
+    RETURNING *`;
+    const params = [staff_id, service_id];
+    const { rows } = await pool.query(q, params);
+    return rows[0] ? mapStaffService(rows[0]) : null;
+  }
 }
 
 module.exports = StaffServiceRepository;

@@ -66,5 +66,40 @@ class StaffServiceService {
     }
     return staff;
   }
+
+  static async removeServiceFromStaff(staffIdPram, serviceIdParam) {
+    const staff_id = Number(staffIdPram);
+    const service_id = Number(serviceIdParam);
+
+    if (!Number.isInteger(staff_id) || staff_id <= 0) {
+      throw new createHttpError(400, "staff_id must be a positive integer");
+    }
+
+    if (!Number.isInteger(service_id) || service_id <= 0) {
+      throw new createHttpError(400, "service_id must be a positive integer");
+    }
+
+    const staff = await UserRepository.findUserById(staff_id);
+    if (!staff) {
+      throw new createHttpError(404, "staff not found ");
+    }
+    if (staff.user_role !== "staff") {
+      throw new createHttpError(400, "this user is not a staff member");
+    }
+
+    //check for the service if exist
+
+    const deleteService = await staffServiceRepository.removeServiceFromStaff(
+      staff_id,
+      service_id,
+    );
+    if (!deleteService) {
+      throw new createHttpError(
+        404,
+        "This service is not assigned to this staff member",
+      );
+    }
+    return deleteService;
+  }
 }
 module.exports = StaffServiceService;
