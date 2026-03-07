@@ -99,7 +99,17 @@ class StaffServiceService {
         "This service is not assigned to this staff member",
       );
     }
-    return deleteService;
+    return {
+      message: "service deleted successfully from staff",
+      data: deleteService,
+    };
+  }
+  static async getAllStaffServices() {
+    const result = await staffServiceRepository.findAllStaffServices();
+    if (!result.length) {
+      throw new createHttpError(404, "nos satff services found ");
+    }
+    return result;
   }
 }
 module.exports = StaffServiceService;

@@ -50,6 +50,13 @@ class StaffServiceRepository {
     const { rows } = await pool.query(q, params);
     return rows[0] ? mapStaffService(rows[0]) : null;
   }
+
+  static async findAllStaffServices() {
+    const { rows } = await pool.query(`SELECT *
+    FROM staff_services
+    ORDER BY service_id,staff_id`);
+    return rows.map(mapStaffService);
+  }
 }
 
 module.exports = StaffServiceRepository;

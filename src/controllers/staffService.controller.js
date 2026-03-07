@@ -37,5 +37,26 @@ class StaffServiceController {
       res.status(500).json({ error: e.message });
     }
   }
+
+  static async deleteServiceFromStaff(req, res) {
+    try {
+      const { staff_id, service_id } = req.body;
+      const result = await staffServiceService.removeServiceFromStaff(
+        staff_id,
+        service_id,
+      );
+      res.status(200).json(result);
+    } catch (e) {
+      res.status(500).json({ error: e.message });
+    }
+  }
+  static async getAllStaffServices(req, res) {
+    try {
+      const result = await staffServiceService.getAllStaffServices();
+      res.json(result);
+    } catch (e) {
+      res.status(500).json({ error: e.message });
+    }
+  }
 }
 module.exports = StaffServiceController;
