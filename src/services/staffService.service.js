@@ -1,3 +1,4 @@
+const StaffServiceRepository = require("../repositories/staffService.repository");
 const staffServiceRepository = require("../repositories/staffService.repository");
 const UserRepository = require("../repositories/user.repository");
 const createHttpError = require("http-errors");
@@ -51,6 +52,19 @@ class StaffServiceService {
     }
 
     return await staffServiceRepository.findStaffServices(staff_id);
+  }
+
+  static async getStaffByService(serviceIdParam) {
+    const service_id = Number(serviceIdParam);
+    if (!Number.isInteger(service_id) || service_id <= 0) {
+      throw new createHttpError(400, "service id must be a positive integer");
+    }
+
+    const staff = await StaffServiceRepository.findStaffByService(service_id);
+    if (!staff.length) {
+      throw new createHttpError(404, "NO Staff found for this service ");
+    }
+    return staff;
   }
 }
 module.exports = StaffServiceService;

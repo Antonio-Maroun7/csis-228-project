@@ -1,5 +1,6 @@
 const pool = require("../db/pool");
 const { mapStaffService } = require("../dto/staffService.dto");
+const { mapUser } = require("../dto/user.dto");
 
 class StaffServiceRepository {
   static async assignServiceToStaff(staff_id, service_id, overrides = {}) {
@@ -27,6 +28,20 @@ class StaffServiceRepository {
     const { rows } = await pool.query(q, params);
     return rows.map(mapStaffService);
   }
+
+  static async findStaffByService(service_id) {
+    const q = `SELECT u.user_id,u.user_fullname,u.user_email,u.user_phone
+    FROM staff_services s 
+    join users u on u.user_id = s.staff_id 
+    WHERE s.service_id = $1
+    AND u.user_role = 'staff'
+    ORDER BY u.user_fullname`;
+    const params = [service_id];
+    const { rows } = await pool.query(q, params);
+    return rows.map(mapUser);
+  }
+
+  static async removeServiceFromStaff(staff_id, service_id) {}
 }
 
 module.exports = StaffServiceRepository;
