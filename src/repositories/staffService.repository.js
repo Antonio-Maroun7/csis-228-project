@@ -57,6 +57,27 @@ class StaffServiceRepository {
     ORDER BY service_id,staff_id`);
     return rows.map(mapStaffService);
   }
+
+  static async updateStaffServiceOverrides(
+    staff_id,
+    service_id,
+    overrides = {},
+  ) {
+    const { staff_duration_min = null, staff_price_cents = null } = overrides;
+    const q = `UPDATE staff_services
+              SET staff_duration_min=$1,staff_price_cents=$2
+              WHERE staff_id =$3 AND service_id =$4
+              RETURNING *`;
+    const params = [
+      staff_duration_min,
+      staff_price_cents,
+      staff_id,
+      service_id,
+    ];
+
+    const { rows } = await pool.query(q, params);
+    return rows[0] ? mapStaffService(rows[0]) : null;
+  }
 }
 
 module.exports = StaffServiceRepository;

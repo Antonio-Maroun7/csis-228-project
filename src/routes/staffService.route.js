@@ -4,6 +4,8 @@ const StaffServiceController = require("../controllers/staffService.controller")
 
 const router = express.Router();
 
+router.put("/updateStaffService", StaffServiceController.updateStaffServices);
+
 router.get("/getAllStaffServices", StaffServiceController.getAllStaffServices);
 
 router.delete(
