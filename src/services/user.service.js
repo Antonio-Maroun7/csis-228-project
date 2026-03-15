@@ -51,11 +51,7 @@ class UserService {
     return user;
   }
 
-  static async deleteUser(userIdParam) {
-    const user_id = Number(userIdParam);
-    if (!Number.isInteger(user_id) || user_id <= 0) {
-      throw new createHttpError(400, "user_id must be a positive integer");
-    }
+  static async deleteUser(user_id) {
     const user = await UserRepository.findUserById(user_id);
     if (!user) {
       throw new createHttpError(404, "user not found");
@@ -64,11 +60,7 @@ class UserService {
     return "User deleted successfully";
   }
 
-  static async changeUserPassword(userIdParam, newPassword) {
-    const user_id = Number(userIdParam);
-    if (!Number.isInteger(user_id) || user_id <= 0) {
-      throw new createHttpError(400, "user_id must be a positive integer");
-    }
+  static async changeUserPassword(user_id, newPassword) {
     const user = await UserRepository.findUserById(user_id);
     if (!user) {
       throw new createHttpError(404, "user not found");

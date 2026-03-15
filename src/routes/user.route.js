@@ -5,12 +5,17 @@ const {
   validatorCreateUser,
   validatorUpdateUser,
   validatorUserEmail,
+  validatorDeleteUser,
 } = require("../validators/user.validator");
 
 const router = express.Router();
 
 router.put("/password/:id", UserController.changeUserPassword);
-router.delete("/deleteUser/:id", UserController.deleteUser);
+router.delete(
+  "/deleteUser/:id",
+  validatorDeleteUser,
+  UserController.deleteUser,
+);
 router.get(
   "/email/:user_email",
   validatorUserEmail,

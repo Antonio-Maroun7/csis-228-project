@@ -105,9 +105,27 @@ const validatorUserEmail = [
     .normalizeEmail(),
   handleValidationErrors,
 ];
+const validatorDeleteUser = [
+  param("id")
+    .notEmpty()
+    .withMessage("id is required ")
+    .isInt({ min: 1 })
+    .withMessage("id must be a positive integer"),
+  handleValidationErrors,
+];
+const validatePassword = [
+  param("id")
+    .notEmpty()
+    .withMessage("id is required ")
+    .isInt({ min: 1 })
+    .withMessage("id must be a positive integer"),
+
+  body("newPassword").notEmpty().withMessage("password is required"),
+];
 module.exports = {
   validatorUserId,
   validatorCreateUser,
   validatorUpdateUser,
   validatorUserEmail,
+  validatorDeleteUser,
 };

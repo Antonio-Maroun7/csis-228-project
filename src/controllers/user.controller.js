@@ -52,7 +52,7 @@ class UserController {
       const result = await UserService.deleteUser(req.params.id);
       res.status(204).json(result);
     } catch (e) {
-      res.status(500).json({ error: e.message });
+      res.status(e.status || 500).json({ error: e.message });
     }
   }
   static async changeUserPassword(req, res) {
