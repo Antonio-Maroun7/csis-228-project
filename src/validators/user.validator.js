@@ -36,7 +36,15 @@ const validatorCreateUser = [
     .notEmpty()
     .withMessage("user_password is required")
     .isLength({ min: 6 })
-    .withMessage("password must be at least characters"),
+    .withMessage("password must be at least characters")
+    .matches(/[A-B]/)
+    .withMessage("password must contain at least one uppercase letter")
+    .matches(/[a-b]/)
+    .withMessage("password must contain at least one lowercase letter")
+    .matches(/[0-9]/)
+    .withMessage("password must contain at least one number")
+    .matches(/[!@#$%^&*(),.?":{}|<>]/)
+    .withMessage(" password must contain at least one special character"),
 
   body("user_role")
     .optional()
@@ -113,14 +121,27 @@ const validatorDeleteUser = [
     .withMessage("id must be a positive integer"),
   handleValidationErrors,
 ];
-const validatePassword = [
+const validateChangePassword = [
   param("id")
     .notEmpty()
     .withMessage("id is required ")
     .isInt({ min: 1 })
     .withMessage("id must be a positive integer"),
 
-  body("newPassword").notEmpty().withMessage("password is required"),
+  body("newpassword")
+    .notEmpty()
+    .withMessage("new password is required")
+    .isLength({ min: 6 })
+    .withMessage("new password must be at least 6 characters long")
+    .matches(/[A-Z]/)
+    .withMessage("new password must contain at least one uppercase letter")
+    .matches(/[a-z]/)
+    .withMessage("new password myst contain at least one lower case letter")
+    .matches(/[0-9]/)
+    .withMessage("new password must contain at least one number")
+    .matches(/[!@#$%^&*(),.?":{}|<>]/)
+    .withMessage("new password must contain at least one special character"),
+  handleValidationErrors,
 ];
 module.exports = {
   validatorUserId,
@@ -128,4 +149,5 @@ module.exports = {
   validatorUpdateUser,
   validatorUserEmail,
   validatorDeleteUser,
+  validateChangePassword,
 };

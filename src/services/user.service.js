@@ -60,12 +60,12 @@ class UserService {
     return "User deleted successfully";
   }
 
-  static async changeUserPassword(user_id, newPassword) {
+  static async changeUserPassword(user_id, newpassword) {
     const user = await UserRepository.findUserById(user_id);
     if (!user) {
       throw new createHttpError(404, "user not found");
     }
-    return await UserRepository.changePasswordByUserId(user_id, newPassword);
+    return await UserRepository.changePasswordByUserId(user_id, newpassword);
   }
 }
 module.exports = UserService;

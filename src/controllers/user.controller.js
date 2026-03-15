@@ -64,7 +64,7 @@ class UserController {
       );
       res.status(200).json({ message: "Password changed successfully" });
     } catch (e) {
-      res.status(500).json({ error: e.message });
+      res.status(e.status || 500).json({ error: e.message });
     }
   }
 }

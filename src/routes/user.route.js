@@ -6,11 +6,16 @@ const {
   validatorUpdateUser,
   validatorUserEmail,
   validatorDeleteUser,
+  validateChangePassword,
 } = require("../validators/user.validator");
 
 const router = express.Router();
 
-router.put("/password/:id", UserController.changeUserPassword);
+router.put(
+  "/changePassword/:id",
+  validateChangePassword,
+  UserController.changeUserPassword,
+);
 router.delete(
   "/deleteUser/:id",
   validatorDeleteUser,
