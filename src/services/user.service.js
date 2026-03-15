@@ -44,13 +44,9 @@ class UserService {
   }
 
   static async getUserByEmail(user_email) {
-    if (!user_email) {
-      throw new createHttpError(400, `user_email is required`);
-    }
-
     const user = await UserRepository.findUserByEmail(user_email);
     if (!user) {
-      return null;
+      throw new createHttpError(404, "user_email not found");
     }
     return user;
   }

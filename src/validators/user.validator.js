@@ -95,4 +95,19 @@ const validatorUpdateUser = [
 
   handleValidationErrors,
 ];
-module.exports = { validatorUserId, validatorCreateUser, validatorUpdateUser };
+
+const validatorUserEmail = [
+  param("user_email")
+    .notEmpty()
+    .withMessage("user_email is required")
+    .isEmail()
+    .withMessage("invalid user_email format")
+    .normalizeEmail(),
+  handleValidationErrors,
+];
+module.exports = {
+  validatorUserId,
+  validatorCreateUser,
+  validatorUpdateUser,
+  validatorUserEmail,
+};

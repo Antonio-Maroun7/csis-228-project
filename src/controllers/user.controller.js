@@ -41,10 +41,10 @@ class UserController {
   }
   static async getUserBYEmail(req, res) {
     try {
-      const result = await UserService.getUserByEmail(req.params.email);
+      const result = await UserService.getUserByEmail(req.params.user_email);
       res.json(result);
     } catch (e) {
-      res.status(500).json({ error: e.message });
+      res.status(e.status || 500).json({ error: e.message });
     }
   }
   static async deleteUser(req, res) {
