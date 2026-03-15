@@ -36,7 +36,7 @@ class UserController {
         .status(200)
         .json({ message: "User updated successfully", data: result });
     } catch (e) {
-      res.status(500).json({ error: e.message });
+      res.status(e.status || 500).json({ error: e.message });
     }
   }
   static async getUserBYEmail(req, res) {

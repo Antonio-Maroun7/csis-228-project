@@ -26,29 +26,21 @@ class UserService {
     }
   }
 
-  static async UpdateUser(userIdParam, data) {
-    const user_id = Number(userIdParam);
-    if (!Number.isInteger(user_id) || user_id <= 0) {
-      throw new createHttpError(400, "user_id must bea positive integer");
-    }
-    if (
-      data.user_fullname === undefined ||
-      data.user_email === undefined ||
-      data.user_role === undefined ||
-      data.user_phone === undefined ||
-      data.user_is_active === undefined
-    ) {
-      throw new createHttpError(
-        400,
-        `Missing required fields: user_fullname, user_email, 
-      user_role, user_phone, user_is_active`,
-      );
-    }
+  static async UpdateUser(user_id, data) {
     const existingUser = await UserRepository.findUserById(user_id);
     if (!existingUser) {
       throw new createHttpError(404, "user not found");
     }
-    return await UserRepository.updateUser(user_id, data);
+
+    const emailOwner = await UserRepository.findUserByEmail(data.user_email);
+    if (emailOwner && emailOwner.user_id !== user_id) {
+      throw new createHttpError(409, "email already exists");
+    }
+    const updated = await UserRepository.updateUser(user_id, data);
+    if (!updated) {
+      throw new createHttpError(400, "user was not updated");
+    }
+    return updated;
   }
 
   static async getUserByEmail(user_email) {
