@@ -1,7 +1,6 @@
 const express = require("express");
-
 const StaffServiceController = require("../controllers/staffService.controller");
-
+const {} = require("../validators/staffService.validator");
 const router = express.Router();
 
 router.put("/updateStaffService", StaffServiceController.updateStaffServices);
