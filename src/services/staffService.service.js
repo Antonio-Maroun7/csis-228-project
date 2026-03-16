@@ -4,18 +4,7 @@ const UserRepository = require("../repositories/user.repository");
 const createHttpError = require("http-errors");
 
 class StaffServiceService {
-  static async assignSerViceToStaff(
-    staff_idParam,
-    service_idParam,
-    overrides = {},
-  ) {
-    const staff_id = Number(staff_idParam);
-    const service_id = Number(service_idParam);
-
-    if (!Number.isInteger(staff_id) || staff_id <= 0) {
-      throw createHttpError(400, "staff_id must be a positive integer");
-    }
-
+  static async assignSerViceToStaff(staff_id, service_id, overrides = {}) {
     const staff = await UserRepository.findUserById(staff_id);
     if (!staff) {
       throw createHttpError(404, "staff not found");
@@ -23,10 +12,6 @@ class StaffServiceService {
 
     if (staff.user_role !== "staff") {
       throw createHttpError(400, "this user is not a staff member ");
-    }
-
-    if (!Number.isInteger(service_id) || service_id <= 0) {
-      throw createHttpError(400, "service_id must be a positive integer");
     }
 
     return await staffServiceRepository.assignServiceToStaff(

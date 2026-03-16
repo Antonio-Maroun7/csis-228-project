@@ -15,7 +15,7 @@ class StaffServiceController {
       );
       res.status(201).json(result);
     } catch (e) {
-      res.status(500).json({ error: e.message });
+      res.status(e.status || 500).json({ error: e.message });
     }
   }
 

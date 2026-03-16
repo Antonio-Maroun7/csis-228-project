@@ -8,4 +8,29 @@ const handleVaidationErrors = (req, res, next) => {
   next();
 };
 
-module.exports = {};
+const validatorAssignSerViceToStaff = [
+  body("staff_id")
+    .notEmpty()
+    .withMessage("id is required")
+    .isInt({ min: 1 })
+    .withMessage("id must be a positive integer"),
+
+  body("service_id")
+    .notEmpty()
+    .withMessage("id is required")
+    .isInt({ min: 1 })
+    .withMessage("id must be a positive integer"),
+
+  body("staff_duration_min")
+    .optional()
+    .isInt({ min: 1 })
+    .withMessage("staff_duration_min must be a positive integer"),
+
+  body("staff_price_cents")
+    .optional()
+    .isInt({ min: 1 })
+    .withMessage("staff_price_cent must be a positive integer"),
+  handleVaidationErrors,
+];
+
+module.exports = { validatorAssignSerViceToStaff };
