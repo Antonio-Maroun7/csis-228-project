@@ -21,12 +21,7 @@ class StaffServiceService {
     );
   }
 
-  static async getStaffServices(staffIdParam) {
-    const staff_id = Number(staffIdParam);
-    if (!Number.isInteger(staff_id) || staff_id <= 0) {
-      throw new createHttpError(400, "staff id must be a positive integer");
-    }
-
+  static async getStaffServices(staff_id) {
     const staff = await UserRepository.findUserById(staff_id);
     if (!staff) {
       throw new createHttpError(404, "staff not found");

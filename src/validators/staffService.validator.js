@@ -33,4 +33,13 @@ const validatorAssignSerViceToStaff = [
   handleVaidationErrors,
 ];
 
-module.exports = { validatorAssignSerViceToStaff };
+const validatorGetStaffServices = [
+  param("staff_id")
+    .notEmpty()
+    .withMessage("staff_id is required")
+    .isInt({ min: 1 })
+    .withMessage("staff_id must a positive integer "),
+  handleVaidationErrors,
+];
+
+module.exports = { validatorAssignSerViceToStaff, validatorGetStaffServices };

@@ -2,6 +2,7 @@ const express = require("express");
 const StaffServiceController = require("../controllers/staffService.controller");
 const {
   validatorAssignSerViceToStaff,
+  validatorGetStaffServices,
 } = require("../validators/staffService.validator");
 const router = express.Router();
 
@@ -19,6 +20,7 @@ router.get(
 );
 router.get(
   "/getStaffServices/:staff_id",
+  validatorGetStaffServices,
   StaffServiceController.getStaffServices,
 );
 router.post(
