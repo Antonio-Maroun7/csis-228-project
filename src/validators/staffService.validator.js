@@ -66,9 +66,46 @@ const validatorRemoveServiceFromStaff = [
   handleVaidationErrors,
 ];
 
+const validatorUpdateStaffService = [
+  body("staff_id")
+    .notEmpty()
+    .withMessage("staff_id is required")
+    .isInt({ min: 1 })
+    .withMessage("staff_id must be a positive integer"),
+
+  body("service_id")
+    .notEmpty()
+    .withMessage("service_id is required")
+    .isInt({ min: 1 })
+    .withMessage("service_id must be a positive integer"),
+
+  body("staff_duration_min")
+    .optional()
+    .isInt({ min: 1 })
+    .withMessage("staff_duration_ min must be a positive integer"),
+
+  body("staff_price_cents")
+    .optional()
+    .isInt({ min: 1 })
+    .withMessage("staff_price_cents must be a positive integer"),
+  body().custom((value) => {
+    if (
+      value.staff_duration_min === undefined &&
+      value.staff_price_cents === undefined
+    ) {
+      throw new Error(
+        "at least one of staff_duration_min or staff_price_cents must be provided",
+      );
+    }
+    return true;
+  }),
+  handleVaidationErrors,
+];
+
 module.exports = {
   validatorAssignSerViceToStaff,
   validatorGetStaffServices,
   validatorGetStaffByService,
   validatorRemoveServiceFromStaff,
+  validatorUpdateStaffService,
 };

@@ -65,7 +65,8 @@ class StaffServiceRepository {
   ) {
     const { staff_duration_min = null, staff_price_cents = null } = overrides;
     const q = `UPDATE staff_services
-              SET staff_duration_min=$1,staff_price_cents=$2
+              SET staff_duration_min=COALESCE($1, staff_duration_min),
+              staff_price_cents=COALESCE($2, staff_price_cents)
               WHERE staff_id =$3 AND service_id =$4
               RETURNING *`;
     const params = [

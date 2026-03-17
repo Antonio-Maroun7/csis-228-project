@@ -55,7 +55,7 @@ class StaffServiceController {
       const result = await staffServiceService.getAllStaffServices();
       res.json(result);
     } catch (e) {
-      res.status(500).json({ error: e.message });
+      res.status(e.status || 500).json({ error: e.message });
     }
   }
   static async updateStaffServices(req, res) {
@@ -72,7 +72,7 @@ class StaffServiceController {
       );
       res.status(200).json(result);
     } catch (e) {
-      res.status(500).json({ error: e.message });
+      res.status(e.status || 500).json({ error: e.message });
     }
   }
 }

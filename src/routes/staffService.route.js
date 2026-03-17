@@ -5,10 +5,15 @@ const {
   validatorGetStaffServices,
   validatorGetStaffByService,
   validatorRemoveServiceFromStaff,
+  validatorUpdateStaffService,
 } = require("../validators/staffService.validator");
 const router = express.Router();
 
-router.put("/updateStaffService", StaffServiceController.updateStaffServices);
+router.put(
+  "/updateStaffService",
+  validatorUpdateStaffService,
+  StaffServiceController.updateStaffServices,
+);
 
 router.get("/getAllStaffServices", StaffServiceController.getAllStaffServices);
 
