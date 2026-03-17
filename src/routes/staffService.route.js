@@ -3,6 +3,8 @@ const StaffServiceController = require("../controllers/staffService.controller")
 const {
   validatorAssignSerViceToStaff,
   validatorGetStaffServices,
+  validatorGetStaffByService,
+  validatorRemoveServiceFromStaff,
 } = require("../validators/staffService.validator");
 const router = express.Router();
 
@@ -12,10 +14,12 @@ router.get("/getAllStaffServices", StaffServiceController.getAllStaffServices);
 
 router.delete(
   "/removeServiceFromStaff",
+  validatorRemoveServiceFromStaff,
   StaffServiceController.deleteServiceFromStaff,
 );
 router.get(
   "/getStaffByService/:service_id",
+  validatorGetStaffByService,
   StaffServiceController.getStaffByService,
 );
 router.get(

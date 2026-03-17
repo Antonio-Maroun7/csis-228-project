@@ -34,7 +34,7 @@ class StaffServiceController {
       const result = await staffServiceService.getStaffByService(service_id);
       res.json(result);
     } catch (e) {
-      res.status(500).json({ error: e.message });
+      res.status(e.status || 500).json({ error: e.message });
     }
   }
 
@@ -47,7 +47,7 @@ class StaffServiceController {
       );
       res.status(200).json(result);
     } catch (e) {
-      res.status(500).json({ error: e.message });
+      res.status(e.status || 500).json({ error: e.message });
     }
   }
   static async getAllStaffServices(req, res) {

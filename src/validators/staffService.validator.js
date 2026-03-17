@@ -42,4 +42,33 @@ const validatorGetStaffServices = [
   handleVaidationErrors,
 ];
 
-module.exports = { validatorAssignSerViceToStaff, validatorGetStaffServices };
+const validatorGetStaffByService = [
+  param("service_id")
+    .notEmpty()
+    .withMessage("service_id is required")
+    .isInt({ min: 1 })
+    .withMessage("service_id must be a positive integer"),
+  handleVaidationErrors,
+];
+
+const validatorRemoveServiceFromStaff = [
+  body("staff_id")
+    .notEmpty()
+    .withMessage("staff_id is required")
+    .isInt({ min: 1 })
+    .withMessage("staff_id must be a positive integer"),
+
+  body("service_id")
+    .notEmpty()
+    .withMessage("service_id is required")
+    .isInt({ min: 1 })
+    .withMessage("service_id must be a positive integer"),
+  handleVaidationErrors,
+];
+
+module.exports = {
+  validatorAssignSerViceToStaff,
+  validatorGetStaffServices,
+  validatorGetStaffByService,
+  validatorRemoveServiceFromStaff,
+};
