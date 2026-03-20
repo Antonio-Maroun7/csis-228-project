@@ -1,17 +1,16 @@
 const StaffServiceRepository = require("../repositories/staffService.repository");
 const staffServiceRepository = require("../repositories/staffService.repository");
 const UserRepository = require("../repositories/user.repository");
-const createHttpError = require("http-errors");
 
 class StaffServiceService {
   static async assignSerViceToStaff(staff_id, service_id, overrides = {}) {
     const staff = await UserRepository.findUserById(staff_id);
     if (!staff) {
-      throw createHttpError(404, "staff not found");
+      throw Error(404, "staff not found");
     }
 
     if (staff.user_role !== "staff") {
-      throw createHttpError(400, "this user is not a staff member ");
+      throw Error(400, "this user is not a staff member ");
     }
 
     return await staffServiceRepository.assignServiceToStaff(
@@ -24,11 +23,11 @@ class StaffServiceService {
   static async getStaffServices(staff_id) {
     const staff = await UserRepository.findUserById(staff_id);
     if (!staff) {
-      throw new createHttpError(404, "staff not found");
+      throw new Error(404, "staff not found");
     }
 
     if (staff.user_role !== "staff") {
-      throw new createHttpError(400, "this user is not a staff member");
+      throw new Error(400, "this user is not a staff member");
     }
 
     return await staffServiceRepository.findStaffServices(staff_id);
@@ -37,7 +36,7 @@ class StaffServiceService {
   static async getStaffByService(service_id) {
     const staff = await StaffServiceRepository.findStaffByService(service_id);
     if (!staff.length) {
-      throw new createHttpError(404, "NO Staff found for this service ");
+      throw new Error(404, "NO Staff found for this service ");
     }
     return staff;
   }
@@ -45,10 +44,10 @@ class StaffServiceService {
   static async removeServiceFromStaff(staff_id, service_id) {
     const staff = await UserRepository.findUserById(staff_id);
     if (!staff) {
-      throw new createHttpError(404, "staff not found ");
+      throw new Error(404, "staff not found ");
     }
     if (staff.user_role !== "staff") {
-      throw new createHttpError(400, "this user is not a staff member");
+      throw new Error(400, "this user is not a staff member");
     }
 
     //check for the service if exist
@@ -58,10 +57,7 @@ class StaffServiceService {
       service_id,
     );
     if (!deleteService) {
-      throw new createHttpError(
-        404,
-        "This service is not assigned to this staff member",
-      );
+      throw new Error(404, "This service is not assigned to this staff member");
     }
     return {
       message: "service deleted successfully from staff",
@@ -71,7 +67,7 @@ class StaffServiceService {
   static async getAllStaffServices() {
     const result = await staffServiceRepository.findAllStaffServices();
     if (!result.length) {
-      throw new createHttpError(404, "nos satff services found ");
+      throw new Error(404, "nos satff services found ");
     }
     return result;
   }
@@ -79,10 +75,10 @@ class StaffServiceService {
   static async updateStaffService(staff_id, service_id, overrides = {}) {
     const staff = await UserRepository.findUserById(staff_id);
     if (!staff) {
-      throw new createHttpError(404, "staff_id not found");
+      throw new Error(404, "staff_id not found");
     }
     if (staff.user_role !== "staff") {
-      throw new createHttpError(400, "this user is not a staff member ");
+      throw new Error(400, "this user is not a staff member ");
     }
 
     // check if the service exist
@@ -93,7 +89,7 @@ class StaffServiceService {
       overrides,
     );
     if (!updated) {
-      throw new createHttpError(
+      throw new Error(
         404,
         "this service is not assigned to this staff member ",
       );

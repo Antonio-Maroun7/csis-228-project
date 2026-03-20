@@ -1,4 +1,5 @@
 const UserService = require("../services/user.service");
+const { handleError } = require("../utils/errorHandler");
 class UserController {
   static async getAllUsers(req, res) {
     try {
@@ -12,8 +13,8 @@ class UserController {
     try {
       const result = await UserService.getUserById(req.params.id);
       res.json(result);
-    } catch (e) {
-      res.status(500).json({ error: e.message });
+    } catch (err) {
+      return handleError(res, err);
     }
   }
 
@@ -25,8 +26,8 @@ class UserController {
       }
       const result = await UserService.createUser(req.body);
       res.status(201).json(result);
-    } catch (e) {
-      res.status(500).json({ error: e.message });
+    } catch (err) {
+      return handleError(res, err);
     }
   }
   static async UpdateUser(req, res) {
@@ -43,8 +44,8 @@ class UserController {
     try {
       const result = await UserService.getUserByEmail(req.params.user_email);
       res.json(result);
-    } catch (e) {
-      res.status(e.status || 500).json({ error: e.message });
+    } catch (err) {
+      return handleError(res, err);
     }
   }
   static async deleteUser(req, res) {
