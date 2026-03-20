@@ -36,8 +36,8 @@ class UserController {
       res
         .status(200)
         .json({ message: "User updated successfully", data: result });
-    } catch (e) {
-      res.status(e.status || 500).json({ error: e.message });
+    } catch (err) {
+      return handleError(res, err);
     }
   }
   static async getUserBYEmail(req, res) {
@@ -52,8 +52,8 @@ class UserController {
     try {
       const result = await UserService.deleteUser(req.params.id);
       res.status(204).json(result);
-    } catch (e) {
-      res.status(e.status || 500).json({ error: e.message });
+    } catch (err) {
+      return handleError(res, err);
     }
   }
   static async changeUserPassword(req, res) {
@@ -64,8 +64,8 @@ class UserController {
         newpassword,
       );
       res.status(200).json({ message: "Password changed successfully" });
-    } catch (e) {
-      res.status(e.status || 500).json({ error: e.message });
+    } catch (err) {
+      return handleError(res, err);
     }
   }
 }

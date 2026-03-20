@@ -26,7 +26,7 @@ router.get(
   validatorUserEmail,
   UserController.getUserBYEmail,
 );
-router.put("/:id", validatorUpdateUser, UserController.UpdateUser);
+router.put("/UpdateUser/:id", validatorUpdateUser, UserController.UpdateUser);
 router.post("/createUser", validatorCreateUser, UserController.createUser);
 router.get("/", UserController.getAllUsers);
 router.get("/:id", validatorUserId, UserController.getUserBYId);

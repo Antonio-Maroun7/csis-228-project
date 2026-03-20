@@ -18,6 +18,7 @@ class UserService {
       return await UserRepository.createUser(data);
     } catch (err) {
       console.log(err.message);
+      throw err;
     }
   }
 
@@ -33,7 +34,7 @@ class UserService {
     }
     const updated = await UserRepository.updateUser(user_id, data);
     if (!updated) {
-      throw new Error("user was not updated");
+      throw new Error("update failed");
     }
     return updated;
   }
