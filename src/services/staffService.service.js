@@ -6,11 +6,11 @@ class StaffServiceService {
   static async assignSerViceToStaff(staff_id, service_id, overrides = {}) {
     const staff = await UserRepository.findUserById(staff_id);
     if (!staff) {
-      throw Error(404, "staff not found");
+      throw Error("staff not found");
     }
 
     if (staff.user_role !== "staff") {
-      throw Error(400, "this user is not a staff member ");
+      throw Error("this user is not a staff member ");
     }
 
     return await staffServiceRepository.assignServiceToStaff(

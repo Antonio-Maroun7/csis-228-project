@@ -1,4 +1,5 @@
 const staffServiceService = require("../services/staffService.service");
+const { handleError } = require("../utils/errorHandler");
 
 class StaffServiceController {
   static async assignServiceToStaff(req, res) {
@@ -14,8 +15,8 @@ class StaffServiceController {
         overrides,
       );
       res.status(201).json(result);
-    } catch (e) {
-      res.status(e.status || 500).json({ error: e.message });
+    } catch (err) {
+      return handleError(res, err);
     }
   }
 
