@@ -12,6 +12,9 @@ function handleError(res, err) {
   if (err.message?.toLowerCase().includes("update failed")) {
     return res.status(400).json({ error: err.message });
   }
+  if (err.message?.toLowerCase().includes("staff member")) {
+    return res.status(400).json({ error: err.message });
+  }
   if (err.message?.toLowerCase().includes("invalid")) {
     return res.status(401).json({ error: err.message });
   }

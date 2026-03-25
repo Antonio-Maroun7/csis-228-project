@@ -25,8 +25,8 @@ class StaffServiceController {
       const { staff_id } = req.params;
       const result = await staffServiceService.getStaffServices(staff_id);
       res.json(result);
-    } catch (e) {
-      res.status(e.status || 500).json({ error: e.message });
+    } catch (err) {
+      return handleError(res, err);
     }
   }
   static async getStaffByService(req, res) {
@@ -34,8 +34,8 @@ class StaffServiceController {
       const { service_id } = req.params;
       const result = await staffServiceService.getStaffByService(service_id);
       res.json(result);
-    } catch (e) {
-      res.status(e.status || 500).json({ error: e.message });
+    } catch (err) {
+      return handleError(res, err);
     }
   }
 
@@ -47,16 +47,16 @@ class StaffServiceController {
         service_id,
       );
       res.status(200).json(result);
-    } catch (e) {
-      res.status(e.status || 500).json({ error: e.message });
+    } catch (err) {
+      return handleError(res, err);
     }
   }
   static async getAllStaffServices(req, res) {
     try {
       const result = await staffServiceService.getAllStaffServices();
       res.json(result);
-    } catch (e) {
-      res.status(e.status || 500).json({ error: e.message });
+    } catch (err) {
+      return handleError(res, err);
     }
   }
   static async updateStaffServices(req, res) {
@@ -72,8 +72,8 @@ class StaffServiceController {
         },
       );
       res.status(200).json(result);
-    } catch (e) {
-      res.status(e.status || 500).json({ error: e.message });
+    } catch (err) {
+      return handleError(res, err);
     }
   }
 }
