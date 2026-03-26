@@ -76,7 +76,7 @@ class UserRepository {
       `
       SELECT  user_id,
              user_fullname,
-             user_email,
+             user_email,a
              user_role,
              user_phone,
              user_is_active
