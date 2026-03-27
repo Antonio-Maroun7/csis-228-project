@@ -1,6 +1,7 @@
 const pool = require("../db/pool");
 const { mapUser } = require("../dto/user.dto");
 const bycrypt = require("bcrypt");
+const UserEntity = require("../entities/user.entity");
 
 class UserRepository {
   static async findAllUsers() {
@@ -8,7 +9,7 @@ class UserRepository {
         SELECT user_id,user_fullname,user_email,user_role,user_phone,user_is_active 
         FROM users
         ORDER BY user_id DESC`);
-    return result.rows.map(mapUser);
+    return UserEntity.fromRows(result.rows);
   }
 
   static async findUserById(user_id) {
@@ -18,7 +19,7 @@ class UserRepository {
       where user_id = $1`,
       [user_id],
     );
-    return result.rows.map(mapUser)[0];
+    return UserEntity.fromRow(result.rows[0]);
   }
 
   static async createUser({

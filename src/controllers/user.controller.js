@@ -3,8 +3,8 @@ const { handleError } = require("../utils/errorHandler");
 class UserController {
   static async getAllUsers(req, res) {
     try {
-      const result = await UserService.getAllUsers();
-      res.json(result);
+      const users = await UserService.getAllUsers();
+      res.json(users);
     } catch (e) {
       res.status(500).json({ error: e.message });
     }

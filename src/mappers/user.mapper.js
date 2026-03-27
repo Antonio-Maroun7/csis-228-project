@@ -9,7 +9,7 @@ const UserEntity = require("../entities/user.entity");
  * Entity → response DTO (single user).
  * @param {UserEntity | null} entity
  * @returns {{ id: number, fullname: string,
- *  email: string,password:string,role:string,
+ *  email: string,role:string,
  * phone:string,user_is_active:boolean } | null}
  */
 function entityToResponseDto(entity) {
@@ -18,9 +18,19 @@ function entityToResponseDto(entity) {
     id: entity.user_id,
     fullname: entity.user_fullname,
     email: entity.user_email,
-    password: entity.user_password,
     role: entity.user_role,
     phone: entity.user_phone,
     is_active: entity.user_is_active,
   };
 }
+
+/**
+ * Entities → list of response DTOs.
+ * @param {ClientEntity[]} entities
+ * @returns {{ id: number, name: string, email: string }[]}
+ */
+function entitiesToListDto(entities) {
+  return (entities || []).map(entityToResponseDto);
+}
+
+module.exports = { entityToResponseDto, entitiesToListDto };

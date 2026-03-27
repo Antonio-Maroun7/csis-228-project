@@ -1,8 +1,9 @@
 const UserRepository = require("../repositories/user.repository");
-
+const UserDto = require("../dto/user.dto");
 class UserService {
   static async getAllUsers() {
-    return await UserRepository.findAllUsers();
+    const entities = await UserRepository.findAllUsers();
+    return UserDto.toListsDto(entities);
   }
 
   static async getUserById(user_id) {
