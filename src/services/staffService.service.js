@@ -3,6 +3,7 @@ const UserRepository = require("../repositories/user.repository");
 const StaffServiceDto = require("../dto/staffService.dto");
 const UserEntity = require("../entities/user.entity");
 const userDto = require("../dto/user.dto");
+const staffServiceDto = require("../dto/staffService.dto");
 
 class StaffServiceService {
   static async assignSerViceToStaff(staff_id, service_id, overrides = {}) {
@@ -65,15 +66,15 @@ class StaffServiceService {
     }
     return {
       message: "service deleted successfully from staff",
-      data: deleteService,
+      data: staffServiceDto.toResponseDto(deleteService),
     };
   }
   static async getAllStaffServices() {
-    const result = await StaffServiceRepository.findAllStaffServices();
-    if (!result.length) {
+    const entities = await StaffServiceRepository.findAllStaffServices();
+    if (!entities.length) {
       throw new Error("no staff services found ");
     }
-    return result;
+    return StaffServiceDto.toListDto(entities);
   }
 
   static async updateStaffService(staff_id, service_id, overrides = {}) {
@@ -97,7 +98,7 @@ class StaffServiceService {
     }
     return {
       message: "staff service updated successfully",
-      data: updated,
+      data: staffServiceDto.toResponseDto(updated),
     };
   }
 }

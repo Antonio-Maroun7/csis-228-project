@@ -1,5 +1,6 @@
 const pool = require("../db/pool");
 const staffServiceDto = require("../dto/staffService.dto");
+const StaffServiceEntity = require("../entities/staffService.entity");
 const staffServiceEntity = require("../entities/staffService.entity");
 const UserEntity = require("../entities/user.entity");
 
@@ -49,14 +50,14 @@ class StaffServiceRepository {
     RETURNING *`;
     const params = [staff_id, service_id];
     const { rows } = await pool.query(q, params);
-    return rows[0] ? mapStaffService(rows[0]) : null;
+    return StaffServiceEntity.fromRow(rows[0]);
   }
 
   static async findAllStaffServices() {
     const { rows } = await pool.query(`SELECT *
     FROM staff_services
     ORDER BY service_id,staff_id`);
-    return rows.map(mapStaffService);
+    return StaffServiceEntity.fromRows(rows);
   }
 
   static async updateStaffServiceOverrides(
@@ -78,7 +79,7 @@ class StaffServiceRepository {
     ];
 
     const { rows } = await pool.query(q, params);
-    return rows[0] ? mapStaffService(rows[0]) : null;
+    return StaffServiceEntity.fromRow(rows[0]);
   }
 }
 
