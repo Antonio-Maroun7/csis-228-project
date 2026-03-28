@@ -3,20 +3,21 @@ const UserDto = require("../dto/user.dto");
 class UserService {
   static async getAllUsers() {
     const entities = await UserRepository.findAllUsers();
-    return UserDto.toListsDto(entities);
+    return UserDto.toListDto(entities);
   }
 
   static async getUserById(user_id) {
-    const user = await UserRepository.findUserById(user_id);
-    if (!user) {
+    const entity = await UserRepository.findUserById(user_id);
+    if (!entity) {
       throw new Error("User not found");
     }
-    return user;
+    return UserDto.toResponseDto(entity);
   }
 
   static async createUser(data) {
     try {
-      return await UserRepository.createUser(data);
+      const entity = await UserRepository.createUser(data);
+      return UserDto.toResponseDto(entity);
     } catch (err) {
       console.log(err.message);
       throw err;
@@ -37,11 +38,12 @@ class UserService {
     if (!updated) {
       throw new Error("update failed");
     }
-    return updated;
+    return UserDto.toResponseDto(updated);
   }
 
   static async getUserByEmail(user_email) {
-    return await UserRepository.findUserByEmail(user_email);
+    const entity = await UserRepository.findUserByEmail(user_email);
+    return UserDto.toResponseDto(entity);
   }
 
   static async deleteUser(user_id) {
@@ -49,8 +51,11 @@ class UserService {
     if (!user) {
       throw new Error("user not found");
     }
-    await UserRepository.deleteUserById(user_id);
-    return "User deleted successfully";
+    const entity = await UserRepository.deleteUserById(user_id);
+    return {
+      message: "User deleted successfully",
+      data: UserDto.toResponseDto(entity),
+    };
   }
 
   static async changeUserPassword(user_id, newpassword) {
@@ -58,7 +63,10 @@ class UserService {
     if (!user) {
       throw new Error("user not found");
     }
-    return await UserRepository.changePasswordByUserId(user_id, newpassword);
+    const entity = await UserRepository.changePasswordByUserId(
+      user_id,
+      newpassword,
+    );
   }
 }
 module.exports = UserService;

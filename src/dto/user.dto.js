@@ -7,5 +7,5 @@ const UserMapper = require("../mappers/user.mapper");
 
 module.exports = {
   toResponseDto: UserMapper.entityToResponseDto,
-  toListsDto: UserMapper.entitiesToListDto,
+  toListDto: UserMapper.entitiesToListDto,
 };

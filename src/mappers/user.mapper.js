@@ -26,11 +26,15 @@ function entityToResponseDto(entity) {
 
 /**
  * Entities → list of response DTOs.
- * @param {ClientEntity[]} entities
- * @returns {{ id: number, name: string, email: string }[]}
+ * @param {UserEntity[]} entities
+ * @returns {{ id: number, fullname: string,
+ *  email: string,role:string, phone:string,user_is_active:boolean }[]}
  */
 function entitiesToListDto(entities) {
   return (entities || []).map(entityToResponseDto);
 }
 
-module.exports = { entityToResponseDto, entitiesToListDto };
+module.exports = {
+  entityToResponseDto,
+  entitiesToListDto,
+};

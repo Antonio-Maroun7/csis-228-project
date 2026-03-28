@@ -1,7 +1,8 @@
 const pool = require("../db/pool");
-const { mapUser } = require("../dto/user.dto");
+
 const bycrypt = require("bcrypt");
 const UserEntity = require("../entities/user.entity");
+const userDto = require("../dto/user.dto");
 
 class UserRepository {
   static async findAllUsers() {
@@ -46,7 +47,7 @@ class UserRepository {
       user_is_active,
     ];
     const { rows } = await pool.query(q, params);
-    return mapUser(rows[0]);
+    return UserEntity.fromRow(rows[0]);
   }
   static async updateUser(
     user_id,
@@ -70,14 +71,14 @@ class UserRepository {
     ];
 
     const { rows } = await pool.query(q, params);
-    return rows[0] ? mapUser(rows[0]) : null;
+    return UserEntity.fromRow(rows[0]);
   }
   static async findUserByEmail(user_email) {
     const { rows } = await pool.query(
       `
       SELECT  user_id,
              user_fullname,
-             user_email,a
+             user_email,
              user_role,
              user_phone,
              user_is_active
@@ -86,16 +87,19 @@ class UserRepository {
      LIMIT 1`,
       [user_email],
     );
-    return rows[0] ? mapUser(rows[0]) : null;
+    return UserEntity.fromRow(rows[0]);
   }
 
   static async deleteUserById(user_id) {
     const { rows } = await pool.query(
       `DELETE 
       FROM users 
-      WHERE user_id = $1`,
+      WHERE user_id = $1
+      RETURNING user_id, user_fullname, 
+      user_email, user_role, user_phone, user_is_active`,
       [user_id],
     );
+    return rows[0] ? UserEntity.fromRow(rows[0]) : null;
   }
   static async changePasswordByUserId(user_id, newpassword) {
     const hashedPassword = await bycrypt.hash(newpassword, 10);
@@ -107,7 +111,6 @@ class UserRepository {
     `;
     const params = [hashedPassword, user_id];
     const { rows } = await pool.query(q, params);
-    return rows[0] ? mapUser(rows[0]) : null;
   }
 }
 module.exports = UserRepository;
