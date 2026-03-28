@@ -29,6 +29,7 @@ class StaffServiceController {
       return handleError(res, err);
     }
   }
+
   static async getStaffByService(req, res) {
     try {
       const { service_id } = req.params;

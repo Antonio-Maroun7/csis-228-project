@@ -1,6 +1,8 @@
 const StaffServiceRepository = require("../repositories/staffService.repository");
 const UserRepository = require("../repositories/user.repository");
 const StaffServiceDto = require("../dto/staffService.dto");
+const UserEntity = require("../entities/user.entity");
+const userDto = require("../dto/user.dto");
 
 class StaffServiceService {
   static async assignSerViceToStaff(staff_id, service_id, overrides = {}) {
@@ -31,7 +33,8 @@ class StaffServiceService {
       throw new Error("this user is not a staff member");
     }
 
-    return await StaffServiceRepository.findStaffServices(staff_id);
+    const entities = await StaffServiceRepository.findStaffServices(staff_id);
+    return staffServiceDto.toListDto(entities);
   }
 
   static async getStaffByService(service_id) {
@@ -39,7 +42,7 @@ class StaffServiceService {
     if (!staff.length) {
       throw new Error("staff not found for this service ");
     }
-    return staff;
+    return userDto.toListDto(staff);
   }
 
   static async removeServiceFromStaff(staff_id, service_id) {
