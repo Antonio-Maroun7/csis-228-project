@@ -3,9 +3,7 @@
  * Uses DB column names (snake_case).
  */
 
-const { fromRow } = require("./user.entity");
-
-class Staff_ServicesEntity {
+class StaffServiceEntity {
   constructor({
     staff_id,
     service_id,
@@ -19,10 +17,10 @@ class Staff_ServicesEntity {
   }
   static fromRow(row) {
     if (!row) return null;
-    return new Staff_ServicesEntity(row);
+    return new StaffServiceEntity(row);
   }
   static fromRows(rows) {
-    return (rows || []).map((row) => Staff_ServicesEntity.fromRow(row));
+    return (rows || []).map((row) => StaffServiceEntity.fromRow(row));
   }
 }
-module.exports = Staff_ServicesEntity;
+module.exports = StaffServiceEntity;

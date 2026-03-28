@@ -1,6 +1,6 @@
 const StaffServiceRepository = require("../repositories/staffService.repository");
-const staffServiceRepository = require("../repositories/staffService.repository");
 const UserRepository = require("../repositories/user.repository");
+const StaffServiceDto = require("../dto/staffService.dto");
 
 class StaffServiceService {
   static async assignSerViceToStaff(staff_id, service_id, overrides = {}) {
@@ -13,11 +13,12 @@ class StaffServiceService {
       throw Error("this user is not a staff member ");
     }
 
-    return await staffServiceRepository.assignServiceToStaff(
+    const entity = await StaffServiceRepository.assignServiceToStaff(
       staff_id,
       service_id,
       overrides,
     );
+    return StaffServiceDto.toResponseDto(entity);
   }
 
   static async getStaffServices(staff_id) {
@@ -30,7 +31,7 @@ class StaffServiceService {
       throw new Error("this user is not a staff member");
     }
 
-    return await staffServiceRepository.findStaffServices(staff_id);
+    return await StaffServiceRepository.findStaffServices(staff_id);
   }
 
   static async getStaffByService(service_id) {
@@ -52,7 +53,7 @@ class StaffServiceService {
 
     //check for the service if exist
 
-    const deleteService = await staffServiceRepository.removeServiceFromStaff(
+    const deleteService = await StaffServiceRepository.removeServiceFromStaff(
       staff_id,
       service_id,
     );
@@ -65,7 +66,7 @@ class StaffServiceService {
     };
   }
   static async getAllStaffServices() {
-    const result = await staffServiceRepository.findAllStaffServices();
+    const result = await StaffServiceRepository.findAllStaffServices();
     if (!result.length) {
       throw new Error("no staff services found ");
     }
@@ -83,7 +84,7 @@ class StaffServiceService {
 
     // check if the service exist
 
-    const updated = await staffServiceRepository.updateStaffServiceOverrides(
+    const updated = await StaffServiceRepository.updateStaffServiceOverrides(
       staff_id,
       service_id,
       overrides,

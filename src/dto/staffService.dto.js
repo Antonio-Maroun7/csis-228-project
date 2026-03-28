@@ -1,11 +1,11 @@
-const mapStaffService = (row) => {
-  if (!row) return null;
-  return {
-    staff_id: row.staff_id,
-    service_id: row.service_id,
-    staff_duration_min: row.staff_duration_min,
-    staff_price_cents: row.staff_price_cents,
-  };
-};
+/**
+ * StaffService DTOs – API contract (camelCase response/request shapes).
+ * All entity ↔ DTO conversion is done in the StaffService mapper.
+ */
 
-module.exports = { mapStaffService };
+const StaffServiceMapper = require("../mappers/staffService.mapper");
+
+module.exports = {
+  toResponseDto: StaffServiceMapper.entityToResponseDto,
+  toListDto: StaffServiceMapper.entitiesToListDto,
+};

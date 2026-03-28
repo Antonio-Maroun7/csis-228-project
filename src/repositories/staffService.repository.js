@@ -1,6 +1,6 @@
 const pool = require("../db/pool");
-const { mapStaffService } = require("../dto/staffService.dto");
-const { mapUser } = require("../dto/user.dto");
+const staffServiceDto = require("../dto/staffService.dto");
+const staffServiceEntity = require("../entities/staffService.entity");
 
 class StaffServiceRepository {
   static async assignServiceToStaff(staff_id, service_id, overrides = {}) {
@@ -16,7 +16,7 @@ class StaffServiceRepository {
       staff_price_cents,
     ];
     const { rows } = await pool.query(q, params);
-    return mapStaffService(rows[0]);
+    return staffServiceEntity.fromRow(rows[0]);
   }
 
   static async findStaffServices(staff_id) {
