@@ -5,8 +5,8 @@ class UserController {
     try {
       const users = await UserService.getAllUsers();
       res.json(users);
-    } catch (e) {
-      res.status(500).json({ error: e.message });
+    } catch (err) {
+      return handleError(res, err);
     }
   }
   static async getUserBYId(req, res) {
