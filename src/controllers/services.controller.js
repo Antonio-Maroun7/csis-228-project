@@ -9,5 +9,13 @@ class ServiceController {
       return handleError(res, err);
     }
   }
+  static async getServiceById(req, res) {
+    try {
+      const service = await ServicesService.getServiceById(req.params.id);
+      res.json(service);
+    } catch (err) {
+      return handleError(res, err);
+    }
+  }
 }
 module.exports = ServiceController;

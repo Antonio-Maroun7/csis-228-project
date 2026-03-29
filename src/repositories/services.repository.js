@@ -9,5 +9,18 @@ class ServicesRepository {
     ORDER By service_id`);
     return ServiceEntity.fromRows(rows);
   }
+
+  //	getServicesByCategory(categoryId)
+
+  static async findServiceById(id) {
+    const { rows } = await pool.query(
+      `
+      SELECT *
+      from services
+      WHERE service_id = $1`,
+      [id],
+    );
+    return ServiceEntity.fromRow(rows[0]);
+  }
 }
 module.exports = ServicesRepository;

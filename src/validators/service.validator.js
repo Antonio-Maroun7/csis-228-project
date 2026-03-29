@@ -7,3 +7,13 @@ const handleValidationErrors = (req, res, next) => {
   }
   next();
 };
+
+const validatorServiceId = [
+  param("id")
+    .notEmpty()
+    .withMessage("id is required")
+    .isInt({ min: 1 })
+    .withMessage("id must be a positive integer "),
+  handleValidationErrors,
+];
+module.exports = { validatorServiceId };
