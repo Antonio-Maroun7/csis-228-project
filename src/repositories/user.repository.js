@@ -33,10 +33,12 @@ class UserRepository {
   }) {
     const hashedPassword = await bycrypt.hash(user_password, 10);
     const q = `INSERT INTO users
-      (user_fullname,user_email,user_password,user_role,user_phone,user_is_active)
+      (user_fullname,user_email,user_password,
+      user_role,user_phone,user_is_active)
       values
       ($1,$2,$3,$4,$5,$6)
-       RETURNING user_id,user_fullname,user_email,user_role,user_phone,user_is_active
+       RETURNING user_id,user_fullname,user_email
+       ,user_role,user_phone,user_is_active
        `;
     const params = [
       user_fullname,

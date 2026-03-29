@@ -1,5 +1,6 @@
 const ServiceRepository = require("../repositories/services.repository");
 const ServiceDto = require("../dto/service.dto");
+const userDto = require("../dto/user.dto");
 
 class ServicesService {
   static async getServices() {
@@ -13,6 +14,15 @@ class ServicesService {
       throw new Error("Service not found");
     }
     return ServiceDto.toResponseDto(entity);
+  }
+  static async createService(data) {
+    try {
+      const entity = await ServiceRepository.createService(data);
+      return userDto.toResponseDto(entity);
+    } catch (err) {
+      console.log(err.message);
+      throw err;
+    }
   }
 }
 module.exports = ServicesService;
