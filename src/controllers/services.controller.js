@@ -17,5 +17,13 @@ class ServiceController {
       return handleError(res, err);
     }
   }
+  static async createService(req, res) {
+    try {
+      const service = await ServicesService.createService(req.body);
+      res.status(201).json(service);
+    } catch (err) {
+      return handleError(res, err);
+    }
+  }
 }
 module.exports = ServiceController;
