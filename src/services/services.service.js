@@ -25,5 +25,21 @@ class ServicesService {
       throw err;
     }
   }
+  static async updateService(id, data) {
+    try {
+      const existingService = await ServiceRepository.findServiceById(id);
+      if (!existingService) {
+        throw new Error("Service not found");
+      }
+      const updated = await ServiceRepository.updateService(id, data);
+      if (!updated) {
+        throw new Error("update failed");
+      }
+      return serviceDto.toResponseDto(updated);
+    } catch (err) {
+      console.log(err.message);
+      throw err;
+    }
+  }
 }
 module.exports = ServicesService;

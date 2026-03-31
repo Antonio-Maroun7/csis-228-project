@@ -25,5 +25,19 @@ class ServiceController {
       return handleError(res, err);
     }
   }
+
+  static async updateService(req, res) {
+    try {
+      const service = await ServicesService.updateService(
+        req.params.id,
+        req.body,
+      );
+      res
+        .status(200)
+        .json({ message: "Sevice updated successfully", data: service });
+    } catch (err) {
+      return handleError(res, err);
+    }
+  }
 }
 module.exports = ServiceController;

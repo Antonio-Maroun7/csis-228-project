@@ -3,10 +3,16 @@ const servicesControler = require("../controllers/services.controller");
 const {
   validatorServiceId,
   validatorCreateService,
+  validatorUpdateService,
 } = require("../validators/service.validator");
 const ServiceController = require("../controllers/services.controller");
 
 const router = express.Router();
+router.put(
+  "/updateService/:id",
+  validatorUpdateService,
+  servicesControler.updateService,
+);
 router.post(
   "/createService",
   validatorCreateService,
