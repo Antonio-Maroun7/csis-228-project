@@ -9,6 +9,11 @@ const {
 const ServiceController = require("../controllers/services.controller");
 
 const router = express.Router();
+
+router.get(
+  "/getServicesByCategory/:id",
+  servicesControler.getServicesByCategory,
+);
 router.put(
   "/disableSevice/:id",
   validatorSDisableService,

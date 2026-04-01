@@ -44,12 +44,20 @@ class ServiceController {
       const disabledService = await ServicesService.disableService(
         req.params.id,
       );
-      res
-        .status(200)
-        .json({
-          message: "service disabled successfully",
-          data: disabledService,
-        });
+      res.status(200).json({
+        message: "service disabled successfully",
+        data: disabledService,
+      });
+    } catch (err) {
+      return handleError(res, err);
+    }
+  }
+  static async getServicesByCategory(req, res) {
+    try {
+      const services = await ServicesService.getServicesByCategory(
+        req.params.id,
+      );
+      res.json(services);
     } catch (err) {
       return handleError(res, err);
     }

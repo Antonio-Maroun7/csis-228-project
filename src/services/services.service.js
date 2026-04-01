@@ -54,6 +54,15 @@ class ServicesService {
       throw err;
     }
   }
-  static async deleteService(id) {}
+  static async getServicesByCategory(id) {
+    try {
+      //check the category if exist
+      const entities = await ServiceRepository.findServicesByCategory(id);
+      return ServiceDto.toListDto(entities);
+    } catch (err) {
+      console.log(err.message);
+      throw err;
+    }
+  }
 }
 module.exports = ServicesService;

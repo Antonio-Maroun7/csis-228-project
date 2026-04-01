@@ -10,7 +10,16 @@ class ServicesRepository {
     return ServiceEntity.fromRows(rows);
   }
 
-  //	getServicesByCategory(categoryId)
+  static async findServicesByCategory(category_id) {
+    const q = `
+    SELECT *
+    FROM services
+    WHERE category_id =$1
+    ORDER BY service_id`;
+    const params = [category_id];
+    const { rows } = await pool.query(q, params);
+    return ServiceEntity.fromRows(rows);
+  }
 
   static async findServiceById(id) {
     const { rows } = await pool.query(
