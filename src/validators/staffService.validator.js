@@ -24,13 +24,15 @@ const validatorAssignSerViceToStaff = [
     .toInt(),
 
   body("staff_duration_min")
-    .optional()
+    .notEmpty()
+    .withMessage("staff_duration_min is required")
     .isInt({ min: 1 })
     .withMessage("staff_duration_min must be a positive integer")
     .toInt(),
 
   body("staff_price_cents")
-    .optional()
+    .notEmpty()
+    .withMessage("staff_price_cents is required")
     .isInt({ min: 1 })
     .withMessage("staff_price_cent must be a positive integer")
     .toInt(),

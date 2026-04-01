@@ -18,7 +18,7 @@ class StaffServiceRepository {
       staff_price_cents,
     ];
     const { rows } = await pool.query(q, params);
-    return staffServiceEntity.fromRow(rows[0]);
+    return StaffServiceEntity.fromRow(rows[0]);
   }
 
   static async findStaffServices(staff_id) {
@@ -28,7 +28,7 @@ class StaffServiceRepository {
     ORDER BY service_id`;
     const params = [staff_id];
     const { rows } = await pool.query(q, params);
-    return staffServiceEntity.fromRows(rows);
+    return StaffServiceEntity.fromRow(rows[0]);
   }
 
   static async findStaffByService(service_id) {

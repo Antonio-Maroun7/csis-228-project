@@ -38,7 +38,7 @@ class StaffServiceService {
     }
 
     const entities = await StaffServiceRepository.findStaffServices(staff_id);
-    return staffServiceDto.toListDto(entities);
+    return StaffServiceDto.toListDto(entities);
   }
 
   static async getStaffByService(service_id) {
