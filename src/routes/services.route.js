@@ -4,10 +4,16 @@ const {
   validatorServiceId,
   validatorCreateService,
   validatorUpdateService,
+  validatorSDisableService,
 } = require("../validators/service.validator");
 const ServiceController = require("../controllers/services.controller");
 
 const router = express.Router();
+router.put(
+  "/disableSevice/:id",
+  validatorSDisableService,
+  ServiceController.disabledService,
+);
 router.put(
   "/updateService/:id",
   validatorUpdateService,

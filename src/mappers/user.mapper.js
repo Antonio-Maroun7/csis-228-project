@@ -12,7 +12,7 @@ const UserEntity = require("../entities/user.entity");
  *  email: string,role:string,
  * phone:string,user_is_active:boolean } | null}
  */
-function entityToResponseDto(entity) {
+const entityToResponseDto = (entity) => {
   if (!entity) return null;
   return {
     id: entity.user_id,
@@ -22,7 +22,7 @@ function entityToResponseDto(entity) {
     phone: entity.user_phone,
     is_active: entity.user_is_active,
   };
-}
+};
 
 /**
  * Entities → list of response DTOs.
@@ -30,9 +30,9 @@ function entityToResponseDto(entity) {
  * @returns {{ id: number, fullname: string,
  *  email: string,role:string, phone:string,user_is_active:boolean }[]}
  */
-function entitiesToListDto(entities) {
+const entitiesToListDto = (entities) => {
   return (entities || []).map(entityToResponseDto);
-}
+};
 
 module.exports = {
   entityToResponseDto,

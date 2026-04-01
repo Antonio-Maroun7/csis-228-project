@@ -41,5 +41,19 @@ class ServicesService {
       throw err;
     }
   }
+  static async disableService(id) {
+    try {
+      const existingService = await ServiceRepository.findServiceById(id);
+      if (!existingService) {
+        throw new Error("service not found");
+      }
+      const disabled = await ServiceRepository.disableService(id);
+      return ServiceDto.toResponseDto(disabled);
+    } catch (err) {
+      console.log(err.message);
+      throw err;
+    }
+  }
+  static async deleteService(id) {}
 }
 module.exports = ServicesService;

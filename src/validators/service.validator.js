@@ -98,8 +98,16 @@ const validatorUpdateService = [
     .withMessage("service_is_active must be true or false"),
   handleValidationErrors,
 ];
+const validatorSDisableService = [
+  param("id")
+    .notEmpty()
+    .withMessage("service_id is required")
+    .isInt({ min: 1 })
+    .withMessage("service_id must be a positive integer"),
+];
 module.exports = {
   validatorServiceId,
   validatorCreateService,
   validatorUpdateService,
+  validatorSDisableService
 };

@@ -18,7 +18,7 @@ const serviceEntity = require("../entities/service.entity");
  * } | null}
  */
 
-function entityToResponseDto(entity) {
+const entityToResponseDto = (entity) => {
   if (!entity) return null;
   return {
     id: entity.service_id,
@@ -29,7 +29,7 @@ function entityToResponseDto(entity) {
     base_price_cents: entity.service_base_price_cents,
     is_active: entity.service_is_active,
   };
-}
+};
 
 /**
  * Entities → list of response DTOs.
@@ -44,8 +44,8 @@ function entityToResponseDto(entity) {
  *   is_active: boolean
  * }[]}
  */
-function entitiesToListDto(entities) {
+const entitiesToListDto = (entities) => {
   return (entities || []).map(entityToResponseDto);
-}
+};
 
 module.exports = { entityToResponseDto, entitiesToListDto };

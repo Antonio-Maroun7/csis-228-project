@@ -39,5 +39,20 @@ class ServiceController {
       return handleError(res, err);
     }
   }
+  static async disabledService(req, res) {
+    try {
+      const disabledService = await ServicesService.disableService(
+        req.params.id,
+      );
+      res
+        .status(200)
+        .json({
+          message: "service disabled successfully",
+          data: disabledService,
+        });
+    } catch (err) {
+      return handleError(res, err);
+    }
+  }
 }
 module.exports = ServiceController;

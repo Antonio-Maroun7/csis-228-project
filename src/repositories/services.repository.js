@@ -87,5 +87,19 @@ class ServicesRepository {
     const { rows } = await pool.query(q, params);
     return ServiceEntity.fromRow(rows[0]);
   }
+
+  static async disableService(service_id) {
+    const q = `
+    UPDATE services
+    SET service_is_active= false
+    WHERE service_id = $1
+    RETURNING service_id, category_id, 
+              service_name, service_description,
+              service_default_duration_min, service_base_price_cents, 
+              service_is_active`;
+    const params = [service_id];
+    const { rows } = await pool.query(q, params);
+    return ServiceEntity.fromRow(rows[0]);
+  }
 }
 module.exports = ServicesRepository;

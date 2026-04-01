@@ -17,7 +17,7 @@ const staffServicesEntity = require("../entities/staffService.entity");
  * } | null}
  */
 
-function entityToResponseDto(entity) {
+const entityToResponseDto = (entity) => {
   if (!entity) return null;
 
   return {
@@ -26,7 +26,7 @@ function entityToResponseDto(entity) {
     duration_min: entity.staff_duration_min,
     price_cents: entity.staff_price_cents,
   };
-}
+};
 
 /**
  * Entities -> list DTO
@@ -38,8 +38,8 @@ function entityToResponseDto(entity) {
  *   staff_price_cents: number | null
  * }[]}
  */
-function entitiesToListDto(entities) {
+const entitiesToListDto = (entities) => {
   return (entities || []).map(entityToResponseDto);
-}
+};
 
 module.exports = { entityToResponseDto, entitiesToListDto };
