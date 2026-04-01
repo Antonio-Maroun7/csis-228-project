@@ -9,7 +9,7 @@ class StaffServiceController {
         staff_duration_min: req.body.staff_duration_min,
         staff_price_cents: req.body.staff_price_cents,
       };
-      const result = await staffServiceService.assignSerViceToStaff(
+      const result = await staffServiceService.assignServiceToStaff(
         staff_id,
         service_id,
         overrides,

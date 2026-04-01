@@ -1,7 +1,7 @@
 const pool = require("../db/pool");
-const staffServiceDto = require("../dto/staffService.dto");
+
 const StaffServiceEntity = require("../entities/staffService.entity");
-const staffServiceEntity = require("../entities/staffService.entity");
+
 const UserEntity = require("../entities/user.entity");
 
 class StaffServiceRepository {

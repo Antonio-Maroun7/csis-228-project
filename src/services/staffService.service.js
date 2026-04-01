@@ -1,12 +1,11 @@
 const StaffServiceRepository = require("../repositories/staffService.repository");
 const UserRepository = require("../repositories/user.repository");
 const StaffServiceDto = require("../dto/staffService.dto");
-const UserEntity = require("../entities/user.entity");
+const ServiceRepository = require("../repositories/services.repository");
 const userDto = require("../dto/user.dto");
-const staffServiceDto = require("../dto/staffService.dto");
 
 class StaffServiceService {
-  static async assignSerViceToStaff(staff_id, service_id, overrides = {}) {
+  static async assignServiceToStaff(staff_id, service_id, overrides = {}) {
     const staff = await UserRepository.findUserById(staff_id);
     if (!staff) {
       throw Error("staff not found");
@@ -14,6 +13,10 @@ class StaffServiceService {
 
     if (staff.user_role !== "staff") {
       throw Error("this user is not a staff member ");
+    }
+    const service = await ServiceRepository.findServiceById(service_id);
+    if (!service) {
+      throw new Error("service not found ");
     }
 
     const entity = await StaffServiceRepository.assignServiceToStaff(
@@ -39,6 +42,10 @@ class StaffServiceService {
   }
 
   static async getStaffByService(service_id) {
+    const service = await ServiceRepository.findServiceById(service_id);
+    if (!service) {
+      throw new Error("service not found ");
+    }
     const staff = await StaffServiceRepository.findStaffByService(service_id);
     if (!staff.length) {
       throw new Error("staff not found for this service ");
@@ -55,7 +62,10 @@ class StaffServiceService {
       throw new Error("this user is not a staff member");
     }
 
-    //check for the service if exist
+    const service = await ServiceRepository.findServiceById(service_id);
+    if (!service) {
+      throw new Error("service not found ");
+    }
 
     const deleteService = await StaffServiceRepository.removeServiceFromStaff(
       staff_id,
@@ -86,7 +96,10 @@ class StaffServiceService {
       throw new Error("this user is not a staff member ");
     }
 
-    // check if the service exist
+    const service = await ServiceRepository.findServiceById(service_id);
+    if (!service) {
+      throw new Error("service not found ");
+    }
 
     const updated = await StaffServiceRepository.updateStaffServiceOverrides(
       staff_id,
