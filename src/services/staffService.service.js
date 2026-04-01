@@ -76,7 +76,7 @@ class StaffServiceService {
     }
     return {
       message: "service deleted successfully from staff",
-      data: staffServiceDto.toResponseDto(deleteService),
+      data: StaffServiceDto.toResponseDto(deleteService),
     };
   }
   static async getAllStaffServices() {
@@ -111,7 +111,7 @@ class StaffServiceService {
     }
     return {
       message: "staff service updated successfully",
-      data: staffServiceDto.toResponseDto(updated),
+      data: StaffServiceDto.toResponseDto(updated),
     };
   }
 }

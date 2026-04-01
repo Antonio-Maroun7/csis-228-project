@@ -28,7 +28,7 @@ class StaffServiceRepository {
     ORDER BY service_id`;
     const params = [staff_id];
     const { rows } = await pool.query(q, params);
-    return StaffServiceEntity.fromRow(rows[0]);
+    return StaffServiceEntity.fromRows(rows);
   }
 
   static async findStaffByService(service_id) {
