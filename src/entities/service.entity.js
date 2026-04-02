@@ -3,8 +3,6 @@
  * Uses DB column names (snake_case).
  */
 
-const { fromRow } = require("./user.entity");
-
 class ServiceEntity {
   constructor({
     service_id,

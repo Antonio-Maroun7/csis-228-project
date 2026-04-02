@@ -1,6 +1,5 @@
 const pool = require("../db/pool");
 const ServiceEntity = require("../entities/service.entity");
-const ServiceDto = require("../dto/service.dto");
 
 class ServicesRepository {
   static async findServices() {

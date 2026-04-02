@@ -1,18 +1,17 @@
 const express = require("express");
-const servicesControler = require("../controllers/services.controller");
+const ServiceController = require("../controllers/service.controller");
 const {
   validatorServiceId,
   validatorCreateService,
   validatorUpdateService,
   validatorSDisableService,
 } = require("../validators/service.validator");
-const ServiceController = require("../controllers/services.controller");
 
 const router = express.Router();
 
 router.get(
   "/getServicesByCategory/:id",
-  servicesControler.getServicesByCategory,
+  ServiceController.getServicesByCategory,
 );
 router.put(
   "/disableSevice/:id",
@@ -22,7 +21,7 @@ router.put(
 router.put(
   "/updateService/:id",
   validatorUpdateService,
-  servicesControler.updateService,
+  ServiceController.updateService,
 );
 router.post(
   "/createService",
@@ -34,5 +33,5 @@ router.get(
   validatorServiceId,
   ServiceController.getServiceById,
 );
-router.get("/", servicesControler.getAllServices);
+router.get("/", ServiceController.getAllServices);
 module.exports = router;
