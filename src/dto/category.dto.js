@@ -4,6 +4,6 @@
  */
 const CategoryMapper = require("../mappers/category.mapper");
 module.exports = {
-  entityToResponseDto: CategoryMapper.entityToResponseDto,
-  entityToListDto: CategoryMapper.entityToListDto,
+  toResponseDto: CategoryMapper.entityToResponseDto,
+  toListDto: CategoryMapper.entityToListDto,
 };
