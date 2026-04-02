@@ -14,7 +14,7 @@ class ServicesRepository {
     SELECT *
     FROM services
     WHERE category_id =$1
-    ORDER BY service_id`;
+    ORDER BY service_id `;
     const params = [category_id];
     const { rows } = await pool.query(q, params);
     return ServiceEntity.fromRows(rows);

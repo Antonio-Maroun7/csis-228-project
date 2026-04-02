@@ -9,5 +9,30 @@ class CategoryRepository {
     ORDER BY category_id`);
     return CategoryEntity.fromRows(rows);
   }
+
+  static async getCategoryById(category_id) {
+    const q = `
+    SELECT *
+    FROM categories
+    WHERE category_id = $1`;
+    const params = [category_id];
+    const { rows } = await pool.query(q, params);
+    return CategoryEntity.fromRow(rows[0]);
+  }
+
+  static async createCategory({
+    category_name,
+    category_description,
+    category_is_active,
+  }) {
+    const q = `
+    INSERT INTO categories
+    (category_name, category_description, category_is_active)
+    values($1,$2,$3)
+    RETURNING category_id, category_name, category_description, category_is_active`;
+    const params = [category_name, category_description, category_is_active];
+    const { rows } = await pool.query(q, params);
+    return CategoryEntity.fromRow(rows[0]);
+  }
 }
 module.exports = CategoryRepository;

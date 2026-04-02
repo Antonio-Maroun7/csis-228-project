@@ -1,4 +1,5 @@
 const ServiceRepository = require("../repositories/services.repository");
+const CategoryRepository = require("../repositories/category.repository");
 const ServiceDto = require("../dto/service.dto");
 
 const serviceDto = require("../dto/service.dto");
@@ -56,7 +57,10 @@ class ServicesService {
   }
   static async getServicesByCategory(id) {
     try {
-      //check the category if exist
+      const existingCategory = await CategoryRepository.getCategoryById(id);
+      if (!existingCategory) {
+        throw new Error("Category not found");
+      }
       const entities = await ServiceRepository.findServicesByCategory(id);
       return ServiceDto.toListDto(entities);
     } catch (err) {
