@@ -45,5 +45,22 @@ class CategoryService {
       throw err;
     }
   }
+
+  static async disableCategory(id) {
+    try {
+      const exsitingCategory = await CategoryRepository.getCategoryById(id);
+      if (!exsitingCategory) {
+        throw new Error("Category not found");
+      }
+      const disabledCategory = await CategoryRepository.disableCategory(id);
+      if (!disabledCategory) {
+        throw new Error("Failed to disable category");
+      }
+      return CategoryDto.toResponseDto(disabledCategory);
+    } catch (err) {
+      console.log(err.message);
+      throw err;
+    }
+  }
 }
 module.exports = CategoryService;

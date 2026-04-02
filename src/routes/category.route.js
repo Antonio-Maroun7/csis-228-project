@@ -24,4 +24,9 @@ router.put(
   validatorUpdateCategory,
   CategoryContorller.updateCategory,
 );
+router.put(
+  "/DisableCategory/:id",
+  validatorCategoryId,
+  CategoryContorller.disableCategory,
+);
 module.exports = router;

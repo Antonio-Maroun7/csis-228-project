@@ -54,5 +54,16 @@ class CategoryRepository {
     const { rows } = await pool.query(q, params);
     return CategoryEntity.fromRow(rows[0]);
   }
+
+  static async disableCategory(category_id) {
+    const q = `
+    UPDATE categories
+    SET category_is_active = false
+    WHERE category_id = $1
+    RETURNING category_id, category_name, category_description, category_is_active`;
+    const params = [category_id];
+    const { rows } = await pool.query(q, params);
+    return CategoryEntity.fromRow(rows[0]);
+  }
 }
 module.exports = CategoryRepository;

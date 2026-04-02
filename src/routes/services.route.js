@@ -11,10 +11,11 @@ const router = express.Router();
 
 router.get(
   "/getServicesByCategory/:id",
+  validatorServiceId,
   ServiceController.getServicesByCategory,
 );
 router.put(
-  "/disableSevice/:id",
+  "/disableService/:id",
   validatorSDisableService,
   ServiceController.disabledService,
 );

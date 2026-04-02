@@ -39,5 +39,16 @@ class CategoryController {
       return handleError(res, err);
     }
   }
+
+  static async disableCategory(req, res) {
+    try {
+      const category = await CategoryService.disableCategory(req.params.id);
+      res
+        .status(200)
+        .json({ message: "Category disabled successfully", category });
+    } catch (err) {
+      return handleError(res, err);
+    }
+  }
 }
 module.exports = CategoryController;
