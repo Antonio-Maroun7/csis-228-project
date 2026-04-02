@@ -34,5 +34,25 @@ class CategoryRepository {
     const { rows } = await pool.query(q, params);
     return CategoryEntity.fromRow(rows[0]);
   }
+  static async updateCategory(
+    category_id,
+    { category_name, category_description, category_is_active },
+  ) {
+    const q = `
+    UPDATE categories
+    SET  category_name = $1,
+    category_description = $2,
+    category_is_active = $3
+    WHERE category_id = $4
+    RETURNING category_id, category_name, category_description, category_is_active`;
+    const params = [
+      category_name,
+      category_description,
+      category_is_active,
+      category_id,
+    ];
+    const { rows } = await pool.query(q, params);
+    return CategoryEntity.fromRow(rows[0]);
+  }
 }
 module.exports = CategoryRepository;

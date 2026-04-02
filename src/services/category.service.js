@@ -29,5 +29,21 @@ class CategoryService {
       throw err;
     }
   }
+  static async updateCategory(id, data) {
+    try {
+      const existingCategory = await CategoryRepository.getCategoryById(id);
+      if (!existingCategory) {
+        throw new Error("Category not found");
+      }
+      const updatedCategory = await CategoryRepository.updateCategory(id, data);
+      if (!updatedCategory) {
+        throw new Error("Failed to update category");
+      }
+      return CategoryDto.toResponseDto(updatedCategory);
+    } catch (err) {
+      console.log(err.message);
+      throw err;
+    }
+  }
 }
 module.exports = CategoryService;

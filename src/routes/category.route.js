@@ -3,6 +3,7 @@ const CategoryContorller = require("../controllers/category.controller");
 const {
   validatorCategoryId,
   validatorCreateCategory,
+  validatorUpdateCategory,
 } = require("../validators/category.validator");
 
 const router = express.Router();
@@ -17,5 +18,10 @@ router.post(
   "/CreateCategory",
   validatorCreateCategory,
   CategoryContorller.createCategory,
+);
+router.put(
+  "/UpdateCategory/:id",
+  validatorUpdateCategory,
+  CategoryContorller.updateCategory,
 );
 module.exports = router;
