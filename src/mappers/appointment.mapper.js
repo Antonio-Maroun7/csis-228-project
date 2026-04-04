@@ -26,11 +26,17 @@ const entityToResponseDto = (entity) => {
     id: entity.appointment_id,
     clientId: entity.client_id,
     staffId: entity.staff_id,
-    appointmentStartAt: entity.appointment_start_at,
-    appointmentEndsAt: entity.appointment_ends_at,
+    appointmentStartAt: entity.appointment_starts_at
+      ? new Date(entity.appointment_starts_at).toISOString()
+      : null,
+    appointmentEndsAt: entity.appointment_ends_at
+      ? new Date(entity.appointment_ends_at).toISOString()
+      : null,
     appointmentStatus: entity.appointment_status,
     appointmentNotes: entity.appointment_notes,
-    appointmentCreatedAt: entity.appointment_created_at,
+    appointmentCreatedAt: entity.appointment_created_at
+      ? new Date(entity.appointment_created_at).toISOString()
+      : null,
   };
 };
 

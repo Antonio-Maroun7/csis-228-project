@@ -3,10 +3,12 @@ const UserRoute = require("./routes/user.route");
 const staffServiceRoute = require("./routes/staffService.route");
 const serviceRoute = require("./routes/services.route");
 const CategoryRoute = require("./routes/category.route");
+const AppointmentRoute = require("./routes/appointment.route");
 
 const app = express();
 app.use(express.json());
 
+app.use("/api/appointments", AppointmentRoute);
 app.use("/api/categories", CategoryRoute);
 app.use("/api/services", serviceRoute);
 app.use("/api/users", UserRoute);
