@@ -55,4 +55,24 @@ const entityToResponseDto = (entity) => {
 const entityToListDto = (entities) => {
   return (entities || []).map(entityToResponseDto);
 };
-module.exports = { entityToResponseDto, entityToListDto };
+
+/** * Request body → data for creating an appointment.
+ * @param {Object} body
+ * @return {{
+ *  client_id: number,
+ *  staff_id: number | null,
+ * starts_at: string,
+ * service_items: number[],
+ * appointment_notes: string | null
+ * }}
+ * */
+const createRequestToData = (body) => {
+  return {
+    client_id: body.client_id,
+    staff_id: body.staff_id ?? null,
+    starts_at: body.starts_at,
+    service_items: body.service_items || [],
+    appointment_notes: body.appointment_notes ?? null,
+  };
+};
+module.exports = { entityToResponseDto, entityToListDto, createRequestToData };

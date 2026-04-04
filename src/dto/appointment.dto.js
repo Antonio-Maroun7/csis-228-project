@@ -7,4 +7,5 @@ const AppointmentMapper = require("../mappers/appointment.mapper");
 module.exports = {
   toResponseDto: AppointmentMapper.entityToResponseDto,
   toListDto: AppointmentMapper.entityToListDto,
+  fromCreateRequest: AppointmentMapper.createRequestToData,
 };
