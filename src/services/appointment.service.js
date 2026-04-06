@@ -54,6 +54,19 @@ class AppointmentService {
       throw err;
     }
   }
+  static async getAppointmentById(appointment_id) {
+    try {
+      const entity =
+        await AppointmentRepository.findAppointmentById(appointment_id);
+      if (!entity) {
+        throw new Error("Apointment not found");
+      }
+      return AppointmentDto.toResponseDto(entity);
+    } catch (err) {
+      console.log(err);
+      throw err;
+    }
+  }
 }
 
 module.exports = AppointmentService;

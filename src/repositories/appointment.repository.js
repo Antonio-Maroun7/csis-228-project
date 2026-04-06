@@ -49,5 +49,14 @@ class AppointmentRepository {
     const { rows } = await pool.query(q, [staff_id]);
     return AppointmentEntity.fromRows(rows);
   }
+  static async findAppointmentById(appointment_id) {
+    const q = `
+    SELECT * 
+    FROM appointments
+    WHERE appointment_id = $1
+    ORDER BY appointment_start_at DESC`;
+    const { rows } = await pool.query(q, [appointment_id]);
+    return AppointmentEntity.fromRow(rows[0]);
+  }
 }
 module.exports = AppointmentRepository;
