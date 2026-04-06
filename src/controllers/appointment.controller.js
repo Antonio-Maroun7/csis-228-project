@@ -12,5 +12,16 @@ class AppointmentController {
       return handleError(res, err);
     }
   }
+
+  static async getAppointmentsByStaff(req, res) {
+    try {
+      const appointments = await AppointmentService.getAppointmentsByStaff_id(
+        req.params.id,
+      );
+      res.json(appointments);
+    } catch (err) {
+      return handleError(res, err);
+    }
+  }
 }
 module.exports = AppointmentController;

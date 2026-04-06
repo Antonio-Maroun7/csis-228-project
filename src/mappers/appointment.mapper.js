@@ -22,20 +22,21 @@ const AppointmentEntity = require("../entities/appointment.entity");
  * */
 const entityToResponseDto = (entity) => {
   if (!entity) return null;
+
   return {
     id: entity.appointment_id,
     clientId: entity.client_id,
     staffId: entity.staff_id,
-    appointmentStartAt: entity.appointment_starts_at
-      ? new Date(entity.appointment_starts_at).toISOString()
+    appointmentStartAt: entity.appointment_start_at
+      ? entity.appointment_start_at
       : null,
-    appointmentEndsAt: entity.appointment_ends_at
-      ? new Date(entity.appointment_ends_at).toISOString()
+    appointmentEndsAt: entity.appointment_ends_at[0]
+      ? entity.appointment_ends_at[0]
       : null,
     appointmentStatus: entity.appointment_status,
     appointmentNotes: entity.appointment_notes,
     appointmentCreatedAt: entity.appointment_created_at
-      ? new Date(entity.appointment_created_at).toISOString()
+      ? entity.appointment_created_at
       : null,
   };
 };

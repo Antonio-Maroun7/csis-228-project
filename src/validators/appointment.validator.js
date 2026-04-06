@@ -16,6 +16,16 @@ const validatorGetAppointmentsByClient = [
     .withMessage("client_id must be a positive integer "),
   handleValidationErrors,
 ];
+
+const validatorGetAppointmentsByStaff = [
+  param("id")
+    .notEmpty()
+    .withMessage("staff_id is required")
+    .isInt({ min: 1 })
+    .withMessage("staff_id must be a positive integer "),
+  handleValidationErrors,
+];
 module.exports = {
   validatorGetAppointmentsByClient,
+  validatorGetAppointmentsByStaff,
 };
