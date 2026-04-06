@@ -58,5 +58,17 @@ class AppointmentRepository {
     const { rows } = await pool.query(q, [appointment_id]);
     return AppointmentEntity.fromRow(rows[0]);
   }
+  static async updateAppointmentStatus(appointment_id, status) {
+    const q = `
+    UPDATE appointments
+    SET appointment_status = $1
+    WHERE appointment_id = $2
+    RETURNING appointment_id, client_id, staff_id, appointment_start_at, 
+    appointment_ends_at, appointment_status, appointment_notes, 
+    appointment_created_at`;
+    const params = [status, appointment_id];
+    const { rows } = await pool.query(q, params);
+    return AppointmentEntity.fromRow(rows[0]);
+  }
 }
 module.exports = AppointmentRepository;

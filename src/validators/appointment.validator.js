@@ -33,8 +33,25 @@ const validatorGetAppointmentById = [
     .withMessage("appointment_id must be a positive integer "),
   handleValidationErrors,
 ];
+
+const validatorUpdateAppointmentStatus = [
+  param("id")
+    .notEmpty()
+    .withMessage("appointment_id is required")
+    .isInt({ min: 1 })
+    .withMessage("appointment_id must be a positive integer "),
+  body("status")
+    .notEmpty()
+    .withMessage("status is required")
+    .isIn(["pending", "confirmed", "completed", "cancelled", "no_show"])
+    .withMessage(
+      "status must be one of pending, confirmed, completed, cancelled, no_show",
+    ),
+  handleValidationErrors,
+];
 module.exports = {
   validatorGetAppointmentsByClient,
   validatorGetAppointmentsByStaff,
   validatorGetAppointmentById,
+  validatorUpdateAppointmentStatus,
 };

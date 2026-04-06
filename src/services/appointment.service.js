@@ -50,7 +50,7 @@ class AppointmentService {
       }
       return AppointmentDto.toListDto(entities);
     } catch (err) {
-      console.log(err);
+      console.log(err.message);
       throw err;
     }
   }
@@ -59,11 +59,46 @@ class AppointmentService {
       const entity =
         await AppointmentRepository.findAppointmentById(appointment_id);
       if (!entity) {
-        throw new Error("Apointment not found");
+        throw new Error("Appointment not found");
       }
       return AppointmentDto.toResponseDto(entity);
     } catch (err) {
-      console.log(err);
+      console.log(err.message);
+      throw err;
+    }
+  }
+
+  static async updateAppointment(appointment_id, status) {
+    try {
+      const appointment =
+        await AppointmentRepository.findAppointmentById(appointment_id);
+      if (!appointment) {
+        throw new Error("Appointment not found");
+      }
+      const allowedStatuses = [
+        "pending",
+        "confirmed",
+        "completed",
+        "cancelled",
+        "no_show",
+      ];
+      if (!allowedStatuses.includes(status)) {
+        throw new Error("Invalid appointment status");
+      }
+      const updatedAppointment =
+        await AppointmentRepository.updateAppointmentStatus(
+          appointment_id,
+          status,
+        );
+      if (!updatedAppointment) {
+        throw new Error("update failed");
+      }
+      return {
+        message: "Appointment status updated successfully",
+        data: AppointmentDto.toResponseDto(updatedAppointment),
+      };
+    } catch (err) {
+      console.log(err.message);
       throw err;
     }
   }
