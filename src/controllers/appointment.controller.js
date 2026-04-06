@@ -40,7 +40,17 @@ class AppointmentController {
         req.params.id,
         status,
       );
-      res.json(updateAppointment);
+      res.status(200).json(updateAppointment);
+    } catch (err) {
+      return handleError(res, err);
+    }
+  }
+  static async cancelAppointment(req, res) {
+    try {
+      const cancelAppointment = await AppointmentService.cancelAppointment(
+        req.params.id,
+      );
+      res.status(200).json(cancelAppointment);
     } catch (err) {
       return handleError(res, err);
     }

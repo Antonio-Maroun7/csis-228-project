@@ -18,6 +18,9 @@ function handleError(res, err) {
   if (err.message?.toLowerCase().includes("Invalid")) {
     return res.status(400).json({ error: err.message });
   }
+  if (err.message?.toLowerCase().includes("already cancelled")) {
+    return res.status(400).json({ error: err.message });
+  }
   if (err.message?.toLowerCase().includes("already exists")) {
     return res.status(409).json({ error: err.message });
   }

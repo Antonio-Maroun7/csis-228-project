@@ -102,6 +102,33 @@ class AppointmentService {
       throw err;
     }
   }
+
+  static async cancelAppointment(appointment_id) {
+    try {
+      const appointment =
+        await AppointmentRepository.findAppointmentById(appointment_id);
+      if (!appointment) {
+        throw new Error("Appointment not found");
+      }
+      if (appointment.appointment_status === "cancelled") {
+        throw new Error("Appointment is already cancelled");
+      }
+      const cancelled = await AppointmentRepository.updateAppointmentStatus(
+        appointment_id,
+        "cancelled",
+      );
+      if (!cancelled) {
+        throw new Error("update failed");
+      }
+      return {
+        message: "Appointment cancelled successfully",
+        data: AppointmentDto.toResponseDto(cancelled),
+      };
+    } catch (err) {
+      console.log(err.message);
+      throw err;
+    }
+  }
 }
 
 module.exports = AppointmentService;

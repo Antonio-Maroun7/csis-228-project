@@ -70,5 +70,9 @@ class AppointmentRepository {
     const { rows } = await pool.query(q, params);
     return AppointmentEntity.fromRow(rows[0]);
   }
+  static async cancelAppointment(appointment_id) {
+    const q = `
+    `;
+  }
 }
 module.exports = AppointmentRepository;
