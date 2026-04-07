@@ -64,5 +64,15 @@ class AppointmentController {
       return handleError(res, err);
     }
   }
+  static async checkAppointmentConflict(req, res) {
+    try {
+      const conflict = await AppointmentService.checkStaffAvailability(
+        req.body,
+      );
+      res.status(200).json(conflict);
+    } catch (err) {
+      return handleError(res, err);
+    }
+  }
 }
 module.exports = AppointmentController;

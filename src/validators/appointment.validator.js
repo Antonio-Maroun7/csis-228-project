@@ -97,6 +97,34 @@ const validatorUpdateAppointment = [
 
   handleValidationErrors,
 ];
+
+const validatorCheckAppointmentConflict = [
+  body("staff_id")
+    .notEmpty()
+    .withMessage("staff_id is required")
+    .isInt({ min: 1 })
+    .withMessage("staff_id must be a positive integer ")
+    .toInt(),
+
+  body("appointment_start_at")
+    .notEmpty()
+    .withMessage("appointment_start_at is required")
+    .isISO8601()
+    .withMessage("appointment_start_at must be a valid ISO8601 date"),
+
+  body("appointment_ends_at")
+    .notEmpty()
+    .withMessage("appointment_ends_at is required")
+    .isISO8601()
+    .withMessage("appointment_ends_at must be a valid ISO8601 date"),
+
+  body("exclude_appointment_id")
+    .optional()
+    .isInt({ min: 1 })
+    .withMessage("exclude_appointment_id must be a positive integer")
+    .toInt(),
+  handleValidationErrors,
+];
 module.exports = {
   validatorGetAppointmentsByClient,
   validatorGetAppointmentsByStaff,
@@ -104,4 +132,5 @@ module.exports = {
   validatorUpdateAppointmentStatus,
   validatorCancelAppointment,
   validatorUpdateAppointment,
+  validatorCheckAppointmentConflict,
 };

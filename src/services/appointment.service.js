@@ -212,8 +212,46 @@ class AppointmentService {
       throw err;
     }
   }
-  static async checkStaffAvailability(staff_id, start_at, ends_at) {
+  static async checkStaffAvailability(data) {
     try {
+      const {
+        staff_id,
+        appointment_start_at,
+        appointment_ends_at,
+        exclude_appointment_id,
+      } = data;
+      const staff = await UserRepository.findUserById(staff_id);
+      if (!staff) {
+        throw new Error("Staff not found");
+      }
+      if (staff.user_role !== "staff") {
+        throw new Error("User is not a staff member");
+      }
+      let startDate = new Date(appointment_start_at);
+      let endDate = new Date(appointment_ends_at);
+
+      if (
+        Number.isNaN(startDate.getTime()) ||
+        Number.isNaN(endDate.getTime())
+      ) {
+        throw new Error("Invalid date format");
+      }
+      if (startDate >= endDate) {
+        throw new Error("Start time must be before end time");
+      }
+      const conflict = await AppointmentRepository.checkStaffAvailability(
+        staff_id,
+        startDate,
+        endDate,
+        exclude_appointment_id ?? null,
+      );
+      return {
+        staff_id: Number(staff_id),
+        appointment_start_at: startDate,
+        appointment_ends_at: endDate,
+        isAvailable: !conflict,
+        conflict: conflict ? AppointmentDto.toResponseDto(conflict) : null,
+      };
     } catch (err) {
       console.log(err.message);
       throw err;
