@@ -58,10 +58,50 @@ const validatorCancelAppointment = [
     .withMessage("appointment_id must be a positive integer "),
   handleValidationErrors,
 ];
+const validatorUpdateAppointment = [
+  param("id")
+    .notEmpty()
+    .withMessage("appointment_id is required")
+    .isInt({ min: 1 })
+    .withMessage("appointment_id must be a positive integer "),
+
+  body("client_id")
+    .notEmpty()
+    .withMessage("client_id is required")
+    .isInt({ min: 1 })
+    .withMessage("client_id must be a positive integer "),
+
+  body("staff_id")
+    .notEmpty()
+    .withMessage("staff_id is required")
+    .isInt({ min: 1 })
+    .withMessage("staff_id must be a positive integer "),
+
+  body("appointment_start_at")
+    .notEmpty()
+    .withMessage("appointment_start_at is required")
+    .isISO8601()
+    .withMessage("appointment_start_at must be a valid ISO 8601 date"),
+
+  body("appointment_ends_at")
+    .notEmpty()
+    .withMessage("appointment_ends_at is required")
+    .isISO8601()
+    .withMessage("appointment_ends_at must be a valid ISO 8601 date"),
+
+  body("appointment_notes")
+    .optional()
+    .isString()
+    .withMessage("appointment_notes must be a string")
+    .trim(),
+
+  handleValidationErrors,
+];
 module.exports = {
   validatorGetAppointmentsByClient,
   validatorGetAppointmentsByStaff,
   validatorGetAppointmentById,
   validatorUpdateAppointmentStatus,
   validatorCancelAppointment,
+  validatorUpdateAppointment,
 };

@@ -30,8 +30,8 @@ const entityToResponseDto = (entity) => {
     appointmentStartAt: entity.appointment_start_at
       ? entity.appointment_start_at
       : null,
-    appointmentEndsAt: entity.appointment_ends_at[0]
-      ? entity.appointment_ends_at[0]
+    appointmentEndsAt: entity.appointment_ends_at
+      ? entity.appointment_ends_at
       : null,
     appointmentStatus: entity.appointment_status,
     appointmentNotes: entity.appointment_notes,

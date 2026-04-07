@@ -6,6 +6,7 @@ const {
   validatorGetAppointmentById,
   validatorUpdateAppointmentStatus,
   validatorCancelAppointment,
+  validatorUpdateAppointment,
 } = require("../validators/appointment.validator");
 
 const router = express.Router();
@@ -28,12 +29,16 @@ router.get(
 router.put(
   "/UpdateAppointmentStatus/:id",
   validatorUpdateAppointmentStatus,
-  AppointmentController.UpdateAppointment,
+  AppointmentController.UpdateAppointmentStatus,
 );
 router.put(
   "/CancelAppointment/:id",
   validatorCancelAppointment,
   AppointmentController.cancelAppointment,
 );
-
+router.put(
+  "/UpdateAppointment/:id",
+  validatorUpdateAppointment,
+  AppointmentController.updateAppointment,
+);
 module.exports = router;

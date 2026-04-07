@@ -1,6 +1,7 @@
 const AppointmentRepository = require("../repositories/appointment.repository");
 const AppointmentDto = require("../dto/appointment.dto");
 const UserRepository = require("../repositories/user.repository");
+const e = require("cors");
 
 class AppointmentService {
   static async createAppointment(appointmentData) {
@@ -68,7 +69,7 @@ class AppointmentService {
     }
   }
 
-  static async updateAppointment(appointment_id, status) {
+  static async updateAppointmentStatus(appointment_id, status) {
     try {
       const appointment =
         await AppointmentRepository.findAppointmentById(appointment_id);
@@ -124,6 +125,95 @@ class AppointmentService {
         message: "Appointment cancelled successfully",
         data: AppointmentDto.toResponseDto(cancelled),
       };
+    } catch (err) {
+      console.log(err.message);
+      throw err;
+    }
+  }
+  static async updateAppointmentDetails(appointment_id, updateData) {
+    try {
+      const appointment =
+        await AppointmentRepository.findAppointmentById(appointment_id);
+      if (!appointment) {
+        throw new Error("Appointment not found");
+      }
+      const {
+        client_id,
+        staff_id,
+        appointment_start_at,
+        appointment_ends_at,
+        appointment_notes,
+      } = updateData;
+      const client = await UserRepository.findUserById(client_id);
+      if (!client) {
+        throw new Error("Client not found");
+      }
+      if (client.user_role !== "client") {
+        throw new Error("User is not a client");
+      }
+      const staff = await UserRepository.findUserById(staff_id);
+      if (!staff) {
+        throw new Error("Staff not found");
+      }
+      if (staff.user_role !== "staff") {
+        throw new Error("User is not a staff member");
+      }
+      let startDate = new Date(appointment_start_at);
+
+      let endDate = new Date(appointment_ends_at);
+
+      if (
+        Number.isNaN(startDate.getTime()) ||
+        Number.isNaN(endDate.getTime())
+      ) {
+        throw new Error("Invalid date format");
+      }
+
+      if (startDate >= endDate) {
+        throw new Error("Appointment start time must be before end time");
+      }
+      if (
+        appointment.appointment_status === "cancelled" ||
+        appointment.appointment_status === "completed"
+      ) {
+        throw new Error("Cannot update a cancelled or completed appointment");
+      }
+
+      const conflict = await AppointmentRepository.checkStaffAvailability(
+        staff_id,
+        appointment_start_at,
+        appointment_ends_at,
+      );
+      if (conflict) {
+        throw new Error(
+          "Staff member is not available during the requested time",
+        );
+      }
+
+      const updatedAppointment = await AppointmentRepository.updateAppointment(
+        appointment_id,
+        {
+          client_id,
+          staff_id,
+          appointment_start_at: startDate,
+          appointment_ends_at: endDate,
+          appointment_notes,
+        },
+      );
+      if (!updatedAppointment) {
+        throw new Error("update failed");
+      }
+      return {
+        message: "Appointment updated successfully",
+        data: AppointmentDto.toResponseDto(updatedAppointment),
+      };
+    } catch (err) {
+      console.log(err.message);
+      throw err;
+    }
+  }
+  static async checkStaffAvailability(staff_id, start_at, ends_at) {
+    try {
     } catch (err) {
       console.log(err.message);
       throw err;

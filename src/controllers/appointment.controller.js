@@ -33,13 +33,11 @@ class AppointmentController {
       return handleError(res, err);
     }
   }
-  static async UpdateAppointment(req, res) {
+  static async UpdateAppointmentStatus(req, res) {
     try {
       const { status } = req.body;
-      const updateAppointment = await AppointmentService.updateAppointment(
-        req.params.id,
-        status,
-      );
+      const updateAppointment =
+        await AppointmentService.updateAppointmentStatus(req.params.id, status);
       res.status(200).json(updateAppointment);
     } catch (err) {
       return handleError(res, err);
@@ -51,6 +49,17 @@ class AppointmentController {
         req.params.id,
       );
       res.status(200).json(cancelAppointment);
+    } catch (err) {
+      return handleError(res, err);
+    }
+  }
+  static async updateAppointment(req, res) {
+    try {
+      const appointment = await AppointmentService.updateAppointmentDetails(
+        req.params.id,
+        req.body,
+      );
+      res.status(200).json(appointment);
     } catch (err) {
       return handleError(res, err);
     }
