@@ -2,6 +2,14 @@ const AppointmentService = require("../services/appointment.service");
 const { handleError } = require("../utils/errorHandler");
 
 class AppointmentController {
+  static async createAppointment(req, res) {
+    try {
+      const appointment = await AppointmentService.createAppointment(req.body);
+      res.status(201).json(appointment);
+    } catch (err) {
+      return handleError(res, err);
+    }
+  }
   static async getAppointmentsByClient(req, res) {
     try {
       const appointments = await AppointmentService.getAppoitmentsByClient_id(

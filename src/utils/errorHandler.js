@@ -21,6 +21,9 @@ function handleError(res, err) {
   if (err.message?.toLowerCase().includes("already cancelled")) {
     return res.status(400).json({ error: err.message });
   }
+  if (err.message?.toLowerCase().includes("is not active")) {
+    return res.status(400).json({ error: err.message });
+  }
   if (err.message === "Cannot update a cancelled or completed appointment") {
     return res.status(400).json({ error: err.message });
   }

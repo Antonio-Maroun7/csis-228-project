@@ -8,9 +8,16 @@ const {
   validatorCancelAppointment,
   validatorUpdateAppointment,
   validatorCheckAppointmentConflict,
+  validatorCreateAppointment,
 } = require("../validators/appointment.validator");
 
 const router = express.Router();
+
+router.post(
+  "/CreateAppointment",
+  validatorCreateAppointment,
+  AppointmentController.createAppointment,
+);
 
 router.get(
   "/GetAllAppointmentsByClient/:id",

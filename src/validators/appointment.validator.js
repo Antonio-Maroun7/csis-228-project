@@ -125,6 +125,39 @@ const validatorCheckAppointmentConflict = [
     .toInt(),
   handleValidationErrors,
 ];
+const validatorCreateAppointment = [
+  body("client_id")
+    .notEmpty()
+    .withMessage("client_id is required")
+    .isInt({ min: 1 })
+    .withMessage("client_id must be a positive integer ")
+    .toInt(),
+
+  body("staff_id")
+    .notEmpty()
+    .withMessage("staff_id is required")
+    .isInt({ min: 1 })
+    .withMessage("staff_id must be a positive integer ")
+    .toInt(),
+
+  body("starts_at")
+    .notEmpty()
+    .withMessage("starts_at is required")
+    .isISO8601()
+    .withMessage("starts_at must be a valid ISO8601 date"),
+
+  body("service_items")
+    .isArray({ min: 1 })
+    .withMessage("service_items must be an array with at least one item"),
+
+  body("service_items.*")
+    .isInt({ min: 1 })
+    .withMessage("each service_id in service_items must be a positive integer")
+    .toInt(),
+
+  handleValidationErrors,
+];
+
 module.exports = {
   validatorGetAppointmentsByClient,
   validatorGetAppointmentsByStaff,
@@ -133,4 +166,5 @@ module.exports = {
   validatorCancelAppointment,
   validatorUpdateAppointment,
   validatorCheckAppointmentConflict,
+  validatorCreateAppointment,
 };
