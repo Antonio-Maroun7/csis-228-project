@@ -7,6 +7,13 @@ function handleError(res, err) {
   if (message?.toLowerCase().includes("not found")) {
     return res.status(404).json({ error: err.message });
   }
+  if (message.includes("invalid credentials")) {
+    return res.status(401).json({ error: err.message });
+  }
+
+  if (message.includes("user is not active")) {
+    return res.status(403).json({ error: err.message });
+  }
   if (
     message.includes("required") ||
     message.includes("invalid") ||
