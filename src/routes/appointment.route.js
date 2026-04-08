@@ -50,7 +50,7 @@ router.put(
   AppointmentController.updateAppointment,
 );
 
-router.get(
+router.post(
   "/CheckAppointmentConflict",
   validatorCheckAppointmentConflict,
   AppointmentController.checkAppointmentConflict,

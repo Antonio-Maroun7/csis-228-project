@@ -271,8 +271,9 @@ class AppointmentService {
 
       const conflict = await AppointmentRepository.checkStaffAvailability(
         staff_id,
-        appointment_start_at,
-        appointment_ends_at,
+        startDate,
+        endDate,
+        appointment_id,
       );
       if (conflict) {
         throw new Error(
