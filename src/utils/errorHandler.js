@@ -10,6 +10,7 @@ function handleError(res, err) {
     message.includes("required") ||
     message.includes("invalid") ||
     message.includes("update failed") ||
+    message.includes("create failed") ||
     message.includes("not a") ||
     message.includes("already cancelled") ||
     message.includes("cannot update a cancelled or completed appointment") ||

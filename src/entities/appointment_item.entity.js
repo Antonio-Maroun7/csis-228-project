@@ -3,8 +3,6 @@
  * Uses DB column names (snake_case).
  */
 
-const AppointmentEntity = require("./appointment.entity");
-
 class AppointmentItemEntity {
   constructor({
     id,
