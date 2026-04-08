@@ -29,4 +29,4 @@ class AppointmentItemEntity {
     return (rows || []).map((row) => AppointmentItemEntity.fromRow(row));
   }
 }
-module.exports = AppointmentEntity;
+module.exports = AppointmentItemEntity;
