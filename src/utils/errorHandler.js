@@ -3,7 +3,8 @@
  * Maps known error messages to appropriate HTTP status codes.
  */
 function handleError(res, err) {
-  if (err.message?.toLowerCase().includes("not found")) {
+  const message = err.message?.toLowerCase() || "";
+  if (message?.toLowerCase().includes("not found")) {
     return res.status(404).json({ error: err.message });
   }
   if (
@@ -21,7 +22,7 @@ function handleError(res, err) {
     return res.status(400).json({ error: err.message });
   }
 
-  if (err.message?.toLowerCase().includes("already exists")) {
+  if (message?.toLowerCase().includes("already exists")) {
     return res.status(409).json({ error: err.message });
   }
   if (err.code === "23P01") {

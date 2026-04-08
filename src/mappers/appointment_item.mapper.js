@@ -46,8 +46,8 @@ const fromCreateRequest = (data) => {
   return {
     appointment_id: Number(data.appointment_id),
     service_id: Number(data.service_id),
-    item_duration_min: Number(data.item_duration_min),
-    item_price_cents: Number(data.item_price_cents),
+    appointment_duration_min: Number(data.appointment_duration_min),
+    appointment_price_cents: Number(data.appointment_price_cents),
   };
 };
 
