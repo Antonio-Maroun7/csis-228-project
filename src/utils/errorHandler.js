@@ -37,6 +37,13 @@ function handleError(res, err) {
   if (err.message?.toLowerCase().includes("already exists")) {
     return res.status(409).json({ error: err.message });
   }
+  if (err.code === "23P01") {
+    return res.status(409).json({
+      error:
+        "Appointment overlaps with another appointment for this staff member",
+    });
+  }
+
   return res.status(500).json({ error: err.message });
 }
 module.exports = { handleError };
