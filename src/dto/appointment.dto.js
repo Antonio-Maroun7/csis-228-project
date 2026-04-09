@@ -4,8 +4,30 @@
  */
 
 const AppointmentMapper = require("../mappers/appointment.mapper");
+
+/**
+ * Maps one AppointmentEntity to response DTO.
+ * Direction: entity -> response DTO.
+ * @type {(entity: Object|null) => Object|null}
+ */
+const toResponseDto = AppointmentMapper.entityToResponseDto;
+
+/**
+ * Maps appointment entities to response DTO list.
+ * Direction: entities -> response DTO list.
+ * @type {(entities: Array<Object>) => Array<Object>}
+ */
+const toListDto = AppointmentMapper.entityToListDto;
+
+/**
+ * Converts appointment create request payload into internal service data shape.
+ * Direction: request DTO -> internal object.
+ * @type {(body: Object) => Object}
+ */
+const fromCreateRequest = AppointmentMapper.createRequestToData;
+
 module.exports = {
-  toResponseDto: AppointmentMapper.entityToResponseDto,
-  toListDto: AppointmentMapper.entityToListDto,
-  fromCreateRequest: AppointmentMapper.createRequestToData,
+  toResponseDto,
+  toListDto,
+  fromCreateRequest,
 };

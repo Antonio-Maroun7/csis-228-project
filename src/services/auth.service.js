@@ -1,9 +1,22 @@
+/**
+ * Authentication service for registering users and issuing login tokens.
+ */
 const AuthRepository = require("../repositories/auth.repository");
 const { generateToken } = require("../utils/token");
 const UserDto = require("../dto/user.dto");
 const bcrypt = require("bcrypt");
 
+/**
+ * Coordinates authentication-related business rules.
+ */
 class AuthService {
+  /**
+   * Registers a new user and generates an auth token.
+   * Side effects: writes a user record to the database and hashes password through repository.
+   * @param {Object} data
+   * @returns {Promise<{ message: string, data: Object, token: string }>}
+   * @throws {Error} When email already exists or creation fails.
+   */
   static async register(data) {
     try {
       const {
@@ -42,9 +55,16 @@ class AuthService {
       throw err;
     }
   }
-  static async login({ email, password }) {
+  /**
+   * Authenticates a user and returns an auth token.
+   * Side effects: compares password hash and generates signed token.
+   * @param {{ user_email: string, user_password: string }} param0
+   * @returns {Promise<{ message: string, token: string, data: Object }>}
+   * @throws {Error} When credentials are invalid or the user is inactive.
+   */
+  static async login({ user_email, user_password }) {
     try {
-      const expectedUser = await AuthRepository.findUserByEmail(email);
+      const expectedUser = await AuthRepository.findUserByEmail(user_email);
       if (!expectedUser) {
         throw new Error("invalid email or password");
       }
@@ -52,7 +72,7 @@ class AuthService {
         throw new Error("user is not active");
       }
       const isPasswordCorrect = await bcrypt.compare(
-        password,
+        user_password,
         expectedUser.user_password,
       );
       if (!isPasswordCorrect) {

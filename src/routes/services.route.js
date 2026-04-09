@@ -1,3 +1,6 @@
+/**
+ * Service routes for CRUD-style operations and category-based lookups.
+ */
 const express = require("express");
 const ServiceController = require("../controllers/service.controller");
 const {
@@ -11,27 +14,27 @@ const router = express.Router();
 
 router.get(
   "/getServicesByCategory/:id",
-  validatorServiceId,
+  ...validatorServiceId,
   ServiceController.getServicesByCategory,
 );
 router.put(
   "/disableService/:id",
-  validatorSDisableService,
+  ...validatorSDisableService,
   ServiceController.disabledService,
 );
 router.put(
   "/updateService/:id",
-  validatorUpdateService,
+  ...validatorUpdateService,
   ServiceController.updateService,
 );
 router.post(
   "/createService",
-  validatorCreateService,
+  ...validatorCreateService,
   ServiceController.createService,
 );
 router.get(
   "/ServiceById/:id",
-  validatorServiceId,
+  ...validatorServiceId,
   ServiceController.getServiceById,
 );
 router.get("/", ServiceController.getAllServices);

@@ -1,6 +1,18 @@
+/**
+ * User controller for user management endpoints.
+ */
 const UserService = require("../services/user.service");
 const { handleError } = require("../utils/errorHandler");
+/**
+ * Handles user-related Express request/response interactions.
+ */
 class UserController {
+  /**
+   * Returns all users.
+   * @param {import("express").Request} req
+   * @param {import("express").Response} res
+   * @returns {Promise<void>}
+   */
   static async getAllUsers(req, res) {
     try {
       const users = await UserService.getAllUsers();
@@ -9,6 +21,12 @@ class UserController {
       return handleError(res, err);
     }
   }
+  /**
+   * Returns a user by id from req.params.id.
+   * @param {import("express").Request} req
+   * @param {import("express").Response} res
+   * @returns {Promise<void>}
+   */
   static async getUserBYId(req, res) {
     try {
       const user = await UserService.getUserById(req.params.id);
@@ -18,6 +36,12 @@ class UserController {
     }
   }
 
+  /**
+   * Updates a user by id using req.params.id and req.body.
+   * @param {import("express").Request} req
+   * @param {import("express").Response} res
+   * @returns {Promise<void>}
+   */
   static async UpdateUser(req, res) {
     try {
       const updateUser = await UserService.UpdateUser(req.params.id, req.body);
@@ -28,6 +52,12 @@ class UserController {
       return handleError(res, err);
     }
   }
+  /**
+   * Returns a user by email from req.params.user_email.
+   * @param {import("express").Request} req
+   * @param {import("express").Response} res
+   * @returns {Promise<void>}
+   */
   static async getUserBYEmail(req, res) {
     try {
       const result = await UserService.getUserByEmail(req.params.user_email);
@@ -36,6 +66,12 @@ class UserController {
       return handleError(res, err);
     }
   }
+  /**
+   * Deletes a user by id from req.params.id.
+   * @param {import("express").Request} req
+   * @param {import("express").Response} res
+   * @returns {Promise<void>}
+   */
   static async deleteUser(req, res) {
     try {
       const result = await UserService.deleteUser(req.params.id);
@@ -44,6 +80,12 @@ class UserController {
       return handleError(res, err);
     }
   }
+  /**
+   * Changes user password using req.params.id and req.body.newpassword.
+   * @param {import("express").Request} req
+   * @param {import("express").Response} res
+   * @returns {Promise<void>}
+   */
   static async changeUserPassword(req, res) {
     try {
       const { newpassword } = req.body;

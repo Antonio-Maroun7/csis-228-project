@@ -1,3 +1,6 @@
+/**
+ * Routes for assigning services to staff members and managing staff overrides.
+ */
 const express = require("express");
 const StaffServiceController = require("../controllers/staffService.controller");
 const {
@@ -19,22 +22,22 @@ router.get("/getAllStaffServices", StaffServiceController.getAllStaffServices);
 
 router.delete(
   "/removeServiceFromStaff",
-  validatorRemoveServiceFromStaff,
+  ...validatorRemoveServiceFromStaff,
   StaffServiceController.deleteServiceFromStaff,
 );
 router.get(
   "/getStaffByService/:service_id",
-  validatorGetStaffByService,
+  ...validatorGetStaffByService,
   StaffServiceController.getStaffByService,
 );
 router.get(
   "/getStaffServices/:staff_id",
-  validatorGetStaffServices,
+  ...validatorGetStaffServices,
   StaffServiceController.getStaffServices,
 );
 router.post(
   "/assignServiceToStaff",
-  validatorAssignSerViceToStaff,
+  ...validatorAssignSerViceToStaff,
   StaffServiceController.assignServiceToStaff,
 );
 

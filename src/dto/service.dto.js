@@ -4,7 +4,21 @@
  */
 const ServiceMapper = require("../mappers/service.mapper");
 
+/**
+ * Maps one ServiceEntity to response DTO.
+ * Direction: entity -> response DTO.
+ * @type {(entity: Object|null) => Object|null}
+ */
+const toResponseDto = ServiceMapper.entityToResponseDto;
+
+/**
+ * Maps ServiceEntity list to response DTO list.
+ * Direction: entities -> response DTO list.
+ * @type {(entities: Array<Object>) => Array<Object>}
+ */
+const toListDto = ServiceMapper.entitiesToListDto;
+
 module.exports = {
-  toResponseDto: ServiceMapper.entityToResponseDto,
-  toListDto: ServiceMapper.entitiesToListDto,
+  toResponseDto,
+  toListDto,
 };

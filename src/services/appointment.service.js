@@ -1,10 +1,22 @@
+/**
+ * Appointment service for scheduling, retrieval, status updates, and conflict checks.
+ */
 const AppointmentRepository = require("../repositories/appointment.repository");
 const AppointmentDto = require("../dto/appointment.dto");
 const StaffServicesRepository = require("../repositories/staffService.repository");
 const UserRepository = require("../repositories/user.repository");
 const ServiceRepository = require("../repositories/services.repository");
 
+/**
+ * Executes appointment business rules and repository orchestration.
+ */
 class AppointmentService {
+  /**
+   * Creates an appointment from request payload and computes totals.
+   * Side effects: reads multiple domain tables and inserts one appointments row.
+   * @param {Object} appointmentData
+   * @returns {Promise<{ message: string, data: Object|null, meta: { totalServices: number, totalDuration: number, totalPrice: number } }>}
+   */
   static async createAppointment(appointmentData) {
     try {
       const {
@@ -107,6 +119,11 @@ class AppointmentService {
       throw err;
     }
   }
+  /**
+   * Returns appointments for a specific client id.
+   * @param {number|string} client_id
+   * @returns {Promise<Array<Object>>}
+   */
   static async getAppoitmentsByClient_id(client_id) {
     const client = await UserRepository.findUserById(client_id);
     if (!client) {
@@ -124,6 +141,11 @@ class AppointmentService {
     return AppointmentDto.toListDto(entities);
   }
 
+  /**
+   * Returns appointments for a specific staff id.
+   * @param {number|string} staff_id
+   * @returns {Promise<Array<Object>>}
+   */
   static async getAppointmentsByStaff_id(staff_id) {
     try {
       const staff = await UserRepository.findUserById(staff_id);
@@ -145,6 +167,11 @@ class AppointmentService {
       throw err;
     }
   }
+  /**
+   * Returns a single appointment by id.
+   * @param {number|string} appointment_id
+   * @returns {Promise<Object>}
+   */
   static async getAppointmentById(appointment_id) {
     try {
       const entity =
@@ -159,6 +186,13 @@ class AppointmentService {
     }
   }
 
+  /**
+   * Updates appointment status.
+   * Side effects: updates appointment_status in appointments.
+   * @param {number|string} appointment_id
+   * @param {string} status
+   * @returns {Promise<{ message: string, data: Object|null }>}
+   */
   static async updateAppointmentStatus(appointment_id, status) {
     try {
       const appointment =
@@ -194,6 +228,12 @@ class AppointmentService {
     }
   }
 
+  /**
+   * Cancels an appointment by setting status to cancelled.
+   * Side effects: updates appointment_status in appointments.
+   * @param {number|string} appointment_id
+   * @returns {Promise<{ message: string, data: Object|null }>}
+   */
   static async cancelAppointment(appointment_id) {
     try {
       const appointment =
@@ -220,6 +260,13 @@ class AppointmentService {
       throw err;
     }
   }
+  /**
+   * Updates appointment core details after role and conflict checks.
+   * Side effects: updates one appointments row.
+   * @param {number|string} appointment_id
+   * @param {Object} updateData
+   * @returns {Promise<{ message: string, data: Object|null }>}
+   */
   static async updateAppointmentDetails(appointment_id, updateData) {
     try {
       const appointment =
@@ -303,6 +350,11 @@ class AppointmentService {
       throw err;
     }
   }
+  /**
+   * Checks if a staff member is available for a date range.
+   * @param {{ staff_id: number|string, appointment_start_at: string|Date, appointment_ends_at: string|Date, exclude_appointment_id?: number|string }} data
+   * @returns {Promise<{ staff_id: number, appointment_start_at: Date, appointment_ends_at: Date, isAvailable: boolean, conflict: Object|null }>}
+   */
   static async checkStaffAvailability(data) {
     try {
       const {

@@ -7,7 +7,8 @@
 
 const AppointmentEntity = require("../entities/appointment.entity");
 
-/** * Entity → response DTO (single appointment).
+/** * Converts one appointment entity into API response DTO.
+ * Direction: entity -> response DTO.
  * @param {AppointmentEntity | null} entity
  * @returns {{
  *   id: number,
@@ -41,7 +42,8 @@ const entityToResponseDto = (entity) => {
   };
 };
 
-/** * Entities → list of response DTOs.
+/** * Converts appointment entities into response DTO list.
+ * Direction: entities -> response DTO list.
  * @param {AppointmentEntity[]} entities
  * @returns {{  id: number,
  *  clientId: number,
@@ -57,7 +59,8 @@ const entityToListDto = (entities) => {
   return (entities || []).map(entityToResponseDto);
 };
 
-/** * Request body → data for creating an appointment.
+/** * Converts create request body into internal appointment creation payload.
+ * Direction: request DTO -> internal object.
  * @param {Object} body
  * @return {{
  *  client_id: number,

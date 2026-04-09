@@ -1,14 +1,26 @@
+/**
+ * Repository for authentication-related user persistence operations.
+ */
 const pool = require("../db/pool");
 const UserEntity = require("../entities/user.entity");
 const bcrypt = require("bcrypt");
 
+/**
+ * Executes auth-oriented queries against the users table.
+ */
 class AuthRepository {
+  /**
+   * Finds a user by email.
+   * @param {string} user_email
+   * @returns {Promise<UserEntity|null>}
+   */
   static async findUserByEmail(user_email) {
     const { rows } = await pool.query(
       `
       SELECT  user_id,
              user_fullname,
              user_email,
+             user_password,
              user_role,
              user_phone,
              user_is_active
@@ -20,6 +32,12 @@ class AuthRepository {
     return UserEntity.fromRow(rows[0]);
   }
 
+  /**
+   * Creates a user row with hashed password.
+   * Side effects: inserts one row into users.
+   * @param {{ user_fullname: string, user_email: string, user_password: string, user_role?: string, user_phone?: string|null, user_is_active?: boolean }} param0
+   * @returns {Promise<UserEntity|null>}
+   */
   static async createUser({
     user_fullname,
     user_email,

@@ -1,5 +1,15 @@
+/**
+ * Validation chains for service endpoints.
+ */
 const { body, param, validationResult } = require("express-validator");
 
+/**
+ * Returns a validation error response when rules fail.
+ * @param {import("express").Request} req
+ * @param {import("express").Response} res
+ * @param {import("express").NextFunction} next
+ * @returns {void}
+ */
 const handleValidationErrors = (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -8,6 +18,10 @@ const handleValidationErrors = (req, res, next) => {
   next();
 };
 
+/**
+ * Validates service id route param.
+ * @type {Array<import("express").RequestHandler>}
+ */
 const validatorServiceId = [
   param("id")
     .notEmpty()
@@ -17,6 +31,10 @@ const validatorServiceId = [
   handleValidationErrors,
 ];
 
+/**
+ * Validates create-service payload fields.
+ * @type {Array<import("express").RequestHandler>}
+ */
 const validatorCreateService = [
   body("category_id")
     .notEmpty()
@@ -55,6 +73,10 @@ const validatorCreateService = [
     .withMessage("service_is_active must be true or false"),
   handleValidationErrors,
 ];
+/**
+ * Validates update-service payload fields and service id.
+ * @type {Array<import("express").RequestHandler>}
+ */
 const validatorUpdateService = [
   param("id")
     .notEmpty()
@@ -98,6 +120,10 @@ const validatorUpdateService = [
     .withMessage("service_is_active must be true or false"),
   handleValidationErrors,
 ];
+/**
+ * Validates service id used by disable-service endpoint.
+ * @type {Array<import("express").RequestHandler>}
+ */
 const validatorSDisableService = [
   param("id")
     .notEmpty()

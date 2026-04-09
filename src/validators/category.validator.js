@@ -1,5 +1,15 @@
+/**
+ * Validation chains for category endpoint payloads and params.
+ */
 const { body, param, validationResult } = require("express-validator");
 
+/**
+ * Sends a 400 response when validation rules fail.
+ * @param {import("express").Request} req
+ * @param {import("express").Response} res
+ * @param {import("express").NextFunction} next
+ * @returns {void}
+ */
 const handleValidationErrors = (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -7,6 +17,10 @@ const handleValidationErrors = (req, res, next) => {
   }
   next();
 };
+/**
+ * Validates category id route param.
+ * @type {Array<import("express").RequestHandler>}
+ */
 const validatorCategoryId = [
   param("id")
     .notEmpty()
@@ -15,6 +29,10 @@ const validatorCategoryId = [
     .withMessage("category_id must be a positive integer "),
   handleValidationErrors,
 ];
+/**
+ * Validates category creation body fields.
+ * @type {Array<import("express").RequestHandler>}
+ */
 const validatorCreateCategory = [
   body("category_name")
     .notEmpty()
@@ -36,6 +54,10 @@ const validatorCreateCategory = [
   handleValidationErrors,
 ];
 
+/**
+ * Validates category update body fields and id param.
+ * @type {Array<import("express").RequestHandler>}
+ */
 const validatorUpdateCategory = [
   param("id")
     .notEmpty()

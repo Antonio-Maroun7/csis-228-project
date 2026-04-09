@@ -5,7 +5,8 @@
 const CategoryEntity = require("../entities/category.entity");
 
 /**
- * Entity → response DTO (single category).
+ * Converts one category entity to response DTO.
+ * Direction: entity -> response DTO.
  * @param {CategoryEntity | null} entity
  * @returns {{
  *   id: number,
@@ -25,7 +26,8 @@ const entityToResponseDto = (entity) => {
 };
 
 /**
- * Entities → list of response DTOs.
+ * Converts category entities to response DTO list.
+ * Direction: entities -> response DTO list.
  * @param {CategoryEntity[]} entities
  * @returns {{
  *   id: number,

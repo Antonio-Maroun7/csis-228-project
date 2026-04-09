@@ -1,7 +1,19 @@
+/**
+ * Repository for appointments table persistence and overlap checks.
+ */
 const pool = require("../db/pool");
 const AppointmentEntity = require("../entities/appointment.entity");
 
+/**
+ * Executes appointment SQL operations.
+ */
 class AppointmentRepository {
+  /**
+   * Creates an appointment row.
+   * Side effects: inserts one row into appointments.
+   * @param {{ client_id: number|string, staff_id: number|string, appointment_start_at: Date|string, appointment_ends_at: Date|string, appointment_status?: string, appointment_notes?: string|null }} param0
+   * @returns {Promise<AppointmentEntity|null>}
+   */
   static async createAppointment({
     client_id,
     staff_id,
@@ -29,6 +41,11 @@ class AppointmentRepository {
     const { rows } = await pool.query(q, params);
     return AppointmentEntity.fromRow(rows[0]);
   }
+  /**
+   * Returns appointments for one client.
+   * @param {number|string} client_id
+   * @returns {Promise<AppointmentEntity[]>}
+   */
   static async findAppointmentsByClient(client_id) {
     const q = `
     SELECT * 
@@ -40,6 +57,11 @@ class AppointmentRepository {
     return AppointmentEntity.fromRows(rows);
   }
 
+  /**
+   * Returns appointments for one staff member.
+   * @param {number|string} staff_id
+   * @returns {Promise<AppointmentEntity[]>}
+   */
   static async findAppointmentsByStaff(staff_id) {
     const q = `
     SELECT * 
@@ -49,6 +71,11 @@ class AppointmentRepository {
     const { rows } = await pool.query(q, [staff_id]);
     return AppointmentEntity.fromRows(rows);
   }
+  /**
+   * Finds one appointment by id.
+   * @param {number|string} appointment_id
+   * @returns {Promise<AppointmentEntity|null>}
+   */
   static async findAppointmentById(appointment_id) {
     const q = `
     SELECT * 
@@ -58,6 +85,13 @@ class AppointmentRepository {
     const { rows } = await pool.query(q, [appointment_id]);
     return AppointmentEntity.fromRow(rows[0]);
   }
+  /**
+   * Updates appointment status by id.
+   * Side effects: updates one row in appointments.
+   * @param {number|string} appointment_id
+   * @param {string} status
+   * @returns {Promise<AppointmentEntity|null>}
+   */
   static async updateAppointmentStatus(appointment_id, status) {
     const q = `
     UPDATE appointments
@@ -70,6 +104,13 @@ class AppointmentRepository {
     const { rows } = await pool.query(q, params);
     return AppointmentEntity.fromRow(rows[0]);
   }
+  /**
+   * Updates appointment details by id.
+   * Side effects: updates one row in appointments.
+   * @param {number|string} appointment_id
+   * @param {{ client_id: number|string, staff_id: number|string, appointment_start_at: Date|string, appointment_ends_at: Date|string, appointment_notes?: string|null }} param1
+   * @returns {Promise<AppointmentEntity|null>}
+   */
   static async updateAppointment(
     appointment_id,
     {
@@ -104,6 +145,14 @@ class AppointmentRepository {
       throw err;
     }
   }
+  /**
+   * Checks whether a staff appointment overlaps an existing one.
+   * @param {number|string} staff_id
+   * @param {Date|string} appointment_start_at
+   * @param {Date|string} appointment_ends_at
+   * @param {number|string|null} [exclude_appointment_id]
+   * @returns {Promise<AppointmentEntity|null>}
+   */
   static async checkStaffAvailability(
     staff_id,
     appointment_start_at,

@@ -6,7 +6,8 @@
 const UserEntity = require("../entities/user.entity");
 
 /**
- * Entity → response DTO (single user).
+ * Converts one user entity to response DTO.
+ * Direction: entity -> response DTO.
  * @param {UserEntity | null} entity
  * @returns {{ id: number, fullname: string,
  *  email: string,role:string,
@@ -25,7 +26,8 @@ const entityToResponseDto = (entity) => {
 };
 
 /**
- * Entities → list of response DTOs.
+ * Converts user entities to response DTO list.
+ * Direction: entities -> response DTO list.
  * @param {UserEntity[]} entities
  * @returns {{ id: number, fullname: string,
  *  email: string,role:string, phone:string,user_is_active:boolean }[]}

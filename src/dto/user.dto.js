@@ -5,7 +5,21 @@
 
 const UserMapper = require("../mappers/user.mapper");
 
+/**
+ * Maps internal UserEntity to public response DTO.
+ * Direction: entity -> response DTO.
+ * @type {(entity: Object|null) => Object|null}
+ */
+const toResponseDto = UserMapper.entityToResponseDto;
+
+/**
+ * Maps a list of UserEntity values to response DTO list.
+ * Direction: entities -> response DTO list.
+ * @type {(entities: Array<Object>) => Array<Object>}
+ */
+const toListDto = UserMapper.entitiesToListDto;
+
 module.exports = {
-  toResponseDto: UserMapper.entityToResponseDto,
-  toListDto: UserMapper.entitiesToListDto,
+  toResponseDto,
+  toListDto,
 };

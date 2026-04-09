@@ -1,5 +1,15 @@
+/**
+ * Validation chains for user endpoints.
+ */
 const { body, param, validationResult } = require("express-validator");
 
+/**
+ * Sends a 400 validation response when request data is invalid.
+ * @param {import("express").Request} req
+ * @param {import("express").Response} res
+ * @param {import("express").NextFunction} next
+ * @returns {void}
+ */
 const handleValidationErrors = (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -8,6 +18,10 @@ const handleValidationErrors = (req, res, next) => {
   next();
 };
 
+/**
+ * Validates route param id for user id based endpoints.
+ * @type {Array<import("express").RequestHandler>}
+ */
 const validatorUserId = [
   param("id")
     .isInt({ min: 1 })
@@ -17,6 +31,10 @@ const validatorUserId = [
   handleValidationErrors,
 ];
 
+/**
+ * Validates user update payload and required id param.
+ * @type {Array<import("express").RequestHandler>}
+ */
 const validatorUpdateUser = [
   param("id")
     .isInt({ min: 1 })
@@ -57,6 +75,10 @@ const validatorUpdateUser = [
   handleValidationErrors,
 ];
 
+/**
+ * Validates route param user_email.
+ * @type {Array<import("express").RequestHandler>}
+ */
 const validatorUserEmail = [
   param("user_email")
     .notEmpty()
@@ -66,6 +88,10 @@ const validatorUserEmail = [
     .normalizeEmail(),
   handleValidationErrors,
 ];
+/**
+ * Validates route param id for delete operation.
+ * @type {Array<import("express").RequestHandler>}
+ */
 const validatorDeleteUser = [
   param("id")
     .notEmpty()
@@ -74,6 +100,10 @@ const validatorDeleteUser = [
     .withMessage("id must be a positive integer"),
   handleValidationErrors,
 ];
+/**
+ * Validates password change request including id param and newpassword constraints.
+ * @type {Array<import("express").RequestHandler>}
+ */
 const validateChangePassword = [
   param("id")
     .notEmpty()

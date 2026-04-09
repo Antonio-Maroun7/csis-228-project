@@ -1,7 +1,17 @@
+/**
+ * Repository for categories table reads and writes.
+ */
 const pool = require("../db/pool");
 const CategoryEntity = require("../entities/category.entity");
 
+/**
+ * Executes category persistence queries.
+ */
 class CategoryRepository {
+  /**
+   * Returns all categories.
+   * @returns {Promise<CategoryEntity[]>}
+   */
   static async findCategories() {
     const { rows } = await pool.query(`
     SELECT *
@@ -10,6 +20,11 @@ class CategoryRepository {
     return CategoryEntity.fromRows(rows);
   }
 
+  /**
+   * Finds one category by id.
+   * @param {number|string} category_id
+   * @returns {Promise<CategoryEntity|null>}
+   */
   static async getCategoryById(category_id) {
     const q = `
     SELECT *
@@ -20,6 +35,12 @@ class CategoryRepository {
     return CategoryEntity.fromRow(rows[0]);
   }
 
+  /**
+   * Creates a category row.
+   * Side effects: inserts one row into categories.
+   * @param {{ category_name: string, category_description?: string|null, category_is_active?: boolean }} param0
+   * @returns {Promise<CategoryEntity|null>}
+   */
   static async createCategory({
     category_name,
     category_description,
@@ -34,6 +55,13 @@ class CategoryRepository {
     const { rows } = await pool.query(q, params);
     return CategoryEntity.fromRow(rows[0]);
   }
+  /**
+   * Updates a category row by id.
+   * Side effects: updates one categories row.
+   * @param {number|string} category_id
+   * @param {{ category_name: string, category_description?: string|null, category_is_active?: boolean }} param1
+   * @returns {Promise<CategoryEntity|null>}
+   */
   static async updateCategory(
     category_id,
     { category_name, category_description, category_is_active },
@@ -55,6 +83,12 @@ class CategoryRepository {
     return CategoryEntity.fromRow(rows[0]);
   }
 
+  /**
+   * Marks a category as inactive.
+   * Side effects: updates category_is_active to false.
+   * @param {number|string} category_id
+   * @returns {Promise<CategoryEntity|null>}
+   */
   static async disableCategory(category_id) {
     const q = `
     UPDATE categories

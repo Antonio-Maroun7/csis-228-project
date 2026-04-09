@@ -1,7 +1,19 @@
+/**
+ * Controller for appointment lifecycle and availability endpoints.
+ */
 const AppointmentService = require("../services/appointment.service");
 const { handleError } = require("../utils/errorHandler");
 
+/**
+ * Handles appointment-related HTTP requests.
+ */
 class AppointmentController {
+  /**
+   * Creates an appointment from req.body payload.
+   * @param {import("express").Request} req
+   * @param {import("express").Response} res
+   * @returns {Promise<void>}
+   */
   static async createAppointment(req, res) {
     try {
       const appointment = await AppointmentService.createAppointment(req.body);
@@ -10,6 +22,12 @@ class AppointmentController {
       return handleError(res, err);
     }
   }
+  /**
+   * Returns appointments for the client id in req.params.id.
+   * @param {import("express").Request} req
+   * @param {import("express").Response} res
+   * @returns {Promise<void>}
+   */
   static async getAppointmentsByClient(req, res) {
     try {
       const appointments = await AppointmentService.getAppoitmentsByClient_id(
@@ -21,6 +39,12 @@ class AppointmentController {
     }
   }
 
+  /**
+   * Returns appointments for the staff id in req.params.id.
+   * @param {import("express").Request} req
+   * @param {import("express").Response} res
+   * @returns {Promise<void>}
+   */
   static async getAppointmentsByStaff(req, res) {
     try {
       const appointments = await AppointmentService.getAppointmentsByStaff_id(
@@ -31,6 +55,12 @@ class AppointmentController {
       return handleError(res, err);
     }
   }
+  /**
+   * Returns one appointment by req.params.id.
+   * @param {import("express").Request} req
+   * @param {import("express").Response} res
+   * @returns {Promise<void>}
+   */
   static async getAppointmentById(req, res) {
     try {
       const appointment = await AppointmentService.getAppointmentById(
@@ -41,6 +71,12 @@ class AppointmentController {
       return handleError(res, err);
     }
   }
+  /**
+   * Updates appointment status using req.params.id and req.body.status.
+   * @param {import("express").Request} req
+   * @param {import("express").Response} res
+   * @returns {Promise<void>}
+   */
   static async UpdateAppointmentStatus(req, res) {
     try {
       const { status } = req.body;
@@ -51,6 +87,12 @@ class AppointmentController {
       return handleError(res, err);
     }
   }
+  /**
+   * Cancels an appointment identified by req.params.id.
+   * @param {import("express").Request} req
+   * @param {import("express").Response} res
+   * @returns {Promise<void>}
+   */
   static async cancelAppointment(req, res) {
     try {
       const cancelAppointment = await AppointmentService.cancelAppointment(
@@ -61,6 +103,12 @@ class AppointmentController {
       return handleError(res, err);
     }
   }
+  /**
+   * Updates appointment details using req.params.id and req.body.
+   * @param {import("express").Request} req
+   * @param {import("express").Response} res
+   * @returns {Promise<void>}
+   */
   static async updateAppointment(req, res) {
     try {
       const appointment = await AppointmentService.updateAppointmentDetails(
@@ -72,6 +120,12 @@ class AppointmentController {
       return handleError(res, err);
     }
   }
+  /**
+   * Checks staff scheduling conflicts using request body date range and staff_id.
+   * @param {import("express").Request} req
+   * @param {import("express").Response} res
+   * @returns {Promise<void>}
+   */
   static async checkAppointmentConflict(req, res) {
     try {
       const conflict = await AppointmentService.checkStaffAvailability(

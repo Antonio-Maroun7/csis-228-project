@@ -1,7 +1,17 @@
+/**
+ * Repository for services table persistence and lookups.
+ */
 const pool = require("../db/pool");
 const ServiceEntity = require("../entities/service.entity");
 
+/**
+ * Executes service-related SQL queries.
+ */
 class ServicesRepository {
+  /**
+   * Returns all services ordered by id.
+   * @returns {Promise<ServiceEntity[]>}
+   */
   static async findServices() {
     const { rows } = await pool.query(`SELECT *
     FROM services 
@@ -9,6 +19,11 @@ class ServicesRepository {
     return ServiceEntity.fromRows(rows);
   }
 
+  /**
+   * Returns services associated with one category.
+   * @param {number|string} category_id
+   * @returns {Promise<ServiceEntity[]>}
+   */
   static async findServicesByCategory(category_id) {
     const q = `
     SELECT *
@@ -20,6 +35,11 @@ class ServicesRepository {
     return ServiceEntity.fromRows(rows);
   }
 
+  /**
+   * Finds one service by id.
+   * @param {number|string} id
+   * @returns {Promise<ServiceEntity|null>}
+   */
   static async findServiceById(id) {
     const { rows } = await pool.query(
       `
@@ -31,6 +51,12 @@ class ServicesRepository {
     return ServiceEntity.fromRow(rows[0]);
   }
 
+  /**
+   * Creates a service row.
+   * Side effects: inserts one row into services.
+   * @param {{ category_id: number, service_name: string, service_description?: string|null, service_default_duration_min: number, service_base_price_cents: number, service_is_active?: boolean }} param0
+   * @returns {Promise<ServiceEntity|null>}
+   */
   static async createService({
     category_id,
     service_name,
@@ -59,6 +85,13 @@ class ServicesRepository {
     const { rows } = await pool.query(q, params);
     return ServiceEntity.fromRow(rows[0]);
   }
+  /**
+   * Updates one service row by id.
+   * Side effects: updates one services row.
+   * @param {number|string} service_id
+   * @param {{ category_id: number, service_name: string, service_description?: string|null, service_default_duration_min: number, service_base_price_cents: number, service_is_active?: boolean }} param1
+   * @returns {Promise<ServiceEntity|null>}
+   */
   static async updateService(
     service_id,
     {
@@ -96,6 +129,12 @@ class ServicesRepository {
     return ServiceEntity.fromRow(rows[0]);
   }
 
+  /**
+   * Disables a service by id.
+   * Side effects: updates service_is_active to false.
+   * @param {number|string} service_id
+   * @returns {Promise<ServiceEntity|null>}
+   */
   static async disableService(service_id) {
     const q = `
     UPDATE services

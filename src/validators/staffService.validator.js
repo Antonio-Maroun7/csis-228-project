@@ -1,5 +1,15 @@
+/**
+ * Validation chains for staff-service assignment endpoints.
+ */
 const { body, param, validationResult } = require("express-validator");
 
+/**
+ * Sends validation errors for invalid staff-service request payloads.
+ * @param {import("express").Request} req
+ * @param {import("express").Response} res
+ * @param {import("express").NextFunction} next
+ * @returns {void}
+ */
 const handleVaidationErrors = (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -8,6 +18,10 @@ const handleVaidationErrors = (req, res, next) => {
   next();
 };
 
+/**
+ * Validates payload for assigning one service to one staff member.
+ * @type {Array<import("express").RequestHandler>}
+ */
 const validatorAssignSerViceToStaff = [
   body("staff_id")
     .notEmpty()
@@ -39,6 +53,10 @@ const validatorAssignSerViceToStaff = [
   handleVaidationErrors,
 ];
 
+/**
+ * Validates staff_id route param for staff-service list endpoint.
+ * @type {Array<import("express").RequestHandler>}
+ */
 const validatorGetStaffServices = [
   param("staff_id")
     .notEmpty()
@@ -48,6 +66,10 @@ const validatorGetStaffServices = [
   handleVaidationErrors,
 ];
 
+/**
+ * Validates service_id route param for staff-by-service endpoint.
+ * @type {Array<import("express").RequestHandler>}
+ */
 const validatorGetStaffByService = [
   param("service_id")
     .notEmpty()
@@ -57,6 +79,10 @@ const validatorGetStaffByService = [
   handleVaidationErrors,
 ];
 
+/**
+ * Validates payload for removing a service assignment from staff.
+ * @type {Array<import("express").RequestHandler>}
+ */
 const validatorRemoveServiceFromStaff = [
   body("staff_id")
     .notEmpty()
@@ -74,6 +100,10 @@ const validatorRemoveServiceFromStaff = [
   handleVaidationErrors,
 ];
 
+/**
+ * Validates payload for updating staff-specific duration and/or price overrides.
+ * @type {Array<import("express").RequestHandler>}
+ */
 const validatorUpdateStaffService = [
   body("staff_id")
     .notEmpty()

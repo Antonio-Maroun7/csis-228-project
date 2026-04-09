@@ -1,3 +1,6 @@
+/**
+ * Loads environment configuration and starts the HTTP server.
+ */
 require("dotenv").config();
 const app = require("./app");
 

@@ -1,5 +1,15 @@
+/**
+ * Validation chains for appointment endpoints.
+ */
 const { body, param, validationResult } = require("express-validator");
 
+/**
+ * Handles express-validator errors for appointment requests.
+ * @param {import("express").Request} req
+ * @param {import("express").Response} res
+ * @param {import("express").NextFunction} next
+ * @returns {void}
+ */
 const handleValidationErrors = (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -8,6 +18,10 @@ const handleValidationErrors = (req, res, next) => {
   next();
 };
 
+/**
+ * Validates client id param for client appointment listing endpoint.
+ * @type {Array<import("express").RequestHandler>}
+ */
 const validatorGetAppointmentsByClient = [
   param("id")
     .notEmpty()
@@ -17,6 +31,10 @@ const validatorGetAppointmentsByClient = [
   handleValidationErrors,
 ];
 
+/**
+ * Validates staff id param for staff appointment listing endpoint.
+ * @type {Array<import("express").RequestHandler>}
+ */
 const validatorGetAppointmentsByStaff = [
   param("id")
     .notEmpty()
@@ -25,6 +43,10 @@ const validatorGetAppointmentsByStaff = [
     .withMessage("staff_id must be a positive integer "),
   handleValidationErrors,
 ];
+/**
+ * Validates appointment id param.
+ * @type {Array<import("express").RequestHandler>}
+ */
 const validatorGetAppointmentById = [
   param("id")
     .notEmpty()
@@ -34,6 +56,10 @@ const validatorGetAppointmentById = [
   handleValidationErrors,
 ];
 
+/**
+ * Validates appointment id and status payload for status update endpoint.
+ * @type {Array<import("express").RequestHandler>}
+ */
 const validatorUpdateAppointmentStatus = [
   param("id")
     .notEmpty()
@@ -50,6 +76,10 @@ const validatorUpdateAppointmentStatus = [
   handleValidationErrors,
 ];
 
+/**
+ * Validates appointment id for cancellation endpoint.
+ * @type {Array<import("express").RequestHandler>}
+ */
 const validatorCancelAppointment = [
   param("id")
     .notEmpty()
@@ -58,6 +88,10 @@ const validatorCancelAppointment = [
     .withMessage("appointment_id must be a positive integer "),
   handleValidationErrors,
 ];
+/**
+ * Validates appointment update payload and id param.
+ * @type {Array<import("express").RequestHandler>}
+ */
 const validatorUpdateAppointment = [
   param("id")
     .notEmpty()
@@ -98,6 +132,10 @@ const validatorUpdateAppointment = [
   handleValidationErrors,
 ];
 
+/**
+ * Validates payload used for staff availability conflict checking.
+ * @type {Array<import("express").RequestHandler>}
+ */
 const validatorCheckAppointmentConflict = [
   body("staff_id")
     .notEmpty()
@@ -125,6 +163,10 @@ const validatorCheckAppointmentConflict = [
     .toInt(),
   handleValidationErrors,
 ];
+/**
+ * Validates payload used to create an appointment.
+ * @type {Array<import("express").RequestHandler>}
+ */
 const validatorCreateAppointment = [
   body("client_id")
     .notEmpty()

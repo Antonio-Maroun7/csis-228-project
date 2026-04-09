@@ -1,6 +1,18 @@
+/**
+ * Service controller for service management endpoints.
+ */
 const ServicesService = require("../services/services.service");
 const { handleError } = require("../utils/errorHandler");
+/**
+ * Handles service-related HTTP request logic.
+ */
 class ServiceController {
+  /**
+   * Returns all services.
+   * @param {import("express").Request} req
+   * @param {import("express").Response} res
+   * @returns {Promise<void>}
+   */
   static async getAllServices(req, res) {
     try {
       const services = await ServicesService.getServices();
@@ -9,6 +21,12 @@ class ServiceController {
       return handleError(res, err);
     }
   }
+  /**
+   * Returns one service by req.params.id.
+   * @param {import("express").Request} req
+   * @param {import("express").Response} res
+   * @returns {Promise<void>}
+   */
   static async getServiceById(req, res) {
     try {
       const service = await ServicesService.getServiceById(req.params.id);
@@ -17,6 +35,12 @@ class ServiceController {
       return handleError(res, err);
     }
   }
+  /**
+   * Creates a service from req.body.
+   * @param {import("express").Request} req
+   * @param {import("express").Response} res
+   * @returns {Promise<void>}
+   */
   static async createService(req, res) {
     try {
       const service = await ServicesService.createService(req.body);
@@ -26,6 +50,12 @@ class ServiceController {
     }
   }
 
+  /**
+   * Updates a service by req.params.id using req.body.
+   * @param {import("express").Request} req
+   * @param {import("express").Response} res
+   * @returns {Promise<void>}
+   */
   static async updateService(req, res) {
     try {
       const service = await ServicesService.updateService(
@@ -39,6 +69,12 @@ class ServiceController {
       return handleError(res, err);
     }
   }
+  /**
+   * Disables a service identified by req.params.id.
+   * @param {import("express").Request} req
+   * @param {import("express").Response} res
+   * @returns {Promise<void>}
+   */
   static async disabledService(req, res) {
     try {
       const disabledService = await ServicesService.disableService(
@@ -52,6 +88,12 @@ class ServiceController {
       return handleError(res, err);
     }
   }
+  /**
+   * Returns services that belong to the category in req.params.id.
+   * @param {import("express").Request} req
+   * @param {import("express").Response} res
+   * @returns {Promise<void>}
+   */
   static async getServicesByCategory(req, res) {
     try {
       const services = await ServicesService.getServicesByCategory(

@@ -7,8 +7,9 @@
 const staffServicesEntity = require("../entities/staffService.entity");
 
 /**
- * Entity -> response DTO
- * @param {StaffServiceEntity | null} entity
+ * Converts one staff-service entity to API response DTO.
+ * Direction: entity -> response DTO.
+ * @param {staffServicesEntity | null} entity
  * @returns {{
  *   staff_id: number,
  *   service_id: number,
@@ -29,8 +30,9 @@ const entityToResponseDto = (entity) => {
 };
 
 /**
- * Entities -> list DTO
- * @param {StaffServiceEntity[]} entities
+ * Converts staff-service entities to list DTO.
+ * Direction: entities -> response DTO list.
+ * @param {staffServicesEntity[]} entities
  * @returns {{
  *   staff_id: number,
  *   service_id: number,

@@ -1,6 +1,16 @@
+/**
+ * Authentication middleware that validates bearer tokens and attaches payload data to the request.
+ */
 const { verifyToken } = require("../utils/token");
 
-function authenticate(req, res, next) {
+/**
+ * Verifies the Authorization bearer token and populates req.user.
+ * @param {import("express").Request} req
+ * @param {import("express").Response} res
+ * @param {import("express").NextFunction} next
+ * @returns {void}
+ */
+const authenticate = (req, res, next) => {
   const authHeader = req.headers.authorization;
   if (!authHeader || !authHeader.startsWith("Bearer")) {
     return res.status(401).json({ error: "Authentication required" });
@@ -14,5 +24,5 @@ function authenticate(req, res, next) {
   } catch (err) {
     return res.status(401).json({ error: err.message });
   }
-}
+};
 module.exports = { authenticate };

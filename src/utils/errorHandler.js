@@ -1,6 +1,12 @@
 /**
+ * Centralized HTTP error mapping utility for controller catch blocks.
+ */
+/**
  * Shared error handling for controllers.
  * Maps known error messages to appropriate HTTP status codes.
+ * @param {import("express").Response} res
+ * @param {Error & { code?: string }} err
+ * @returns {import("express").Response}
  */
 function handleError(res, err) {
   const message = err.message?.toLowerCase() || "";

@@ -1,3 +1,6 @@
+/**
+ * Configures the Express application and mounts all API route groups.
+ */
 const express = require("express");
 const UserRoute = require("./routes/user.route");
 const staffServiceRoute = require("./routes/staffService.route");

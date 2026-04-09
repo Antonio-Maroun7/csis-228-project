@@ -1,4 +1,14 @@
+/**
+ * Validation chains for appointment item endpoints.
+ */
 const { body, param, validationResult } = require("express-validator");
+/**
+ * Handles validation error responses for appointment item requests.
+ * @param {import("express").Request} req
+ * @param {import("express").Response} res
+ * @param {import("express").NextFunction} next
+ * @returns {void}
+ */
 const handleValidationErrors = (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -7,6 +17,10 @@ const handleValidationErrors = (req, res, next) => {
   next();
 };
 
+/**
+ * Validates payload fields for creating an appointment item.
+ * @type {Array<import("express").RequestHandler>}
+ */
 const ValidatorCreateAppointmentItem = [
   body("appointment_id")
     .notEmpty()

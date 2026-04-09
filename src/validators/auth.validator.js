@@ -1,4 +1,14 @@
+/**
+ * Validation chains for authentication endpoints.
+ */
 const { body, param, validationResult } = require("express-validator");
+/**
+ * Sends 400 response when express-validator found invalid fields.
+ * @param {import("express").Request} req
+ * @param {import("express").Response} res
+ * @param {import("express").NextFunction} next
+ * @returns {void}
+ */
 const handleValidationErrors = (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -7,6 +17,10 @@ const handleValidationErrors = (req, res, next) => {
   next();
 };
 
+/**
+ * Validates register payload fields: fullname, email, password, optional role/phone/is_active.
+ * @type {Array<import("express").RequestHandler>}
+ */
 const validatorRegisterUser = [
   body("user_fullname")
     .notEmpty()
@@ -54,18 +68,19 @@ const validatorRegisterUser = [
   handleValidationErrors,
 ];
 
+/**
+ * Validates login payload fields: user_email and user_password.
+ * @type {Array<import("express").RequestHandler>}
+ */
 const validatorLoginUser = [
   body("user_email")
     .notEmpty()
     .withMessage("user_email is required")
     .isEmail()
-    .withMessage("Invalid email format").normalizeEmail,
+    .withMessage("Invalid email format")
+    .normalizeEmail(),
 
-  body("user_password")
-    .notEmpty()
-    .withMessage("user_password is required")
-    .withMessage("user_password is required"),
-  ,
+  body("user_password").notEmpty().withMessage("user_password is required"),
   handleValidationErrors,
 ];
 module.exports = { validatorRegisterUser, validatorLoginUser };

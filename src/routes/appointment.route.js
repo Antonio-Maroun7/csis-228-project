@@ -1,3 +1,6 @@
+/**
+ * Appointment routes for creation, retrieval, updates, cancellation, and conflict checks.
+ */
 const express = require("express");
 const AppointmentController = require("../controllers/appointment.controller");
 const {
@@ -15,44 +18,44 @@ const router = express.Router();
 
 router.post(
   "/CreateAppointment",
-  validatorCreateAppointment,
+  ...validatorCreateAppointment,
   AppointmentController.createAppointment,
 );
 
 router.get(
   "/GetAllAppointmentsByClient/:id",
-  validatorGetAppointmentsByClient,
+  ...validatorGetAppointmentsByClient,
   AppointmentController.getAppointmentsByClient,
 );
 router.get(
   "/GetAllAppointmentsByStaff/:id",
-  validatorGetAppointmentsByStaff,
+  ...validatorGetAppointmentsByStaff,
   AppointmentController.getAppointmentsByStaff,
 );
 router.get(
   "/GetAppointmentById/:id",
-  validatorGetAppointmentById,
+  ...validatorGetAppointmentById,
   AppointmentController.getAppointmentById,
 );
 router.put(
   "/UpdateAppointmentStatus/:id",
-  validatorUpdateAppointmentStatus,
+  ...validatorUpdateAppointmentStatus,
   AppointmentController.UpdateAppointmentStatus,
 );
 router.put(
   "/CancelAppointment/:id",
-  validatorCancelAppointment,
+  ...validatorCancelAppointment,
   AppointmentController.cancelAppointment,
 );
 router.put(
   "/UpdateAppointment/:id",
-  validatorUpdateAppointment,
+  ...validatorUpdateAppointment,
   AppointmentController.updateAppointment,
 );
 
 router.post(
   "/CheckAppointmentConflict",
-  validatorCheckAppointmentConflict,
+  ...validatorCheckAppointmentConflict,
   AppointmentController.checkAppointmentConflict,
 );
 module.exports = router;

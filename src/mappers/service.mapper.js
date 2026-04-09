@@ -5,8 +5,9 @@
 const serviceEntity = require("../entities/service.entity");
 
 /**
- * Entity → response DTO (single service).
- * @param {ServiceEntity | null} entity
+ * Converts one service entity to API response shape.
+ * Direction: entity -> response DTO.
+ * @param {serviceEntity | null} entity
  * @returns {{
  *   id: number,
  *   category_id: number,
@@ -32,8 +33,9 @@ const entityToResponseDto = (entity) => {
 };
 
 /**
- * Entities → list of response DTOs.
- * @param {ServiceEntity[]} entities
+ * Converts service entities to list response shape.
+ * Direction: entities -> response DTO list.
+ * @param {serviceEntity[]} entities
  * @returns {{
  *   id: number,
  *   category_id: number,

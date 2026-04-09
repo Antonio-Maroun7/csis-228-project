@@ -1,3 +1,6 @@
+/**
+ * Category routes for listing, creating, updating, and disabling categories.
+ */
 const express = require("express");
 const CategoryContorller = require("../controllers/category.controller");
 const {
@@ -11,22 +14,22 @@ const router = express.Router();
 router.get("/GetAllCategories", CategoryContorller.getAllCategories);
 router.get(
   "/GetCategoryById/:id",
-  validatorCategoryId,
+  ...validatorCategoryId,
   CategoryContorller.getCategoryById,
 );
 router.post(
   "/CreateCategory",
-  validatorCreateCategory,
+  ...validatorCreateCategory,
   CategoryContorller.createCategory,
 );
 router.put(
   "/UpdateCategory/:id",
-  validatorUpdateCategory,
+  ...validatorUpdateCategory,
   CategoryContorller.updateCategory,
 );
 router.put(
   "/DisableCategory/:id",
-  validatorCategoryId,
+  ...validatorCategoryId,
   CategoryContorller.disableCategory,
 );
 module.exports = router;

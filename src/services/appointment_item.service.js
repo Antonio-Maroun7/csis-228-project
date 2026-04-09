@@ -1,9 +1,21 @@
+/**
+ * Service for creating appointment item records linked to appointments.
+ */
 const AppointmentItemRepository = require("../repositories/appointment_item.repository");
 const AppointmentItemDto = require("../dto/appointment_item.dto");
 const AppointmentRepository = require("../repositories/appointment.repository");
 const serviceRepository = require("../repositories/services.repository");
 
+/**
+ * Handles appointment item business logic.
+ */
 class AppointmentItemService {
+  /**
+   * Creates one appointment item from request data.
+   * Side effects: inserts a row into appointment_items.
+   * @param {Object} data
+   * @returns {Promise<{ message: string, data: Object|null }>}
+   */
   static async createAppointmentItem(data) {
     try {
       const {

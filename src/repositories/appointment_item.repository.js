@@ -1,7 +1,19 @@
+/**
+ * Repository for persisting appointment_items records.
+ */
 const pool = require("../db/pool");
 const AppointmentItemEntity = require("../entities/appointment_item.entity");
 
+/**
+ * Executes appointment item SQL operations.
+ */
 class AppointmentItemRepository {
+  /**
+   * Creates an appointment item row.
+   * Side effects: inserts one row into appointment_items.
+   * @param {{ appointment_id: number|string, service_id: number|string, appointment_duration_min: number, appointment_price_cents: number }} param0
+   * @returns {Promise<AppointmentItemEntity|null>}
+   */
   static async createAppointmentItem({
     appointment_id,
     service_id,
