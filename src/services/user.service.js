@@ -15,16 +15,6 @@ class UserService {
     return UserDto.toResponseDto(entity);
   }
 
-  static async createUser(data) {
-    try {
-      const entity = await AuthRepository.createUser(data);
-      return UserDto.toResponseDto(entity);
-    } catch (err) {
-      console.log(err.message);
-      throw err;
-    }
-  }
-
   static async UpdateUser(user_id, data) {
     const existingUser = await UserRepository.findUserById(user_id);
     if (!existingUser) {

@@ -7,7 +7,7 @@ function handleError(res, err) {
   if (message?.toLowerCase().includes("not found")) {
     return res.status(404).json({ error: err.message });
   }
-  if (message.includes("invalid credentials")) {
+  if (message.includes("invalid email or password")) {
     return res.status(401).json({ error: err.message });
   }
 
