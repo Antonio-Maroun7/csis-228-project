@@ -11,7 +11,7 @@ class AuthService {
         user_email,
         user_password,
         user_role = "client",
-        user_is_active = null,
+        user_is_active = true,
       } = data;
       const existingUser = await AuthRepository.findUserByEmail(user_email);
       if (existingUser) {

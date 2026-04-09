@@ -1,5 +1,6 @@
 const pool = require("../db/pool");
 const UserEntity = require("../entities/user.entity");
+const bcrypt = require("bcrypt");
 
 class AuthRepository {
   static async findUserByEmail(user_email) {
@@ -27,7 +28,7 @@ class AuthRepository {
     user_phone = null,
     user_is_active = true,
   }) {
-    const hashedPassword = await bycrypt.hash(user_password, 10);
+    const hashedPassword = await bcrypt.hash(user_password, 10);
     const q = `INSERT INTO users
       (user_fullname,user_email,user_password,
       user_role,user_phone,user_is_active)
