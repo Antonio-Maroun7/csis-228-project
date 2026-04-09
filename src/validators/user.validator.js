@@ -17,53 +17,6 @@ const validatorUserId = [
   handleValidationErrors,
 ];
 
-const validatorCreateUser = [
-  body("user_fullname")
-    .notEmpty()
-    .withMessage("user_fullname is required")
-    .isString()
-    .withMessage("user_fullname must be a string ")
-    .trim(),
-
-  body("user_email")
-    .notEmpty()
-    .withMessage("email is required")
-    .isEmail()
-    .withMessage("Invalid email format")
-    .normalizeEmail(),
-
-  body("user_password")
-    .notEmpty()
-    .withMessage("user_password is required")
-    .isLength({ min: 6 })
-    .withMessage("password must be at least characters")
-    .matches(/[A-Z]/)
-    .withMessage("password must contain at least one uppercase letter")
-    .matches(/[a-z]/)
-    .withMessage("password must contain at least one lowercase letter")
-    .matches(/[0-9]/)
-    .withMessage("password must contain at least one number")
-    .matches(/[!@#$%^&*(),.?":{}|<>]/)
-    .withMessage(" password must contain at least one special character"),
-
-  body("user_role")
-    .optional()
-    .isIn(["client", "staff", "admin"])
-    .withMessage("user_role must be a client , staff or admin "),
-
-  body("user_phone")
-    .isString()
-    .withMessage("user_phone must be a string")
-    .trim()
-    .optional(),
-
-  body("user_is_active")
-    .isBoolean()
-    .withMessage("user_is_active must be true or false")
-    .optional(),
-  handleValidationErrors,
-];
-
 const validatorUpdateUser = [
   param("id")
     .isInt({ min: 1 })
@@ -145,7 +98,7 @@ const validateChangePassword = [
 ];
 module.exports = {
   validatorUserId,
-  validatorCreateUser,
+
   validatorUpdateUser,
   validatorUserEmail,
   validatorDeleteUser,

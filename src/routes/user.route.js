@@ -2,7 +2,7 @@ const express = require("express");
 const UserController = require("../controllers/user.controller");
 const {
   validatorUserId,
-  validatorCreateUser,
+
   validatorUpdateUser,
   validatorUserEmail,
   validatorDeleteUser,
@@ -27,7 +27,7 @@ router.get(
   UserController.getUserBYEmail,
 );
 router.put("/UpdateUser/:id", validatorUpdateUser, UserController.UpdateUser);
-router.post("/createUser", validatorCreateUser, UserController.createUser);
+
 router.get("/", UserController.getAllUsers);
 router.get("/:id", validatorUserId, UserController.getUserBYId);
 

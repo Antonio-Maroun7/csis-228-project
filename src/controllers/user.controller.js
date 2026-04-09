@@ -18,18 +18,6 @@ class UserController {
     }
   }
 
-  static async createUser(req, res) {
-    try {
-      const user = await UserService.getUserByEmail(req.body.user_email);
-      if (user) {
-        return res.status(409).json({ error: "Email already exists" });
-      }
-      const createUser = await UserService.createUser(req.body);
-      res.status(201).json(createUser);
-    } catch (err) {
-      return handleError(res, err);
-    }
-  }
   static async UpdateUser(req, res) {
     try {
       const updateUser = await UserService.UpdateUser(req.params.id, req.body);
