@@ -1,5 +1,6 @@
 const UserRepository = require("../repositories/user.repository");
 const UserDto = require("../dto/user.dto");
+const AuthRepository = require("../repositories/auth.repository");
 class UserService {
   static async getAllUsers() {
     const entities = await UserRepository.findAllUsers();
@@ -16,7 +17,7 @@ class UserService {
 
   static async createUser(data) {
     try {
-      const entity = await UserRepository.createUser(data);
+      const entity = await AuthRepository.createUser(data);
       return UserDto.toResponseDto(entity);
     } catch (err) {
       console.log(err.message);
@@ -30,7 +31,7 @@ class UserService {
       throw new Error("user not found");
     }
 
-    const emailOwner = await UserRepository.findUserByEmail(data.user_email);
+    const emailOwner = await AuthRepository.findUserByEmail(data.user_email);
     if (emailOwner && emailOwner.user_id !== user_id) {
       throw new Error("email already exists");
     }
@@ -42,7 +43,7 @@ class UserService {
   }
 
   static async getUserByEmail(user_email) {
-    const entity = await UserRepository.findUserByEmail(user_email);
+    const entity = await AuthRepository.findUserByEmail(user_email);
     return UserDto.toResponseDto(entity);
   }
 
@@ -67,6 +68,7 @@ class UserService {
       user_id,
       newpassword,
     );
+    return { message: "password changed successfully" };
   }
 }
 module.exports = UserService;
