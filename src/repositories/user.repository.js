@@ -94,15 +94,15 @@ class UserRepository {
    * @param {string} newpassword
    * @returns {Promise<UserEntity|null>}
    */
-  static async changePasswordByUserId(user_id, newpassword) {
+  static async changePasswordByEmail(user_email, newpassword) {
     const hashedPassword = await bycrypt.hash(newpassword, 10);
     const q = `UPDATE users 
     SET user_password = $1
-    WHERE user_id = $2
+    WHERE user_email = $2
     RETURNING user_id,user_fullname,user_email,
     user_role,user_phone,user_is_active
     `;
-    const params = [hashedPassword, user_id];
+    const params = [hashedPassword, user_email];
     const { rows } = await pool.query(q, params);
     return UserEntity.fromRow(rows[0]);
   }

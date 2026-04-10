@@ -4,6 +4,7 @@
 const UserRepository = require("../repositories/user.repository");
 const UserDto = require("../dto/user.dto");
 const AuthRepository = require("../repositories/auth.repository");
+const bycrypt = require("bcrypt");
 /**
  * Encapsulates user business logic over repository operations.
  */
@@ -93,15 +94,26 @@ class UserService {
    * @returns {Promise<{ message: string }>}
    * @throws {Error} When user is not found.
    */
-  static async changeUserPassword(user_id, newpassword) {
-    const user = await UserRepository.findUserById(user_id);
+  static async changePasswordByEmail(user_email, currentPassword, newpassword) {
+    const user = await AuthRepository.findUserByEmail(user_email);
     if (!user) {
       throw new Error("user not found");
     }
-    const entity = await UserRepository.changePasswordByUserId(
-      user_id,
+    const passwordMatch = await bycrypt.compare(
+      currentPassword,
+      user.user_password,
+    );
+    if (!passwordMatch) {
+      throw new Error("current password is incorrect");
+    }
+
+    const entity = await UserRepository.changePasswordByEmail(
+      user_email,
       newpassword,
     );
+    if (!entity) {
+      throw new Error("update failed");
+    }
     return { message: "password changed successfully" };
   }
 }

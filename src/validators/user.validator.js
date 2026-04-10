@@ -104,12 +104,18 @@ const validatorDeleteUser = [
  * Validates password change request including id param and newpassword constraints.
  * @type {Array<import("express").RequestHandler>}
  */
-const validateChangePassword = [
-  param("id")
+
+const validateChangePasswordByEmail = [
+  param("user_email")
     .notEmpty()
-    .withMessage("id is required ")
-    .isInt({ min: 1 })
-    .withMessage("id must be a positive integer"),
+    .withMessage("user_email is required")
+    .isEmail()
+    .withMessage("invalid user_email format")
+    .normalizeEmail(),
+
+  body("currentPassword")
+    .notEmpty()
+    .withMessage("current password is required"),
 
   body("newpassword")
     .notEmpty()
@@ -122,7 +128,7 @@ const validateChangePassword = [
     .withMessage("new password myst contain at least one lower case letter")
     .matches(/[0-9]/)
     .withMessage("new password must contain at least one number")
-    .matches(/[!@#$%^&*(),.?":{}|<>]/)
+    .matches(/[!@#$%^&*(),.?\":{}|<>]/)
     .withMessage("new password must contain at least one special character"),
   handleValidationErrors,
 ];
@@ -132,5 +138,6 @@ module.exports = {
   validatorUpdateUser,
   validatorUserEmail,
   validatorDeleteUser,
-  validateChangePassword,
+
+  validateChangePasswordByEmail,
 };

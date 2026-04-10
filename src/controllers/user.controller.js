@@ -88,9 +88,10 @@ class UserController {
    */
   static async changeUserPassword(req, res) {
     try {
-      const { newpassword } = req.body;
-      const result = await UserService.changeUserPassword(
-        req.params.id,
+      const { currentPassword, newpassword } = req.body;
+      const result = await UserService.changePasswordByEmail(
+        req.params.user_email,
+        currentPassword,
         newpassword,
       );
       res.status(200).json({ message: "Password changed successfully" });

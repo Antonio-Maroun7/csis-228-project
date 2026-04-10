@@ -10,39 +10,54 @@ const {
   validatorUpdateUser,
   validatorUserEmail,
   validatorDeleteUser,
-  validateChangePassword,
+
+  validateChangePasswordByEmail,
 } = require("../validators/user.validator");
 const authorize = require("../middleware/authorize.middleware");
 
 const router = express.Router();
 
 router.put(
-  "/changePassword/:id",
-  ...validateChangePassword,
+  "/changePasswordByEmail/:user_email",
+  authenticate,
+  authorize(["admin", "client", "staff"]),
+  authorize.selfByEmailOrRoles(["admin"]),
+  ...validateChangePasswordByEmail,
   UserController.changeUserPassword,
 );
 router.delete(
   "/deleteUser/:id",
+  authenticate,
+  authorize(["admin"]),
   ...validatorDeleteUser,
   UserController.deleteUser,
 );
 router.get(
   "/email/:user_email",
+  authenticate,
+  authorize(["client"]),
+  authorize.selfByEmailOrRoles(),
   ...validatorUserEmail,
   UserController.getUserBYEmail,
 );
 router.put(
   "/UpdateUser/:id",
+  authenticate,
+  authorize(["admin", "client", "staff"]),
+  authorize.selfByIdOrRoles(["admin"]),
   ...validatorUpdateUser,
   UserController.UpdateUser,
 );
 
+router.get("/", authenticate, authorize(["admin"]), UserController.getAllUsers);
+
 router.get(
-  "/",
+  "/:id",
   authenticate,
-  authorize(["client"]),
-  UserController.getAllUsers,
+  authorize(["client", "staff", "admin"]),
+  authorize.selfByIdOrRoles(),
+  ...validatorUserId,
+  UserController.getUserBYId,
 );
-router.get("/:id", ...validatorUserId, UserController.getUserBYId);
 
 module.exports = router;
