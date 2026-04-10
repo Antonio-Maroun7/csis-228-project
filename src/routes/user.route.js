@@ -35,8 +35,8 @@ router.delete(
 router.get(
   "/email/:user_email",
   authenticate,
-  authorize(["client"]),
-  authorize.selfByEmailOrRoles(),
+  authorize(["admin", "client", "staff"]),
+  authorize.selfByEmailOrRoles(["admin"]),
   ...validatorUserEmail,
   UserController.getUserBYEmail,
 );
@@ -55,7 +55,7 @@ router.get(
   "/:id",
   authenticate,
   authorize(["client", "staff", "admin"]),
-  authorize.selfByIdOrRoles(),
+  authorize.selfByIdOrRoles(["admin", "staff"]),
   ...validatorUserId,
   UserController.getUserBYId,
 );
