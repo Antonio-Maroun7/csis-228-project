@@ -52,4 +52,60 @@ const ValidatorCreateAppointmentItem = [
   handleValidationErrors,
 ];
 
-module.exports = { ValidatorCreateAppointmentItem };
+const validatorGetAppointmentItemById = [
+  param("id")
+    .notEmpty()
+    .withMessage("appointment_item_id is required")
+    .isInt({ min: 1 })
+    .withMessage("appointment_item_id must be a positive integer")
+    .toInt(),
+  handleValidationErrors,
+];
+
+const validatorGetAppointmentItemsByAppointmentId = [
+  param("id")
+    .notEmpty()
+    .withMessage("appointment_id is required")
+    .isInt({ min: 1 })
+    .withMessage("appointment_id must be a positive integer")
+    .toInt(),
+  handleValidationErrors,
+];
+
+const validatorUpdateAppointmentItem = [
+  param("id")
+    .notEmpty()
+    .withMessage("appointment_item_id is required")
+    .isInt({ min: 1 })
+    .withMessage("appointment_item_id must be a positive integer")
+    .toInt(),
+
+  body("service_id")
+    .notEmpty()
+    .withMessage("service_id is required")
+    .isInt({ min: 1 })
+    .withMessage("service_id must be a positive integer")
+    .toInt(),
+
+  body("appointment_duration_min")
+    .notEmpty()
+    .withMessage("appointment_duration_min is required")
+    .isInt({ min: 1 })
+    .withMessage("appointment_duration_min must be a positive integer")
+    .toInt(),
+
+  body("appointment_price_cents")
+    .notEmpty()
+    .withMessage("appointment_price_cents is required")
+    .isInt({ min: 0 })
+    .withMessage("appointment_price_cents must be a positive integer")
+    .toInt(),
+  handleValidationErrors,
+];
+
+module.exports = {
+  ValidatorCreateAppointmentItem,
+  validatorGetAppointmentItemById,
+  validatorGetAppointmentItemsByAppointmentId,
+  validatorUpdateAppointmentItem,
+};

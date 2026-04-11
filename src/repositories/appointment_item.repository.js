@@ -36,5 +36,62 @@ class AppointmentItemRepository {
     const { rows } = await pool.query(q, params);
     return AppointmentItemEntity.fromRow(rows[0]);
   }
+  static async findAppointmentItemById(appointment_item_id) {
+    const q = `
+    SELECT appointment_item_id,appointment_id,service_id,
+    appointment_duration_min,appointment_price_cents
+    FROM appointment_items
+    WHERE appointment_item_id = $1
+    LIMIT 1  
+    `;
+    const { rows } = await pool.query(q, [appointment_item_id]);
+    return rows[0] ? AppointmentItemEntity.fromRow(rows[0]) : null;
+  }
+
+  static async findAppointmentItemByAppointmentId(appointment_id) {
+    const q = `
+    SELECT appointment_item_id,appointment_id,service_id,
+    appointment_duration_min,appointment_price_cents
+    FROM appointment_items
+    WHERE appointment_id = $1
+    ORDER BY appointment_item_id ASC
+    `;
+    const { rows } = await pool.query(q, [appointment_id]);
+    return AppointmentItemEntity.fromRows(rows);
+  }
+  static async UpdateAppointmentItem(
+    appointment_item_id,
+    { service_id, appointment_duration_min, appointment_price_cents },
+  ) {
+    const q = `
+    UPDATE appointment_items
+    SET 
+    service_id = $1,
+    appointment_duration_min = $2,
+    appointment_price_cents = $3
+    WHERE appointment_item_id = $4
+    RETURNING appointment_item_id,appointment_id,service_id,
+    appointment_duration_min,appointment_price_cents
+    `;
+    const params = [
+      service_id,
+      appointment_duration_min,
+      appointment_price_cents,
+      appointment_item_id,
+    ];
+    const { rows } = await pool.query(q, params);
+    return rows[0] ? AppointmentItemEntity.fromRow(rows[0]) : null;
+  }
+  static async deleteAppointmentItem(appointment_item_id) {
+    const q = `
+    DELETE 
+    FROM appointment_items
+    WHERE appointment_item_id = $1
+    RETURNING appointment_item_id,appointment_id,service_id,
+    appointment_duration_min,appointment_price_cents
+    `;
+    const { rows } = await pool.query(q,[appointment_item_id]);
+    return rows[0] ? AppointmentItemEntity.fromRow(rows[0]) : null;
+  }
 }
 module.exports = AppointmentItemRepository;

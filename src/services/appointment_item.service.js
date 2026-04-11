@@ -64,5 +64,83 @@ class AppointmentItemService {
       throw err;
     }
   }
+  static async getAppointmentItemById(appointment_item_id) {
+    try {
+      const entity =
+        await AppointmentItemRepository.findAppointmentItemById(
+          appointment_item_id,
+        );
+      if (!entity) {
+        throw new Error("Appointment item not found");
+      }
+      return AppointmentItemDto.toResponseDto(entity);
+    } catch (err) {
+      console.log(err.message);
+      throw err;
+    }
+  }
+  static async getAppointmentItemsByAppointmentId(appointment_id) {
+    try {
+      const appointment =
+        await AppointmentRepository.findAppointmentById(appointment_id);
+      if (!appointment) {
+        throw new Error("Appointment not found");
+      }
+      const entities =
+        await AppointmentItemRepository.findAppointmentItemByAppointmentId(
+          appointment_id,
+        );
+      return AppointmentItemDto.entityToListDto(entities);
+    } catch (err) {
+      console.log(err.message);
+      throw err;
+    }
+  }
+  static async updateAppointmentItem(id, data) {
+    try {
+      const existingItem =
+        await AppointmentItemRepository.findAppointmentItemById(id);
+      if (!existingItem) {
+        throw new Error("Appointment item not found");
+      }
+      const appointment = await AppointmentRepository.findAppointmentById(
+        existingItem.appointment_id,
+      );
+      if (!appointment) {
+        throw new Error("Linked appointment not found");
+      }
+      if (
+        appointment.appointment_status === "cancelled" ||
+        appointment.appointment_status === "completed"
+      ) {
+        throw new Error(
+          "cannot update item of a cancelled or completed appointment",
+        );
+      }
+      const { service_id, appointment_duration_min, appointment_price_cents } =
+        AppointmentItemDto.toResponseDto(data);
+      const service = await serviceRepository.findServiceById(service_id);
+      if (!service) {
+        throw new Error("Service not found");
+      }
+      if (!service.service_is_active) {
+        throw new Error("Service is not active");
+      }
+      const updated = await AppointmentItemRepository.UpdateAppointmentItem(
+        id,
+        { service_id, appointment_duration_min, appointment_price_cents },
+      );
+      if (!updated) {
+        throw new Error("update failed");
+      }
+      return {
+        message: "Appointment item updated successfully",
+        data: AppointmentItemDto.toResponseDto(updated),
+      };
+    } catch (err) {
+      console.log(err.message);
+      throw err;
+    }
+  }
 }
 module.exports = AppointmentItemService;

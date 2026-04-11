@@ -24,5 +24,37 @@ class AppointmentItemController {
       return handleError(res, err);
     }
   }
+  static async getAppointmentItemById(req, res) {
+    try {
+      const result = await AppointmentItemService.getAppointmentItemById(
+        req.params.id,
+      );
+      res.json(result);
+    } catch (err) {
+      return handleError(res, err);
+    }
+  }
+  static async getAppointmentItemsByAppointmentId(req, res) {
+    try {
+      const result =
+        await AppointmentItemService.getAppointmentItemsByAppointmentId(
+          req.params.id,
+        );
+      res.json(result);
+    } catch (err) {
+      return handleError(res, err);
+    }
+  }
+  static async updateAppointmentItem(req, res) {
+    try {
+      const result = await AppointmentItemService.updateAppointmentItem(
+        req.params.id,
+        req.body,
+      );
+      return res.status(200).json(result);
+    } catch (err) {
+      return handleError(res, err);
+    }
+  }
 }
 module.exports = AppointmentItemController;
