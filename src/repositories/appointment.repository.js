@@ -3,6 +3,7 @@
  */
 const pool = require("../db/pool");
 const AppointmentEntity = require("../entities/appointment.entity");
+const AppointmentWithClientEntity = require("../entities/appointmentWithClient.entity");
 
 /**
  * Executes appointment SQL operations.
@@ -175,6 +176,36 @@ class AppointmentRepository {
     q += ` limit 1`;
     const { rows } = await pool.query(q, params);
     return AppointmentEntity.fromRow(rows[0]);
+  }
+  /**
+   * Returns appointments created between two dates with associated client details.
+   * @param {Date|string} start_date
+   * @param {Date|string} end_date
+   * @returns {Promise<AppointmentWithClientEntity[]>}
+   */
+  static async findAppointmentBetweenDates(start_date, end_date) {
+    const q = `
+    SELECT
+      a.appointment_id,
+      a.client_id,
+      a.staff_id,
+      a.appointment_start_at,
+      a.appointment_ends_at,
+      a.appointment_status,
+      a.appointment_notes,
+      a.appointment_created_at,
+      u.user_fullname AS client_fullname,
+      u.user_email AS client_email,
+      u.user_role AS client_role,
+      u.user_phone AS client_phone,
+      u.user_is_active AS client_is_active
+    FROM appointments a
+    JOIN users u ON a.client_id = u.user_id
+    WHERE a.appointment_created_at BETWEEN $1 AND $2
+    ORDER BY a.appointment_created_at DESC
+    `;
+    const { rows } = await pool.query(q, [start_date, end_date]);
+    return AppointmentWithClientEntity.fromRows(rows);
   }
 }
 module.exports = AppointmentRepository;

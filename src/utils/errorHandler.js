@@ -29,6 +29,7 @@ function handleError(res, err) {
     message.includes("already cancelled") ||
     message.includes("cannot update a cancelled or completed appointment") ||
     message.includes("appointment start time must be before end time") ||
+    message.includes("start date must be before end date") ||
     message.includes("is not active") ||
     message.includes("not available")
   ) {

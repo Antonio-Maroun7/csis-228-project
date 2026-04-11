@@ -200,6 +200,20 @@ const validatorCreateAppointment = [
   handleValidationErrors,
 ];
 
+const validatorGetAppointmentBetweenDates = [
+  body("start_date")
+    .notEmpty()
+    .withMessage("start_date is required")
+    .isISO8601()
+    .withMessage("start_date must be a valid ISO8601 date"),
+  body("end_date")
+    .notEmpty()
+    .withMessage("end_date is required")
+    .isISO8601()
+    .withMessage("end_date must be a valid ISO8601 date"),
+  handleValidationErrors,
+];
+
 module.exports = {
   validatorGetAppointmentsByClient,
   validatorGetAppointmentsByStaff,
@@ -209,4 +223,5 @@ module.exports = {
   validatorUpdateAppointment,
   validatorCheckAppointmentConflict,
   validatorCreateAppointment,
+  validatorGetAppointmentBetweenDates,
 };

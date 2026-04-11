@@ -136,5 +136,18 @@ class AppointmentController {
       return handleError(res, err);
     }
   }
+  static async getAppointmentsBetweenDates(req, res) {
+    try {
+      const result = await AppointmentService.getAppointmentBetweenDates(
+        req.body,
+      );
+      return {
+        message: "Appointments retrieved successfully",
+        data: result,
+      };
+    } catch (err) {
+      return handleError(res, err);
+    }
+  }
 }
 module.exports = AppointmentController;

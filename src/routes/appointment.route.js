@@ -12,6 +12,7 @@ const {
   validatorUpdateAppointment,
   validatorCheckAppointmentConflict,
   validatorCreateAppointment,
+  validatorGetAppointmentBetweenDates,
 } = require("../validators/appointment.validator");
 
 const router = express.Router();
@@ -57,5 +58,11 @@ router.post(
   "/CheckAppointmentConflict",
   ...validatorCheckAppointmentConflict,
   AppointmentController.checkAppointmentConflict,
+);
+
+router.get(
+  "/GetAppointmentsBetweenDates",
+  ...validatorGetAppointmentBetweenDates,
+  AppointmentController.getAppointmentsBetweenDates,
 );
 module.exports = router;

@@ -6,6 +6,7 @@ const AppointmentDto = require("../dto/appointment.dto");
 const StaffServicesRepository = require("../repositories/staffService.repository");
 const UserRepository = require("../repositories/user.repository");
 const ServiceRepository = require("../repositories/services.repository");
+const AppointmentWithClientDto = require("../dto/appointmentWithClient.dto");
 
 /**
  * Executes appointment business rules and repository orchestration.
@@ -395,6 +396,24 @@ class AppointmentService {
         isAvailable: !conflict,
         conflict: conflict ? AppointmentDto.toResponseDto(conflict) : null,
       };
+    } catch (err) {
+      console.log(err.message);
+      throw err;
+    }
+  }
+
+  static async getAppointmentBetweenDates(start_date, end_date) {
+    try {
+      let startDate = new Date(start_date);
+      let endDate = new Date(end_date);
+      if (startDate >= endDate) {
+        throw new Error("start date must be before end date");
+      }
+      const entities = await AppointmentRepository.findAppointmentBetweenDates(
+        startDate,
+        endDate,
+      );
+      return AppointmentWithClientDto.toListDto(entities);
     } catch (err) {
       console.log(err.message);
       throw err;
