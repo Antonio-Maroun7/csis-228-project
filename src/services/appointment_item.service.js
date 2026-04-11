@@ -64,6 +64,13 @@ class AppointmentItemService {
       throw err;
     }
   }
+
+  /**
+   * Returns one appointment item by id.
+   * @param {number|string} appointment_item_id
+   * @returns {Promise<Object>}
+   * @throws {Error} When the item does not exist.
+   */
   static async getAppointmentItemById(appointment_item_id) {
     try {
       const entity =
@@ -79,6 +86,13 @@ class AppointmentItemService {
       throw err;
     }
   }
+
+  /**
+   * Returns appointment items for a specific appointment id.
+   * @param {number|string} appointment_id
+   * @returns {Promise<Array<Object>>}
+   * @throws {Error} When the appointment does not exist.
+   */
   static async getAppointmentItemsByAppointmentId(appointment_id) {
     try {
       const appointment =
@@ -96,6 +110,14 @@ class AppointmentItemService {
       throw err;
     }
   }
+
+  /**
+   * Updates an appointment item when linked appointment and service are valid.
+   * Side effects: updates one row in appointment_items.
+   * @param {number|string} id
+   * @param {Object} data
+   * @returns {Promise<{ message: string, data: Object|null }>}
+   */
   static async updateAppointmentItem(id, data) {
     try {
       const existingItem =
@@ -142,6 +164,13 @@ class AppointmentItemService {
       throw err;
     }
   }
+
+  /**
+   * Deletes an appointment item when linked appointment allows modifications.
+   * Side effects: deletes one row from appointment_items.
+   * @param {number|string} id
+   * @returns {Promise<{ message: string, data: Object|null }>}
+   */
   static async deleteAppointmentItem(id) {
     try {
       const exsistingItem =

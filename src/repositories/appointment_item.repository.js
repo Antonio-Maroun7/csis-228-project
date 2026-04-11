@@ -36,6 +36,12 @@ class AppointmentItemRepository {
     const { rows } = await pool.query(q, params);
     return AppointmentItemEntity.fromRow(rows[0]);
   }
+
+  /**
+   * Finds a single appointment item by its primary key.
+   * @param {number|string} appointment_item_id
+   * @returns {Promise<AppointmentItemEntity|null>}
+   */
   static async findAppointmentItemById(appointment_item_id) {
     const q = `
     SELECT appointment_item_id,appointment_id,service_id,
@@ -48,6 +54,11 @@ class AppointmentItemRepository {
     return rows[0] ? AppointmentItemEntity.fromRow(rows[0]) : null;
   }
 
+  /**
+   * Returns all appointment items for a given appointment.
+   * @param {number|string} appointment_id
+   * @returns {Promise<AppointmentItemEntity[]>}
+   */
   static async findAppointmentItemByAppointmentId(appointment_id) {
     const q = `
     SELECT appointment_item_id,appointment_id,service_id,
@@ -59,6 +70,14 @@ class AppointmentItemRepository {
     const { rows } = await pool.query(q, [appointment_id]);
     return AppointmentItemEntity.fromRows(rows);
   }
+
+  /**
+   * Updates an appointment item record by id.
+   * Side effects: updates one row in appointment_items.
+   * @param {number|string} appointment_item_id
+   * @param {{ service_id: number|string, appointment_duration_min: number, appointment_price_cents: number }} param1
+   * @returns {Promise<AppointmentItemEntity|null>}
+   */
   static async UpdateAppointmentItem(
     appointment_item_id,
     { service_id, appointment_duration_min, appointment_price_cents },
@@ -82,6 +101,13 @@ class AppointmentItemRepository {
     const { rows } = await pool.query(q, params);
     return rows[0] ? AppointmentItemEntity.fromRow(rows[0]) : null;
   }
+
+  /**
+   * Deletes an appointment item record by id.
+   * Side effects: deletes one row from appointment_items.
+   * @param {number|string} appointment_item_id
+   * @returns {Promise<AppointmentItemEntity|null>}
+   */
   static async deleteAppointmentItem(appointment_item_id) {
     const q = `
     DELETE 
@@ -90,7 +116,7 @@ class AppointmentItemRepository {
     RETURNING appointment_item_id,appointment_id,service_id,
     appointment_duration_min,appointment_price_cents
     `;
-    const { rows } = await pool.query(q,[appointment_item_id]);
+    const { rows } = await pool.query(q, [appointment_item_id]);
     return rows[0] ? AppointmentItemEntity.fromRow(rows[0]) : null;
   }
 }

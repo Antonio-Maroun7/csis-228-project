@@ -52,6 +52,10 @@ const ValidatorCreateAppointmentItem = [
   handleValidationErrors,
 ];
 
+/**
+ * Validates route param id for fetching one appointment item.
+ * @type {Array<import("express").RequestHandler>}
+ */
 const validatorGetAppointmentItemById = [
   param("id")
     .notEmpty()
@@ -62,6 +66,10 @@ const validatorGetAppointmentItemById = [
   handleValidationErrors,
 ];
 
+/**
+ * Validates route param id for listing items by appointment id.
+ * @type {Array<import("express").RequestHandler>}
+ */
 const validatorGetAppointmentItemsByAppointmentId = [
   param("id")
     .notEmpty()
@@ -72,6 +80,10 @@ const validatorGetAppointmentItemsByAppointmentId = [
   handleValidationErrors,
 ];
 
+/**
+ * Validates route param id and body payload for appointment item updates.
+ * @type {Array<import("express").RequestHandler>}
+ */
 const validatorUpdateAppointmentItem = [
   param("id")
     .notEmpty()
@@ -103,6 +115,10 @@ const validatorUpdateAppointmentItem = [
   handleValidationErrors,
 ];
 
+/**
+ * Validates route param id for appointment item deletion.
+ * @type {Array<import("express").RequestHandler>}
+ */
 const validatorDeleteAppointmentItem = [
   param("id")
     .notEmpty()

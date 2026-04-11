@@ -24,6 +24,13 @@ class AppointmentItemController {
       return handleError(res, err);
     }
   }
+
+  /**
+   * Returns a single appointment item using req.params.id.
+   * @param {import("express").Request} req
+   * @param {import("express").Response} res
+   * @returns {Promise<void>}
+   */
   static async getAppointmentItemById(req, res) {
     try {
       const result = await AppointmentItemService.getAppointmentItemById(
@@ -34,6 +41,13 @@ class AppointmentItemController {
       return handleError(res, err);
     }
   }
+
+  /**
+   * Returns appointment items for one appointment using req.params.id.
+   * @param {import("express").Request} req
+   * @param {import("express").Response} res
+   * @returns {Promise<void>}
+   */
   static async getAppointmentItemsByAppointmentId(req, res) {
     try {
       const result =
@@ -45,6 +59,13 @@ class AppointmentItemController {
       return handleError(res, err);
     }
   }
+
+  /**
+   * Updates an appointment item using req.params.id and req.body.
+   * @param {import("express").Request} req
+   * @param {import("express").Response} res
+   * @returns {Promise<void>}
+   */
   static async updateAppointmentItem(req, res) {
     try {
       const result = await AppointmentItemService.updateAppointmentItem(
@@ -56,6 +77,13 @@ class AppointmentItemController {
       return handleError(res, err);
     }
   }
+
+  /**
+   * Deletes an appointment item using req.params.id.
+   * @param {import("express").Request} req
+   * @param {import("express").Response} res
+   * @returns {Promise<void>}
+   */
   static async deleteAppointmentItem(req, res) {
     try {
       const result = await AppointmentItemService.deleteAppointmentItem(
