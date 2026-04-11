@@ -142,5 +142,39 @@ class AppointmentItemService {
       throw err;
     }
   }
+  static async deleteAppointmentItem(id) {
+    try {
+      const exsistingItem =
+        await AppointmentItemRepository.findAppointmentItemById(id);
+      if (!exsistingItem) {
+        throw new Error("Appointment item not found");
+      }
+      const appointment = await AppointmentRepository.findAppointmentById(
+        existingItem.appointment_id,
+      );
+      if (!appointment) {
+        throw new Error("Linked appointment not found");
+      }
+      if (
+        appointment.appointment_status === "cancelled" ||
+        appointment.appointment_status === "completed"
+      ) {
+        throw new Error(
+          "cannot delete item of a cancelled or completed appointment",
+        );
+      }
+      const deleted = await AppointmentItemRepository.deleteAppointmentItem(id);
+      if (!deleted) {
+        throw new Error("Failed to delete appointment item");
+      }
+      return {
+        message: "Appointment item deleted successfully",
+        data: AppointmentItemDto.toResponseDto(deleted),
+      };
+    } catch (err) {
+      console.log(err.message);
+      throw err;
+    }
+  }
 }
 module.exports = AppointmentItemService;

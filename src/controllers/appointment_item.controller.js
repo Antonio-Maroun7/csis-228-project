@@ -56,5 +56,15 @@ class AppointmentItemController {
       return handleError(res, err);
     }
   }
+  static async deleteAppointmentItem(req, res) {
+    try {
+      const result = await AppointmentItemService.deleteAppointmentItem(
+        req.params.id,
+      );
+      return res.status(200).json(result);
+    } catch (err) {
+      return handleError(res, err);
+    }
+  }
 }
 module.exports = AppointmentItemController;

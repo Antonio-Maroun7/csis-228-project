@@ -8,6 +8,7 @@ const {
   validatorGetAppointmentItemById,
   validatorGetAppointmentItemsByAppointmentId,
   validatorUpdateAppointmentItem,
+  validatorDeleteAppointmentItem,
 } = require("../validators/appointment_item.validator");
 const router = express.Router();
 
@@ -33,6 +34,12 @@ router.put(
   "/UpdateAppointmentItem/:id",
   validatorUpdateAppointmentItem,
   AppointmentItemController.updateAppointmentItem,
+);
+
+router.delete(
+  "/DeleteAppointmentItem/:id",
+  validatorDeleteAppointmentItem,
+  AppointmentItemController.deleteAppointmentItem,
 );
 
 module.exports = router;

@@ -103,9 +103,20 @@ const validatorUpdateAppointmentItem = [
   handleValidationErrors,
 ];
 
+const validatorDeleteAppointmentItem = [
+  param("id")
+    .notEmpty()
+    .withMessage("appointment_item_id is required")
+    .isInt({ min: 1 })
+    .withMessage("appointment_item_id must be a positive integer")
+    .toInt(),
+  handleValidationErrors,
+];
+
 module.exports = {
   ValidatorCreateAppointmentItem,
   validatorGetAppointmentItemById,
   validatorGetAppointmentItemsByAppointmentId,
   validatorUpdateAppointmentItem,
+  validatorDeleteAppointmentItem,
 };
