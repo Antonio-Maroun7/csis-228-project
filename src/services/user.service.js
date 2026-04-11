@@ -46,8 +46,14 @@ class UserService {
       throw new Error("user not found");
     }
 
-    const emailOwner = await AuthRepository.findUserByEmail(data.user_email);
-    if (emailOwner && emailOwner.user_id !== user_id) {
+    const existingUserWithEmail = await AuthRepository.findUserByEmail(
+      data.user_email,
+    );
+
+    if (
+      existingUserWithEmail &&
+      existingUserWithEmail.user_id !== Number(user_id)
+    ) {
       throw new Error("email already exists");
     }
     const updated = await UserRepository.updateUser(user_id, data);
