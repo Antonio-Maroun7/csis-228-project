@@ -6,11 +6,9 @@ const UserController = require("../controllers/user.controller");
 const { authenticate } = require("../middleware/auth.middleware");
 const {
   validatorUserId,
-
   validatorUpdateUser,
   validatorUserEmail,
   validatorDeleteUser,
-
   validateChangePasswordByEmail,
 } = require("../validators/user.validator");
 const authorize = require("../middleware/authorize.middleware");
@@ -55,7 +53,7 @@ router.get(
   "/:id",
   authenticate,
   authorize(["client", "staff", "admin"]),
-  authorize.selfByIdOrRoles(["admin", "staff"]),
+  authorize.selfByIdOrRoles(["admin"]),
   ...validatorUserId,
   UserController.getUserBYId,
 );

@@ -200,6 +200,10 @@ const validatorCreateAppointment = [
   handleValidationErrors,
 ];
 
+/**
+ * Validates date range payload for appointment retrieval between dates.
+ * @type {Array<import("express").RequestHandler>}
+ */
 const validatorGetAppointmentBetweenDates = [
   body("start_date")
     .notEmpty()

@@ -402,6 +402,12 @@ class AppointmentService {
     }
   }
 
+  /**
+   * Returns appointments created between two provided dates.
+   * @param {string|Date} start_date
+   * @param {string|Date} end_date
+   * @returns {Promise<Array<Object>>}
+   */
   static async getAppointmentBetweenDates(start_date, end_date) {
     try {
       let startDate = new Date(start_date);

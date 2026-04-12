@@ -136,6 +136,13 @@ class AppointmentController {
       return handleError(res, err);
     }
   }
+
+  /**
+   * Retrieves appointments between date boundaries from request body.
+   * @param {import("express").Request} req
+   * @param {import("express").Response} res
+   * @returns {Promise<void>}
+   */
   static async getAppointmentsBetweenDates(req, res) {
     try {
       const result = await AppointmentService.getAppointmentBetweenDates(

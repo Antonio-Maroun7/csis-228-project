@@ -10,6 +10,8 @@ const {
   validatorUpdateAppointmentItem,
   validatorDeleteAppointmentItem,
 } = require("../validators/appointment_item.validator");
+const { authenticate } = require("../middleware/auth.middleware");
+const authorize = require("../middleware/authorize.middleware");
 const router = express.Router();
 
 /**
@@ -17,6 +19,9 @@ const router = express.Router();
  */
 router.post(
   "/CreateAppointmentItem",
+  authenticate,
+  authorize(["admin", "staff", "client"]),
+  authorize.selfByAppointmentBodyIdOrRoles(["admin"], "appointment_id"),
   ...ValidatorCreateAppointmentItem,
   AppointmentItemController.createAppointment,
 );
@@ -26,6 +31,9 @@ router.post(
  */
 router.get(
   "/GetAppointmentItemById/:id",
+  authenticate,
+  authorize(["admin", "staff", "client"]),
+  authorize.selfByAppointmentItemIdOrRoles(["admin"], "id"),
   validatorGetAppointmentItemById,
   AppointmentItemController.getAppointmentItemById,
 );
@@ -35,6 +43,9 @@ router.get(
  */
 router.get(
   "/GetAppointmentItemsByAppointmentId/:id",
+  authenticate,
+  authorize(["admin", "staff", "client"]),
+  authorize.selfByAppointmentIdOrRoles(["admin"], "id"),
   validatorGetAppointmentItemsByAppointmentId,
   AppointmentItemController.getAppointmentItemsByAppointmentId,
 );
@@ -44,6 +55,9 @@ router.get(
  */
 router.put(
   "/UpdateAppointmentItem/:id",
+  authenticate,
+  authorize(["admin", "staff", "client"]),
+  authorize.selfByAppointmentItemIdOrRoles(["admin"], "id"),
   validatorUpdateAppointmentItem,
   AppointmentItemController.updateAppointmentItem,
 );
@@ -53,6 +67,9 @@ router.put(
  */
 router.delete(
   "/DeleteAppointmentItem/:id",
+  authenticate,
+  authorize(["admin", "staff", "client"]),
+  authorize.selfByAppointmentItemIdOrRoles(["admin"], "id"),
   validatorDeleteAppointmentItem,
   AppointmentItemController.deleteAppointmentItem,
 );

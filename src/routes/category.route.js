@@ -8,27 +8,42 @@ const {
   validatorCreateCategory,
   validatorUpdateCategory,
 } = require("../validators/category.validator");
+const { authenticate } = require("../middleware/auth.middleware");
+const authorize = require("../middleware/authorize.middleware");
 
 const router = express.Router();
 
-router.get("/GetAllCategories", CategoryContorller.getAllCategories);
+router.get(
+  "/GetAllCategories",
+  authenticate,
+  authorize(["admin", "staff", "client"]),
+  CategoryContorller.getAllCategories,
+);
 router.get(
   "/GetCategoryById/:id",
+  authenticate,
+  authorize(["admin", "staff", "client"]),
   ...validatorCategoryId,
   CategoryContorller.getCategoryById,
 );
 router.post(
   "/CreateCategory",
+  authenticate,
+  authorize(["admin"]),
   ...validatorCreateCategory,
   CategoryContorller.createCategory,
 );
 router.put(
   "/UpdateCategory/:id",
+  authenticate,
+  authorize(["admin"]),
   ...validatorUpdateCategory,
   CategoryContorller.updateCategory,
 );
 router.put(
   "/DisableCategory/:id",
+  authenticate,
+  authorize(["admin"]),
   ...validatorCategoryId,
   CategoryContorller.disableCategory,
 );
