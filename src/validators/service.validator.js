@@ -130,6 +130,7 @@ const validatorSDisableService = [
     .withMessage("service_id is required")
     .isInt({ min: 1 })
     .withMessage("service_id must be a positive integer"),
+  handleValidationErrors,
 ];
 
 module.exports = {

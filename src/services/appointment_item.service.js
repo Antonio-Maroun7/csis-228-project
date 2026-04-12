@@ -104,7 +104,7 @@ class AppointmentItemService {
         await AppointmentItemRepository.findAppointmentItemByAppointmentId(
           appointment_id,
         );
-      return AppointmentItemDto.entityToListDto(entities);
+      return AppointmentItemDto.toListDto(entities);
     } catch (err) {
       console.log(err.message);
       throw err;
@@ -139,8 +139,9 @@ class AppointmentItemService {
           "cannot update item of a cancelled or completed appointment",
         );
       }
-      const { service_id, appointment_duration_min, appointment_price_cents } =
-        AppointmentItemDto.toResponseDto(data);
+      const service_id = Number(data.service_id);
+      const appointment_duration_min = Number(data.appointment_duration_min);
+      const appointment_price_cents = Number(data.appointment_price_cents);
       const service = await serviceRepository.findServiceById(service_id);
       if (!service) {
         throw new Error("Service not found");
@@ -173,9 +174,9 @@ class AppointmentItemService {
    */
   static async deleteAppointmentItem(id) {
     try {
-      const exsistingItem =
+      const existingItem =
         await AppointmentItemRepository.findAppointmentItemById(id);
-      if (!exsistingItem) {
+      if (!existingItem) {
         throw new Error("Appointment item not found");
       }
       const appointment = await AppointmentRepository.findAppointmentById(

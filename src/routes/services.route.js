@@ -50,7 +50,7 @@ router.get(
   ServiceController.getServiceById,
 );
 router.get(
-  "/",
+  "/getAllServices",
   authenticate,
   authorize(["admin", "staff", "client"]),
   ServiceController.getAllServices,

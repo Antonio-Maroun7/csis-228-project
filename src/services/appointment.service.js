@@ -412,6 +412,12 @@ class AppointmentService {
     try {
       let startDate = new Date(start_date);
       let endDate = new Date(end_date);
+      if (
+        Number.isNaN(startDate.getTime()) ||
+        Number.isNaN(endDate.getTime())
+      ) {
+        throw new Error("Invalid date format");
+      }
       if (startDate >= endDate) {
         throw new Error("start date must be before end date");
       }

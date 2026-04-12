@@ -145,13 +145,16 @@ class AppointmentController {
    */
   static async getAppointmentsBetweenDates(req, res) {
     try {
+      const start_date = req.body?.start_date ?? req.query?.start_date;
+      const end_date = req.body?.end_date ?? req.query?.end_date;
       const result = await AppointmentService.getAppointmentBetweenDates(
-        req.body,
+        start_date,
+        end_date,
       );
-      return {
+      return res.status(200).json({
         message: "Appointments retrieved successfully",
         data: result,
-      };
+      });
     } catch (err) {
       return handleError(res, err);
     }

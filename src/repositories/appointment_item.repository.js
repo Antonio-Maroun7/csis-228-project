@@ -24,7 +24,7 @@ class AppointmentItemRepository {
     INSERT into appointment_items
     (appointment_id,service_id,appointment_duration_min,appointment_price_cents)
     values($1,$2,$3,$4)
-    RETURNING  appointment_id, service_id,
+    RETURNING  appointment_item_id, appointment_id, service_id,
                 appointment_duration_min, appointment_price_cents`;
 
     const params = [

@@ -19,13 +19,7 @@ class AuthService {
    */
   static async register(data) {
     try {
-      const {
-        user_fullname,
-        user_email,
-        user_password,
-        user_role = "client",
-        user_is_active = true,
-      } = data;
+      const { user_fullname, user_email, user_password } = data;
       const existingUser = await AuthRepository.findUserByEmail(user_email);
       if (existingUser) {
         throw new Error("user already exist");
@@ -34,8 +28,8 @@ class AuthService {
         user_fullname,
         user_email,
         user_password,
-        user_role,
-        user_is_active,
+        user_role: "client",
+        user_is_active: true,
       });
       if (!user) {
         throw new Error("create failed");

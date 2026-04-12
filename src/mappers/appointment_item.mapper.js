@@ -21,7 +21,7 @@ const AppointmentItemEntity = require("../entities/appointment_item.entity");
 const entityToResponseDto = (entity) => {
   if (!entity) return null;
   return {
-    id: entity.id,
+    id: entity.appointment_item_id,
     appointmentId: entity.appointment_id,
     serviceId: entity.service_id,
     ItemDurationMin: entity.appointment_duration_min,
