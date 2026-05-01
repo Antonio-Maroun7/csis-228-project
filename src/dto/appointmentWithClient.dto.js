@@ -2,6 +2,8 @@
  * DTO for appointment date-range query results joined with client user data.
  * Converts raw database rows into API-friendly nested objects.
  */
+const { formatDateTime } = require("../utils/dateFormat");
+
 class AppointmentWithClientDto {
   /**
    * Maps one appointment-with-client entity into API response shape.
@@ -31,11 +33,11 @@ class AppointmentWithClientDto {
       appointment_id: entity.appointment_id,
       client_id: entity.client_id,
       staff_id: entity.staff_id,
-      appointment_start_at: entity.appointment_start_at,
-      appointment_ends_at: entity.appointment_ends_at,
+      appointment_start_at: formatDateTime(entity.appointment_start_at),
+      appointment_ends_at: formatDateTime(entity.appointment_ends_at),
       appointment_status: entity.appointment_status,
       appointment_notes: entity.appointment_notes,
-      appointment_created_at: entity.appointment_created_at,
+      appointment_created_at: formatDateTime(entity.appointment_created_at),
       client: {
         fullname: entity.client_fullname,
         email: entity.client_email,

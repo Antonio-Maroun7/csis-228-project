@@ -71,9 +71,6 @@ class StaffServiceService {
       throw new Error("service not found ");
     }
     const staff = await StaffServiceRepository.findStaffByService(service_id);
-    if (!staff.length) {
-      throw new Error("staff not found for this service ");
-    }
     return userDto.toListDto(staff);
   }
 
@@ -116,9 +113,6 @@ class StaffServiceService {
    */
   static async getAllStaffServices() {
     const entities = await StaffServiceRepository.findAllStaffServices();
-    if (!entities.length) {
-      throw new Error("no staff services found ");
-    }
     return StaffServiceDto.toListDto(entities);
   }
 

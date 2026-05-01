@@ -6,6 +6,7 @@
  */
 
 const AppointmentEntity = require("../entities/appointment.entity");
+const { formatDateTime } = require("../utils/dateFormat");
 
 /** * Converts one appointment entity into API response DTO.
  * Direction: entity -> response DTO.
@@ -28,17 +29,11 @@ const entityToResponseDto = (entity) => {
     id: entity.appointment_id,
     clientId: entity.client_id,
     staffId: entity.staff_id,
-    appointmentStartAt: entity.appointment_start_at
-      ? entity.appointment_start_at
-      : null,
-    appointmentEndsAt: entity.appointment_ends_at
-      ? entity.appointment_ends_at
-      : null,
+    appointmentStartAt: formatDateTime(entity.appointment_start_at),
+    appointmentEndsAt: formatDateTime(entity.appointment_ends_at),
     appointmentStatus: entity.appointment_status,
     appointmentNotes: entity.appointment_notes,
-    appointmentCreatedAt: entity.appointment_created_at
-      ? entity.appointment_created_at
-      : null,
+    appointmentCreatedAt: formatDateTime(entity.appointment_created_at),
   };
 };
 

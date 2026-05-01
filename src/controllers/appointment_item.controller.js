@@ -86,10 +86,8 @@ class AppointmentItemController {
    */
   static async deleteAppointmentItem(req, res) {
     try {
-      const result = await AppointmentItemService.deleteAppointmentItem(
-        req.params.id,
-      );
-      return res.status(200).json(result);
+      await AppointmentItemService.deleteAppointmentItem(req.params.id);
+      return res.status(204).send();
     } catch (err) {
       return handleError(res, err);
     }

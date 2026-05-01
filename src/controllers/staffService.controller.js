@@ -73,11 +73,8 @@ class StaffServiceController {
   static async deleteServiceFromStaff(req, res) {
     try {
       const { staff_id, service_id } = req.body;
-      const result = await staffServiceService.removeServiceFromStaff(
-        staff_id,
-        service_id,
-      );
-      res.status(200).json(result);
+      await staffServiceService.removeServiceFromStaff(staff_id, service_id);
+      return res.status(204).send();
     } catch (err) {
       return handleError(res, err);
     }

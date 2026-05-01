@@ -65,6 +65,7 @@ The booking flow enforces business safety rules such as:
 - PostgreSQL (pg)
 - dotenv
 - bcrypt
+- moment
 - express-validator
 - cors
 - http-errors
@@ -98,6 +99,10 @@ This backend follows a layered architecture:
 
 ```text
 project-228/
+├─ database/
+│  └─ csis-228.sql
+├─ docs/
+│  └─ POSTMAN_WORKSPACE.md
 ├─ package.json
 ├─ README.md
 └─ src/
@@ -206,6 +211,31 @@ project-228/
 - users (staff) many <-> many services via staff_services
 - users (client/staff) -> appointments (client_id, staff_id)
 - appointments 1 -> many appointment_items
+
+### Database Schema Description (High-Level)
+
+The project expects a PostgreSQL schema with the following key fields used by repositories/services:
+
+- users:
+  - user_id (PK), user_fullname, user_email, user_password, user_role, user_phone, user_is_active
+- categories:
+  - category_id (PK), category_name, category_description, category_is_active
+- services:
+  - service_id (PK), category_id (FK), service_name, service_description, service_default_duration_min, service_base_price_cents, service_is_active
+- staff_services:
+  - staff_id (FK to users), service_id (FK to services), staff_duration_min, staff_price_cents
+- appointments:
+  - appointment_id (PK), client_id (FK to users), staff_id (FK to users), appointment_start_at, appointment_ends_at, appointment_status, appointment_notes, appointment_created_at
+- appointment_items:
+  - appointment_item_id (PK), appointment_id (FK to appointments), service_id (FK to services), appointment_duration_min, appointment_price_cents
+
+### Database Scripts
+
+The repository includes a SQL bootstrap script:
+
+- database/csis-228.sql
+
+Use this script to create/populate the required schema before running API tests.
 
 ---
 
@@ -386,6 +416,16 @@ This keeps controller code clean and response handling consistent.
 
 ## Setup and Installation
 
+### Project Setup Instructions (Quick Start)
+
+Prerequisites:
+
+- Node.js 18+
+- npm 9+
+- PostgreSQL
+
+Quick setup:
+
 1. Clone repository
 
    git clone <your-repository-url>
@@ -399,7 +439,13 @@ This keeps controller code clean and response handling consistent.
    Create a .env file at project root.
 
 4. Prepare PostgreSQL database
-   Ensure your schema/tables exist and match repository SQL usage.
+   Ensure your schema/tables exist and match repository queries.
+
+   Option A: import the provided SQL file
+
+   psql -U <db_user> -d <db_name> -f database/csis-228.sql
+
+   Option B: run the same SQL script using your database GUI tool.
 
 5. Start server
 
@@ -461,6 +507,46 @@ Manual API testing (Postman):
    Bearer <token>
 4. Call protected endpoints according to role
 5. Validate forbidden/ownership scenarios by changing token role and route payload ids
+
+Postman test notes:
+
+- For protected routes, use Authorization tab -> Bearer Token, or header Authorization: Bearer <token>
+- For date-range endpoint, send query params start_date and end_date in ISO format
+- For create appointment endpoint, ensure:
+  - client_id belongs to a client user
+  - staff_id belongs to a staff user
+  - service_items are assigned to that staff member in staff_services
+
+## Postman Workspace Document
+
+A dedicated Postman workspace/collection guide is included here:
+
+- docs/POSTMAN_WORKSPACE.md
+
+It includes:
+
+- recommended collection folder structure
+- environment variables
+- auth setup steps
+- quick smoke test request sequence
+- endpoint grouping by module
+
+---
+
+## Code Documentation
+
+The codebase is documented directly in source files using JSDoc-style comments across:
+
+- routes
+- controllers
+- services
+- repositories
+- DTOs/mappers/entities
+- validators
+- middleware
+- utils
+
+This helps maintain consistency between implementation and API behavior while keeping business logic easy to review.
 
 ---
 

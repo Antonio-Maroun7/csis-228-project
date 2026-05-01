@@ -7,6 +7,7 @@ const StaffServicesRepository = require("../repositories/staffService.repository
 const UserRepository = require("../repositories/user.repository");
 const ServiceRepository = require("../repositories/services.repository");
 const AppointmentWithClientDto = require("../dto/appointmentWithClient.dto");
+const { formatDateTime } = require("../utils/dateFormat");
 
 /**
  * Executes appointment business rules and repository orchestration.
@@ -136,9 +137,6 @@ class AppointmentService {
 
     const entities =
       await AppointmentRepository.findAppointmentsByClient(client_id);
-    if (!entities || entities.length === 0) {
-      throw new Error("Appointments for this client not found");
-    }
     return AppointmentDto.toListDto(entities);
   }
 
@@ -159,9 +157,6 @@ class AppointmentService {
 
       const entities =
         await AppointmentRepository.findAppointmentsByStaff(staff_id);
-      if (!entities || entities.length === 0) {
-        throw new Error(" appointments for this staff member not found");
-      }
       return AppointmentDto.toListDto(entities);
     } catch (err) {
       console.log(err.message);
@@ -391,8 +386,8 @@ class AppointmentService {
       );
       return {
         staff_id: Number(staff_id),
-        appointment_start_at: startDate,
-        appointment_ends_at: endDate,
+        appointment_start_at: formatDateTime(startDate),
+        appointment_ends_at: formatDateTime(endDate),
         isAvailable: !conflict,
         conflict: conflict ? AppointmentDto.toResponseDto(conflict) : null,
       };

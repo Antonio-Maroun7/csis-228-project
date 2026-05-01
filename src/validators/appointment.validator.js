@@ -1,7 +1,7 @@
 /**
  * Validation chains for appointment endpoints.
  */
-const { body, param, validationResult } = require("express-validator");
+const { body, param, validationResult, query } = require("express-validator");
 
 /**
  * Handles express-validator errors for appointment requests.
@@ -205,12 +205,12 @@ const validatorCreateAppointment = [
  * @type {Array<import("express").RequestHandler>}
  */
 const validatorGetAppointmentBetweenDates = [
-  body("start_date")
+  query("start_date")
     .notEmpty()
     .withMessage("start_date is required")
     .isISO8601()
     .withMessage("start_date must be a valid ISO8601 date"),
-  body("end_date")
+  query("end_date")
     .notEmpty()
     .withMessage("end_date is required")
     .isISO8601()

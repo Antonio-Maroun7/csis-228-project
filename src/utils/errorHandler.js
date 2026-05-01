@@ -10,40 +10,58 @@
  */
 function handleError(res, err) {
   const message = err.message?.toLowerCase() || "";
-  if (message?.toLowerCase().includes("not found")) {
-    return res.status(404).json({ error: err.message });
+  if (
+    err.code === "23P01" ||
+    err.code === "23505" ||
+    message.includes("duplicate key")
+  ) {
+    return res.status(409).json({
+      error:
+        "Appointment overlaps with another appointment for this staff member",
+    });
   }
+
   if (message.includes("invalid email or password")) {
     return res.status(401).json({ error: err.message });
   }
 
-  if (message.includes("user is not active")) {
+  if (
+    message.includes("access denied") ||
+    message.includes("forbidden") ||
+    message.includes("not active")
+  ) {
     return res.status(403).json({ error: err.message });
   }
+
+  if (message.includes("not found")) {
+    return res.status(404).json({ error: err.message });
+  }
+
+  if (
+    message.includes("already exist") ||
+    message.includes("already exists") ||
+    message.includes("already cancelled") ||
+    message.includes("cannot add item to") ||
+    message.includes("cannot update item of") ||
+    message.includes("cannot delete item of") ||
+    message.includes("cannot update a cancelled or completed appointment") ||
+    message.includes("not available") ||
+    message.includes("overlap") ||
+    message.includes("conflict")
+  ) {
+    return res.status(409).json({ error: err.message });
+  }
+
   if (
     message.includes("required") ||
     message.includes("invalid") ||
     message.includes("update failed") ||
     message.includes("create failed") ||
     message.includes("not a") ||
-    message.includes("already cancelled") ||
-    message.includes("cannot update a cancelled or completed appointment") ||
     message.includes("appointment start time must be before end time") ||
-    message.includes("start date must be before end date") ||
-    message.includes("is not active") ||
-    message.includes("not available")
+    message.includes("start date must be before end date")
   ) {
     return res.status(400).json({ error: err.message });
-  }
-
-  if (message?.toLowerCase().includes("already exists")) {
-    return res.status(409).json({ error: err.message });
-  }
-  if (err.code === "23P01") {
-    return res.status(409).json({
-      error:
-        "Appointment overlaps with another appointment for this staff member",
-    });
   }
 
   return res.status(500).json({ error: err.message });
