@@ -3,8 +3,15 @@ const router = express.Router();
 
 const viewController = require("../controllers/view.controller");
 
-router.get("/test", (req, res) => {
-  res.render("test");
-});
+const {
+  requireViewAuth,
+  requireViewRole,
+} = require("../middleware/viewAuth.middleware");
 
+/**
+ * Public pages
+ */
+router.get("/", viewController.redirectToLogin);
+router.get("/views/login", viewController.renderLogin);
+router.post("/views/login", viewController.login);
 module.exports = router;

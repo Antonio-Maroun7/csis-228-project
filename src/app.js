@@ -29,6 +29,9 @@ app.use(express.json());
 //  allows Express to read form data from the frontend.
 app.use(express.urlencoded({ extended: true }));
 
+// VERY IMPORTANT for images, css, js
+app.use(express.static(path.join(__dirname, "public")));
+
 app.use("/", viewRoute);
 app.use("/api/auth", AuthRoute);
 app.use("/api/appointmentItems", AppointmentItemRoute);

@@ -1,3 +1,8 @@
+/**
+ * ViewController handles EJS page rendering.
+ * It uses the existing backend service layer instead of inventing new endpoints.
+ */
+const AuthService = require("../services/auth.service");
 function buildFeedbackState(req) {
   return {
     message: req.query.message || null,
@@ -10,10 +15,39 @@ function buildRedirectPath(basePath, message, type = "success") {
   return `${basePath}?${params.toString()}`;
 }
 
+function setAuthCookie(res, token) {
+  res.cookie("auth_token", token, {
+    httpOnly: true,
+    sameSite: "lax",
+    maxAge: 60 * 60 * 1000,
+  });
+}
+
 class ViewController {
-  static async renderHome(req, res) {
+  static redirectToLogin(req, res) {
+    return res.redirect("/views/login");
+  }
+
+  static renderLogin(req, res) {
+    return res.render("login", {
+      title: "Login",
+      ...buildFeedbackState(req),
+    });
+  }
+
+  static async login(req, res) {
     try {
-    } catch (err) {}
+      const result = await AuthService.login(req.body);
+      setAuthCookie(res, result.token);
+
+      return res.redirect(
+        buildRedirectPath("/views/dashboard", "Login successful"),
+      );
+    } catch (err) {
+      return res.redirect(
+        buildRedirectPath("/views/login", err.message, "error"),
+      );
+    }
   }
 }
 
