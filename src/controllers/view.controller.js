@@ -49,6 +49,28 @@ class ViewController {
       );
     }
   }
+  static async renderRegister(req, res) {
+    return res.render("register", {
+      title: "Register",
+      ...buildFeedbackState(req),
+    });
+  }
+
+  static async register(req, res) {
+    try {
+      const result = await AuthService.register(req.body);
+
+      setAuthCookie(res, result.token);
+
+      return res.redirect(
+        buildFeedbackState("/views/dashboard", "Registration successful"),
+      );
+    } catch (err) {
+      return res.redirect(
+        buildFeedbackState("/views/register", err.message, "error"),
+      );
+    }
+  }
 }
 
 module.exports = ViewController;

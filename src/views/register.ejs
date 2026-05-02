@@ -1,12 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+  <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title><%= typeof title !== "undefined" ? title : "Login" %></title>
-
+    <title>Register</title>
     <style>
-        :root {
+      :root {
             --primary: #0f8f8c;
             --primary-dark: #087674;
             --primary-soft: #e6fffb;
@@ -81,6 +80,7 @@
             z-index: 2;
         }
 
+        /* LEFT SIDE IMAGE */
         .photo-side {
             position: relative;
             height: 100%;
@@ -109,7 +109,7 @@
         .info-box {
             position: absolute;
             left: 28px;
-            bottom: 70px;
+            bottom: 58px;
             width: 390px;
             max-width: calc(100% - 56px);
             display: flex;
@@ -139,6 +139,7 @@
             display: block;
             margin-bottom: 4px;
             font-size: 0.98rem;
+            color: #172033;
         }
 
         .info-box p {
@@ -148,9 +149,10 @@
             font-size: 0.9rem;
         }
 
+        /* RIGHT SIDE FORM */
         .form-side {
             height: 100%;
-            padding: 10px 60px;
+            padding: 8px 60px;
             background: rgba(255, 255, 255, 0.94);
             display: flex;
             align-items: center;
@@ -161,34 +163,34 @@
             width: 100%;
             max-width: 430px;
             text-align: center;
-            transform: scale(0.95);
+            transform: scale(0.9);
             transform-origin: center;
         }
 
         .top-icon {
-            width: 44px;
-            height: 44px;
-            margin: 0 auto 8px;
+            width: 42px;
+            height: 42px;
+            margin: 0 auto 7px;
             border-radius: 50%;
             display: grid;
             place-items: center;
             background: var(--primary-soft);
             color: var(--primary);
-            font-size: 1.25rem;
+            font-size: 1.2rem;
         }
 
         .brand-title {
             margin: 0;
             color: var(--primary);
             font-family: Georgia, "Times New Roman", serif;
-            font-size: 1.55rem;
+            font-size: 1.5rem;
             font-weight: 800;
         }
 
         .brand-subtitle {
             margin: 4px 0 0;
             color: var(--muted);
-            font-size: 0.9rem;
+            font-size: 0.88rem;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -204,28 +206,28 @@
         }
 
         h1 {
-            margin: 16px 0 6px;
+            margin: 14px 0 5px;
             font-family: Georgia, "Times New Roman", serif;
-            font-size: 2.35rem;
+            font-size: 2.25rem;
             line-height: 1.05;
             letter-spacing: -0.04em;
             color: #172033;
         }
 
         .description {
-            margin: 0 0 14px;
+            margin: 0 0 12px;
             color: var(--muted);
-            font-size: 0.98rem;
-            line-height: 1.45;
+            font-size: 0.95rem;
+            line-height: 1.4;
         }
 
         .message {
-            margin-bottom: 12px;
-            padding: 12px 14px;
+            margin-bottom: 10px;
+            padding: 10px 13px;
             border-radius: 12px;
             font-weight: 700;
             text-align: left;
-            font-size: 0.95rem;
+            font-size: 0.92rem;
         }
 
         .message.success {
@@ -242,20 +244,20 @@
             text-align: left;
         }
 
-        label {
-            display: block;
-            margin-bottom: 6px;
-            font-weight: 800;
-            color: #111827;
-            font-size: 0.96rem;
+        .field {
+            margin-bottom: 9px;
         }
 
-        .field {
-            margin-bottom: 12px;
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 800;
+            color: #111827;
+            font-size: 0.93rem;
         }
 
         .input-box {
-            height: 48px;
+            height: 44px;
             width: 100%;
             display: flex;
             align-items: center;
@@ -263,7 +265,7 @@
             border: 1px solid #d8dee8;
             border-radius: 12px;
             background: white;
-            padding: 0 15px;
+            padding: 0 14px;
             transition: 0.2s ease;
         }
 
@@ -275,18 +277,18 @@
         .input-icon {
             color: #7b8794;
             font-size: 1rem;
-            flex: 0 0 auto;
         }
 
+        input[type="text"],
         input[type="email"],
-        input[type="password"],
-        input[type="text"] {
+        input[type="tel"],
+        input[type="password"] {
             width: 100%;
             border: 0;
             outline: 0;
             background: transparent;
             font-family: inherit;
-            font-size: 0.98rem;
+            font-size: 0.95rem;
             color: var(--text);
         }
 
@@ -294,52 +296,32 @@
             color: #94a3b8;
         }
 
-        /* NEW: show password button inside password input */
-        .password-toggle {
-            border: 0;
-            outline: 0;
-            background: transparent;
-            color: #64748b;
-            font-size: 1.05rem;
-            cursor: pointer;
-            padding: 4px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: 0.2s ease;
-            flex: 0 0 auto;
-        }
-
-        .password-toggle:hover {
-            color: var(--primary);
-            transform: scale(1.08);
-        }
-
-        .login-button {
+        .register-button {
             width: 100%;
-            height: 50px;
+            height: 48px;
             border: 0;
             border-radius: 12px;
             background: linear-gradient(135deg, var(--primary), var(--primary-dark));
             color: white;
             font-family: inherit;
-            font-size: 1.03rem;
+            font-size: 1rem;
             font-weight: 800;
             cursor: pointer;
             box-shadow: 0 16px 30px rgba(15, 143, 140, 0.22);
             transition: 0.2s ease;
+            margin-top: 4px;
         }
 
-        .login-button:hover {
+        .register-button:hover {
             transform: translateY(-1px);
             box-shadow: 0 20px 38px rgba(15, 143, 140, 0.28);
         }
 
-        .register-text {
-            margin: 12px 0 11px;
+        .login-text {
+            margin: 10px 0 9px;
             color: var(--muted);
             text-align: center;
-            font-size: 0.96rem;
+            font-size: 0.93rem;
         }
 
         a {
@@ -356,7 +338,7 @@
             display: flex;
             align-items: center;
             gap: 14px;
-            margin-bottom: 9px;
+            margin-bottom: 8px;
         }
 
         .bottom-divider::before,
@@ -368,23 +350,23 @@
         }
 
         .heart {
-            width: 28px;
-            height: 28px;
+            width: 27px;
+            height: 27px;
             display: grid;
             place-items: center;
             border-radius: 50%;
             background: #fff7ed;
             color: var(--orange);
             border: 1px solid #ffedd5;
-            font-size: 0.85rem;
+            font-size: 0.82rem;
         }
 
         .secure-note {
             max-width: 330px;
             margin: 0 auto;
             color: var(--muted);
-            line-height: 1.4;
-            font-size: 0.88rem;
+            line-height: 1.35;
+            font-size: 0.85rem;
         }
 
         @media (max-width: 1000px) {
@@ -441,118 +423,46 @@
             }
         }
     </style>
-</head>
+  </head>
 
-<body>
+  <body>
     <main class="page">
-        <section class="auth-card">
-            <div class="photo-side">
-                <img src="/images/login.png" alt="Smart booking reception" />
+      <section class="auth-card">
+        <!-- LEFT SIDE: IMAGE FIRST LIKE LOGIN.EJS -->
+        <div class="photo-side">
+          <img src="/images/login.png" alt="Smart Booking registration" />
 
-                <div class="info-box">
-                    <div class="info-icon">📅</div>
-                    <div>
-                        <strong>Your time matters.</strong>
-                        <p>We make booking simple, so you can focus on what matters most.</p>
-                    </div>
-                </div>
+          <div class="info-box">
+            <div class="info-icon">📅</div>
+            <div>
+              <strong>Get started today.</strong>
+              <p>Create your account to enjoy fast and seamless booking.</p>
             </div>
+          </div>
+        </div>
 
-            <div class="form-side">
-                <div class="form-content">
-                    <div class="top-icon">📅</div>
+        <!-- RIGHT SIDE: REGISTER FORM -->
+        <div class="form-side">
+          <div class="form-content">
+            <div class="top-icon">📅</div>
 
-                    <h2 class="brand-title">Smart Booking System</h2>
-                    <p class="brand-subtitle">Clinic / Salon / Advisor</p>
+            <h2 class="brand-title">Smart Booking System</h2>
+            <p class="brand-subtitle">Clinic / Salon / Advisor</p>
 
-                    <h1>Welcome Back</h1>
-                    <p class="description">Manage your appointments and services with ease.</p>
+            <h1>Create Account</h1>
+            <p class="description">
+              Register to manage your appointments and services with ease.
+            </p>
 
-                    <% if (typeof message !== "undefined" && message) { %>
+             <% if (typeof message !== "undefined" && message) { %>
                         <div class="message <%= messageType === 'error' ? 'error' : 'success' %>">
                             <%= message %>
                         </div>
                     <% } %>
-
-                    <form action="/views/login" method="POST">
-                        <div class="field">
-                            <label for="user_email">Email</label>
-                            <div class="input-box">
-                                <span class="input-icon">✉️</span>
-                                <input
-                                    type="email"
-                                    id="user_email"
-                                    name="user_email"
-                                    placeholder="Enter your email"
-                                    autocomplete="email"
-                                    required
-                                />
-                            </div>
-                        </div>
-
-                        <div class="field">
-                            <label for="user_password">Password</label>
-                            <div class="input-box">
-                                <span class="input-icon">🔒</span>
-
-                                <input
-                                    type="password"
-                                    id="user_password"
-                                    name="user_password"
-                                    placeholder="Enter your password"
-                                    autocomplete="current-password"
-                                    required
-                                />
-
-                                <!-- NEW: show/hide password button inside input box -->
-                                <button
-                                    type="button"
-                                    class="password-toggle"
-                                    id="togglePassword"
-                                    aria-label="Show password"
-                                >
-                                    👁️
-                                </button>
-                            </div>
-                        </div>
-
-                        <button class="login-button" type="submit">
-                            Login →
-                        </button>
-                    </form>
-
-                    <p class="register-text">
-                        Don't have an account?
-                        <a href="/views/register">Register</a>
-                    </p>
-
-                    <div class="bottom-divider">
-                        <span class="heart">♡</span>
-                    </div>
-
-                    <p class="secure-note">
-                        Built to help you deliver exceptional care and seamless appointment experiences.
-                    </p>
-                </div>
-            </div>
-        </section>
+            
+          </div>
+        </div>
+      </section>
     </main>
-
-    <!-- NEW: JavaScript for show/hide password -->
-    <script>
-        const passwordInput = document.getElementById("user_password");
-        const togglePassword = document.getElementById("togglePassword");
-
-        togglePassword.addEventListener("click", function () {
-            const isPasswordHidden = passwordInput.type === "password";
-
-            passwordInput.type = isPasswordHidden ? "text" : "password";
-            togglePassword.textContent = isPasswordHidden ? "🙈" : "👁️";
-            togglePassword.setAttribute(
-                "aria-label",
-                isPasswordHidden ? "Hide password" : "Show password"
-            );
-        });
-    </script>
-</body>
+  </body>
 </html>

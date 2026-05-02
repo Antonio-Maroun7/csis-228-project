@@ -14,4 +14,8 @@ const {
 router.get("/", viewController.redirectToLogin);
 router.get("/views/login", viewController.renderLogin);
 router.post("/views/login", viewController.login);
+
+router.get("/views/register", viewController.renderRegister);
+router.post("/views/register", viewController.register);
+
 module.exports = router;
