@@ -30,6 +30,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // VERY IMPORTANT for images, css, js
+app.use(express.static("public"));
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/", viewRoute);
