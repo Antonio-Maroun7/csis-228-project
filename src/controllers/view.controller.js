@@ -3,10 +3,13 @@
  * It uses the existing backend service layer instead of inventing new endpoints.
  */
 const AuthService = require("../services/auth.service");
-function buildFeedbackState(req) {
+
+function buildFeedbackState(req = {}) {
+  const query = req.query || {};
+
   return {
-    message: req.query.message || null,
-    messageType: req.query.type === "error" ? "error" : "success",
+    message: query.message || null,
+    messageType: query.type === "error" ? "error" : "success",
   };
 }
 
@@ -37,19 +40,23 @@ class ViewController {
 
   static async login(req, res) {
     try {
+      console.log("LOGIN BODY:", req.body);
       const result = await AuthService.login(req.body);
+
       setAuthCookie(res, result.token);
 
       return res.redirect(
         buildRedirectPath("/views/dashboard", "Login successful"),
       );
     } catch (err) {
+      console.log(err.message);
       return res.redirect(
         buildRedirectPath("/views/login", err.message, "error"),
       );
     }
   }
-  static async renderRegister(req, res) {
+
+  static renderRegister(req, res) {
     return res.render("register", {
       title: "Register",
       ...buildFeedbackState(req),
@@ -58,16 +65,20 @@ class ViewController {
 
   static async register(req, res) {
     try {
+      console.log("REGISTER BODY:", req.body);
+
       const result = await AuthService.register(req.body);
 
       setAuthCookie(res, result.token);
 
       return res.redirect(
-        buildFeedbackState("/views/dashboard", "Registration successful"),
+        buildRedirectPath("/views/dashboard", "Registration successful"),
       );
     } catch (err) {
+      console.log(err.message);
+
       return res.redirect(
-        buildFeedbackState("/views/register", err.message, "error"),
+        buildRedirectPath("/views/register", err.message, "error"),
       );
     }
   }
