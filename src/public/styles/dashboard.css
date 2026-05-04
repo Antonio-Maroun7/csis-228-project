@@ -2,6 +2,7 @@
   --primary: #0f8f8c;
   --primary-dark: #087674;
   --primary-soft: #e6fffb;
+  --primary-light: #d9f5f3;
   --orange: #f59e0b;
   --orange-soft: #fff7ed;
   --text: #1f2937;
@@ -18,7 +19,8 @@
 
 body {
   margin: 0;
-  min-height: 100vh;
+  height: 100vh;
+  overflow: hidden;
   font-family: "Segoe UI", Arial, sans-serif;
   color: var(--text);
   background:
@@ -36,7 +38,7 @@ body {
 }
 
 .dashboard-page {
-  min-height: 100vh;
+  height: 100vh;
   padding: 24px 28px;
   display: flex;
   align-items: center;
@@ -46,7 +48,7 @@ body {
 .dashboard {
   width: 100%;
   max-width: 1440px;
-  min-height: calc(100vh - 48px);
+  height: calc(100vh - 48px);
   display: grid;
   grid-template-columns: 235px 1fr;
   background: rgba(255, 255, 255, 0.9);
@@ -178,7 +180,7 @@ body {
 }
 
 .dashboard-topbar {
-  min-height: 78px;
+  height: 78px;
   padding: 0 34px;
   display: flex;
   align-items: center;
@@ -227,6 +229,10 @@ body {
   font-size: 0.95rem;
 }
 
+.search-box input::placeholder {
+  color: #94a3b8;
+}
+
 .user-box {
   display: flex;
   align-items: center;
@@ -250,7 +256,9 @@ body {
 
 .dashboard-content {
   flex: 1;
+  min-height: 0;
   padding: 24px 34px 22px;
+  overflow: hidden;
 }
 
 .page-title {
@@ -271,7 +279,7 @@ body {
   font-size: 0.98rem;
 }
 
-/* Reusable cards/buttons */
+/* REUSABLE */
 .card {
   background: white;
   border: 1px solid rgba(226, 232, 240, 0.9);
@@ -298,6 +306,7 @@ body {
 
 .outline-button {
   height: 36px;
+  min-width: 155px;
   padding: 0 22px;
   display: inline-flex;
   align-items: center;
@@ -311,20 +320,39 @@ body {
   font-weight: 900;
   text-decoration: none;
   cursor: pointer;
+  transition: 0.2s ease;
 }
 
+.outline-button:hover {
+  background: var(--primary);
+  color: white;
+}
+
+/* RESPONSIVE */
 @media (max-width: 1100px) {
+  body {
+    height: auto;
+    overflow-y: auto;
+  }
+
   .dashboard-page {
+    height: auto;
+    min-height: 100vh;
     align-items: flex-start;
     padding: 18px;
   }
 
   .dashboard {
+    height: auto;
     grid-template-columns: 1fr;
   }
 
   .sidebar {
     display: none;
+  }
+
+  .dashboard-content {
+    overflow: visible;
   }
 
   .dashboard-topbar {
@@ -342,5 +370,15 @@ body {
 
   .search-box {
     width: 100%;
+  }
+}
+
+@media (max-width: 700px) {
+  .dashboard-content {
+    padding: 22px 18px;
+  }
+
+  .page-title h2 {
+    font-size: 1.9rem;
   }
 }

@@ -6,18 +6,26 @@
 class CategoryEntity {
   /**
    * Creates a category entity with DB column properties.
-   * @param {{ category_id?: number, category_name?: string, category_description?: string|null, category_is_active?: boolean }} [param0]
+   * @param {{
+   * category_id?: number,
+   * category_name?: string,
+   * category_description?: string|null,
+   * category_is_active?: boolean,
+   * services_count?: number|string
+   * }} [param0]
    */
   constructor({
     category_id,
     category_name,
     category_description,
     category_is_active,
+    services_count,
   } = {}) {
     this.category_id = category_id;
     this.category_name = category_name;
     this.category_description = category_description;
     this.category_is_active = category_is_active;
+    this.services_count = Number(services_count || 0);
   }
 
   /**
@@ -39,4 +47,5 @@ class CategoryEntity {
     return (rows || []).map((row) => CategoryEntity.fromRow(row));
   }
 }
+
 module.exports = CategoryEntity;

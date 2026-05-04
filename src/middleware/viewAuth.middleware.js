@@ -1,5 +1,15 @@
+/**
+ * Middleware for protecting EJS view pages using JWT stored in a cookie.
+ */
+
 const { verifyToken } = require("../utils/token");
 
+/**
+ * Reads one cookie value from the request header.
+ * @param {import("express").Request} req
+ * @param {string} name
+ * @returns {string|null}
+ */
 function getCookie(req, name) {
   const cookieHeader = req.headers.cookie;
   if (!cookieHeader) return null;
@@ -17,6 +27,9 @@ function getCookie(req, name) {
   return null;
 }
 
+/**
+ * Protects frontend EJS pages.
+ */
 function requireViewAuth(req, res, next) {
   const token = getCookie(req, "auth_token");
 
@@ -34,6 +47,11 @@ function requireViewAuth(req, res, next) {
   }
 }
 
+/**
+ * Protects pages based on role.
+ * Example:
+ * requireViewRole(["admin"])
+ */
 function requireViewRole(allowedRoles) {
   return (req, res, next) => {
     const userRole = req.user?.role || req.user?.user_role;
