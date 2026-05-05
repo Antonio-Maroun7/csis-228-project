@@ -76,36 +76,48 @@
                         </div>
                     <% } %>
 
-                    <section class="summary-layout">
-                        <article class="summary-card card">
-                            <div class="summary-icon">▦</div>
+                    <section class="client-home-header">
+                        <div class="client-home-left">
+                            <section class="summary-layout">
+                                <article class="summary-card card">
+                                    <div class="summary-icon">▦</div>
 
-                            <div class="summary-info">
-                                <strong><%= pageStats.availableCategories %></strong>
-                                <span>Available Categories</span>
-                                <small>Explore a wide range</small>
-                            </div>
-                        </article>
+                                    <div class="summary-info">
+                                        <strong><%= pageStats.availableCategories %></strong>
+                                        <span>Available Categories</span>
+                                        <small>Explore a wide range</small>
+                                    </div>
+                                </article>
 
-                        <article class="summary-card card">
-                            <div class="summary-icon">📅</div>
+                                <article class="summary-card card">
+                                    <div class="summary-icon">📅</div>
 
-                            <div class="summary-info">
-                                <strong><%= pageStats.upcomingAppointments %></strong>
-                                <span>Upcoming Appointments</span>
-                                <small>Next one coming soon</small>
-                            </div>
-                        </article>
+                                    <div class="summary-info">
+                                        <strong><%= pageStats.upcomingAppointments %></strong>
+                                        <span>Upcoming Appointments</span>
+                                        <small>Next one coming soon</small>
+                                    </div>
+                                </article>
 
-                        <article class="summary-card card">
-                            <div class="summary-icon">♡</div>
+                                <article class="summary-card card">
+                                    <div class="summary-icon">♡</div>
 
-                            <div class="summary-info">
-                                <strong><%= pageStats.favoriteServices %></strong>
-                                <span>Favorite Services</span>
-                                <small>Your go-to services</small>
-                            </div>
-                        </article>
+                                    <div class="summary-info">
+                                        <strong><%= pageStats.favoriteServices %></strong>
+                                        <span>Favorite Services</span>
+                                        <small>Your go-to services</small>
+                                    </div>
+                                </article>
+                            </section>
+
+                            <section class="page-title">
+                                <h2>Browse Categories</h2>
+
+                                <p>
+                                    Select a category to explore services and book an appointment.
+                                </p>
+                            </section>
+                        </div>
 
                         <article class="promo-image-card">
                             <img
@@ -114,14 +126,6 @@
                                 class="promo-banner-image"
                             />
                         </article>
-                    </section>
-
-                    <section class="page-title">
-                        <h2>Browse Categories</h2>
-
-                        <p>
-                            Select a category to explore services and book an appointment.
-                        </p>
                     </section>
 
                     <% if (!categoryList.length) { %>
