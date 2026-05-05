@@ -1,11 +1,170 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Client Home</title>
+
+    <title><%= typeof title !== "undefined" ? title : "Client Home" %></title>
+
     <link rel="stylesheet" href="/styles/dashboard.css" />
     <link rel="stylesheet" href="/styles/client-home.css" />
-  </head>
-  <body></body>
+</head>
+
+<body>
+    <%
+        const safeRole =
+            typeof role !== "undefined" && role
+                ? role
+                : "client";
+
+        const safeActivePage =
+            typeof activePage !== "undefined" && activePage
+                ? activePage
+                : "client-home";
+
+        const safeFirstName =
+            typeof firstName !== "undefined" && firstName
+                ? firstName
+                : "Client";
+
+        const safeBreadcrumbMain =
+            typeof breadcrumbMain !== "undefined" && breadcrumbMain
+                ? breadcrumbMain
+                : "Home";
+
+        const safeBreadcrumbSub =
+            typeof breadcrumbSub !== "undefined" && breadcrumbSub
+                ? breadcrumbSub
+                : "Categories";
+
+        const categoryList =
+            typeof categories !== "undefined" && Array.isArray(categories)
+                ? categories
+                : [];
+
+        const pageStats =
+            typeof stats !== "undefined" && stats
+                ? stats
+                : {
+                    availableCategories: categoryList.length,
+                    upcomingAppointments: 0,
+                    favoriteServices: 0,
+                };
+    %>
+
+    <main class="dashboard-page">
+        <section class="dashboard">
+            <%- include("./partials/dashboard-sidebar", {
+                role: safeRole,
+                activePage: safeActivePage
+            }) %>
+
+            <section class="dashboard-main">
+                <%- include("./partials/dashboard-topbar", {
+                    breadcrumbMain: safeBreadcrumbMain,
+                    breadcrumbSub: safeBreadcrumbSub,
+                    firstName: safeFirstName,
+                    role: safeRole,
+                    showNotification: false,
+                    searchPlaceholder: "Search services, categories..."
+                }) %>
+
+                <div class="dashboard-content">
+                    <% if (typeof message !== "undefined" && message && messageType === "error") { %>
+                        <div class="dashboard-message error">
+                            <%= message %>
+                        </div>
+                    <% } %>
+
+                    <section class="summary-layout">
+                        <article class="summary-card card">
+                            <div class="summary-icon">▦</div>
+
+                            <div class="summary-info">
+                                <strong><%= pageStats.availableCategories %></strong>
+                                <span>Available Categories</span>
+                                <small>Explore a wide range</small>
+                            </div>
+                        </article>
+
+                        <article class="summary-card card">
+                            <div class="summary-icon">📅</div>
+
+                            <div class="summary-info">
+                                <strong><%= pageStats.upcomingAppointments %></strong>
+                                <span>Upcoming Appointments</span>
+                                <small>Next one coming soon</small>
+                            </div>
+                        </article>
+
+                        <article class="summary-card card">
+                            <div class="summary-icon">♡</div>
+
+                            <div class="summary-info">
+                                <strong><%= pageStats.favoriteServices %></strong>
+                                <span>Favorite Services</span>
+                                <small>Your go-to services</small>
+                            </div>
+                        </article>
+
+                        <article class="promo-image-card">
+                            <img
+                                src="/images/client-wellness-banner.png"
+                                alt="Wellness banner"
+                                class="promo-banner-image"
+                            />
+                        </article>
+                    </section>
+
+                    <section class="page-title">
+                        <h2>Browse Categories</h2>
+
+                        <p>
+                            Select a category to explore services and book an appointment.
+                        </p>
+                    </section>
+
+                    <% if (!categoryList.length) { %>
+                        <section class="empty-state card">
+                            <h3>No categories available</h3>
+
+                            <p>
+                                There are no active categories in the database right now.
+                            </p>
+                        </section>
+                    <% } else { %>
+                        <section class="category-grid">
+                            <% categoryList.forEach(function(category) { %>
+                                <article class="category-card card <%= category.featured ? 'featured' : '' %>">
+                                    <div class="category-icon">
+                                        <%= category.icon || "▦" %>
+                                    </div>
+
+                                    <h3>
+                                        <%= category.name %>
+                                    </h3>
+
+                                    <p>
+                                        <%= category.description || "Explore available services and book your appointment" %>
+                                    </p>
+
+                                    <div class="service-badge">
+                                        <%= category.servicesCount || 0 %> Services
+                                    </div>
+
+                                    <a
+                                        class="outline-button"
+                                        href="/views/services-by-category/<%= category.id %>"
+                                    >
+                                        View Services
+                                    </a>
+                                </article>
+                            <% }) %>
+                        </section>
+                    <% } %>
+                </div>
+            </section>
+        </section>
+    </main>
+</body>
 </html>

@@ -49,15 +49,11 @@
             ? showNotification
             : safeRole === "admin" || safeRole === "staff";
 
-    const safeAvatarUrl =
-        typeof avatarUrl !== "undefined" && avatarUrl
-            ? avatarUrl
-            : null;
-
     const userInitial = safeFirstName.charAt(0).toUpperCase();
 %>
-<header class = "dashboard-topbar">
-     <div class="breadcrumb">
+
+<header class="dashboard-topbar">
+    <div class="breadcrumb">
         <span class="active-crumb"><%= safeBreadcrumbMain %></span>
         <span>/</span>
         <span><%= safeBreadcrumbSub %></span>
@@ -66,10 +62,13 @@
     <div class="topbar-right">
         <form class="search-box" action="#" method="GET">
             <span class="search-icon">🔍</span>
-            <input 
-            type="text" 
-            name="search" 
-            placeholder="<%= safeSearchPlaceholder %>">
+
+            <input
+                type="text"
+                name="search"
+                placeholder="<%= safeSearchPlaceholder %>"
+                autocomplete="off"
+            />
         </form>
 
         <% if (shouldShowNotification) { %>
@@ -83,21 +82,18 @@
                 <% } %>
             </button>
         <% } %>
-      <div class="user-box">
-        <div class="avatar">
-            <% if (safeAvatarUrl) { %>
-                <img src="<%= safeAvatarUrl %>" alt="<%= safeFirstName %>" />
-                <% } else { %>
-                       <span><%= userInitial %></span>
-                <% } %>
-                </div>
 
-        <div class="user-info">
-            <strong>Hello <%= safeFirstName %></strong>
-            <span><%= safeRoleLabel %></span>
+        <div class="user-box">
+            <div class="avatar">
+                <span><%= userInitial %></span>
+            </div>
+
+            <div class="user-info">
+                <strong>Hello, <%= safeFirstName %></strong>
+                <span><%= safeRoleLabel %></span>
+            </div>
+
+            <span class="user-chevron">⌄</span>
         </div>
-        <span class="user-chevron">⌄</span>
-     </div>
     </div>
-
 </header>
