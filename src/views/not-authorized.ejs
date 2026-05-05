@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title><%= typeof title !== "undefined" ? title : "Not Authorized" %></title>
+
+    <link rel="stylesheet" href="/styles/not-authorized.css" />
+</head>
+
+<body>
+    <%
+        const pageUser =
+            typeof user !== "undefined" && user
+                ? user
+                : null;
+
+        const userRole =
+            pageUser && (pageUser.role || pageUser.user_role)
+                ? pageUser.role || pageUser.user_role
+                : "client";
+
+        let dashboardPath = "/views/client-home";
+
+        if (userRole === "admin") {
+            dashboardPath = "/views/admin-dashboard";
+        }
+
+        if (userRole === "staff") {
+            dashboardPath = "/views/staff-dashboard";
+        }
+    %>
+
+    <main class="not-authorized-page">
+        <section class="not-authorized-card">
+            <div class="visual-side">
+                <img
+                    src="/images/not-authorized.png"
+                    alt="Not authorized security illustration"
+                    class="not-authorized-image"
+                />
+            </div>
+
+            <div class="content-side">
+                <div class="status-badge">
+                    <span>403</span>
+                    <span>Access Denied</span>
+                </div>
+
+                <h1>Not Authorized</h1>
+
+                <p class="main-description">
+                    You do not have permission to open this page. Please return to your dashboard
+                    or login with an account that has the correct role.
+                </p>
+
+                <div class="help-box">
+                    <strong>Why am I seeing this?</strong>
+
+                    <span>
+                        This page is protected by role-based access control.
+                        Your current account does not match the required permission for this section.
+                    </span>
+                </div>
+
+                <div class="actions">
+                    <a class="primary-action" href="<%= dashboardPath %>">
+                        Back to Dashboard
+                    </a>
+
+                    <a class="secondary-action" href="/views/logout">
+                        Logout
+                    </a>
+                </div>
+
+                <p class="bottom-note">
+                    Need another account?
+                    <a href="/views/login">Go to Login</a>
+                </p>
+            </div>
+        </section>
+    </main>
+</body>
+</html>
