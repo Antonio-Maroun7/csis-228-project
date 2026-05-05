@@ -137,9 +137,13 @@
                             </p>
                         </section>
                     <% } else { %>
-                        <section class="category-grid">
+                        <section class="category-grid" id="categoryGrid">
                             <% categoryList.forEach(function(category) { %>
-                                <article class="category-card card <%= category.featured ? 'featured' : '' %>">
+                                <article
+                                    class="category-card card <%= category.featured ? 'featured' : '' %>"
+                                    data-category-card
+                                    data-search-text="<%= `${category.name || ''} ${category.description || ''}`.toLowerCase() %>"
+                                >
                                     <div class="category-icon">
                                         <%= category.icon || "▦" %>
                                     </div>
@@ -165,10 +169,59 @@
                                 </article>
                             <% }) %>
                         </section>
+
+                        <section
+                            class="empty-state card search-empty-state"
+                            id="searchEmptyState"
+                            hidden
+                        >
+                            <h3>No matching categories</h3>
+
+                            <p>
+                                Try searching with another category name or description.
+                            </p>
+                        </section>
                     <% } %>
                 </div>
             </section>
         </section>
     </main>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const searchForm = document.getElementById("dashboardSearchForm");
+            const searchInput = document.getElementById("dashboardSearchInput");
+            const categoryCards = document.querySelectorAll("[data-category-card]");
+            const searchEmptyState = document.getElementById("searchEmptyState");
+
+            if (searchForm) {
+                searchForm.addEventListener("submit", function (event) {
+                    event.preventDefault();
+                });
+            }
+
+            if (searchInput) {
+                searchInput.addEventListener("input", function () {
+                    const searchValue = searchInput.value.trim().toLowerCase();
+                    let visibleCount = 0;
+
+                    categoryCards.forEach(function (card) {
+                        const searchText = card.dataset.searchText || "";
+                        const shouldShow = searchText.includes(searchValue);
+
+                        card.style.display = shouldShow ? "" : "none";
+
+                        if (shouldShow) {
+                            visibleCount += 1;
+                        }
+                    });
+
+                    if (searchEmptyState) {
+                        searchEmptyState.hidden = visibleCount !== 0;
+                    }
+                });
+            }
+        });
+    </script>
 </body>
 </html>

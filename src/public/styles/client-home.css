@@ -264,3 +264,52 @@
   padding: 30px;
   text-align: center;
 }
+
+.empty-state h3 {
+  margin: 0 0 8px;
+  color: var(--dark);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.5rem;
+}
+
+.empty-state p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+.search-empty-state {
+  margin-top: 10px;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 1250px) {
+  .client-home-header {
+    grid-template-columns: 1fr;
+  }
+
+  .promo-image-card {
+    height: 170px;
+  }
+
+  .category-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 900px) {
+  .summary-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .category-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .promo-image-card {
+    height: 150px;
+  }
+}

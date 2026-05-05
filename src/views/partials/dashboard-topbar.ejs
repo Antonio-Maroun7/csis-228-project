@@ -1,4 +1,71 @@
 <%
+    function capitalizeTopbarName(value) {
+        if (!value) return "User";
+
+        const text = String(value).trim();
+
+        if (!text) return "User";
+
+        return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
+    }
+
+    function formatTopbarFirstName(value) {
+        if (!value) return "User";
+
+        let text = String(value).trim();
+
+        if (!text) return "User";
+
+        if (text.includes("@")) {
+            text = text.split("@")[0];
+        }
+
+        text = text
+            .replace(/[0-9]/g, "")
+            .replace(/[._-]+/g, " ")
+            .trim();
+
+        const parts = text.split(/\s+/).filter(Boolean);
+
+        if (parts.length > 1) {
+            return capitalizeTopbarName(parts[0]);
+        }
+
+        let singleValue = parts[0] || text;
+        const lowerValue = singleValue.toLowerCase();
+
+        const knownFirstNames = [
+            "antonio",
+            "john",
+            "jane",
+            "maria",
+            "marie",
+            "mohammad",
+            "mohammed",
+            "ahmad",
+            "ali",
+            "hassan",
+            "hussein",
+            "george",
+            "elie",
+            "joe",
+            "charbel",
+            "mike",
+            "sarah",
+            "priya",
+        ];
+
+        const matchedName = knownFirstNames.find(function(name) {
+            return lowerValue.startsWith(name);
+        });
+
+        if (matchedName) {
+            singleValue = matchedName;
+        }
+
+        return capitalizeTopbarName(singleValue);
+    }
+
     const safeBreadcrumbMain =
         typeof breadcrumbMain !== "undefined" && breadcrumbMain
             ? breadcrumbMain
@@ -9,10 +76,12 @@
             ? breadcrumbSub
             : "Dashboard";
 
-    const safeFirstName =
+    const rawFirstName =
         typeof firstName !== "undefined" && firstName
             ? firstName
             : "User";
+
+    const safeFirstName = formatTopbarFirstName(rawFirstName);
 
     const safeRole =
         typeof role !== "undefined" && role
@@ -60,10 +129,11 @@
     </div>
 
     <div class="topbar-right">
-        <form class="search-box" action="#" method="GET">
+        <form class="search-box" action="#" method="GET" id="dashboardSearchForm">
             <span class="search-icon">🔍</span>
 
             <input
+                id="dashboardSearchInput"
                 type="text"
                 name="search"
                 placeholder="<%= safeSearchPlaceholder %>"
