@@ -1,0 +1,103 @@
+<%
+    const safeBreadcrumbMain =
+        typeof breadcrumbMain !== "undefined" && breadcrumbMain
+            ? breadcrumbMain
+            : "Home";
+
+    const safeBreadcrumbSub =
+        typeof breadcrumbSub !== "undefined" && breadcrumbSub
+            ? breadcrumbSub
+            : "Dashboard";
+
+    const safeFirstName =
+        typeof firstName !== "undefined" && firstName
+            ? firstName
+            : "User";
+
+    const safeRole =
+        typeof role !== "undefined" && role
+            ? role
+            : "client";
+
+    const roleLabels = {
+        admin: "Administrator",
+        staff: "Staff Member",
+        client: "Client",
+    };
+
+    const safeRoleLabel = roleLabels[safeRole] || "User";
+
+    const defaultSearchPlaceholder =
+        safeRole === "admin"
+            ? "Search services, categories, users..."
+            : safeRole === "staff"
+                ? "Search appointments, clients, services..."
+                : "Search services, categories...";
+
+    const safeSearchPlaceholder =
+        typeof searchPlaceholder !== "undefined" && searchPlaceholder
+            ? searchPlaceholder
+            : defaultSearchPlaceholder;
+
+    const safeNotificationCount =
+        typeof notificationCount !== "undefined" && notificationCount
+            ? notificationCount
+            : 0;
+
+    const shouldShowNotification =
+        typeof showNotification !== "undefined"
+            ? showNotification
+            : safeRole === "admin" || safeRole === "staff";
+
+    const safeAvatarUrl =
+        typeof avatarUrl !== "undefined" && avatarUrl
+            ? avatarUrl
+            : null;
+
+    const userInitial = safeFirstName.charAt(0).toUpperCase();
+%>
+<header class = "dashboard-topbar">
+     <div class="breadcrumb">
+        <span class="active-crumb"><%= safeBreadcrumbMain %></span>
+        <span>/</span>
+        <span><%= safeBreadcrumbSub %></span>
+    </div>
+
+    <div class="topbar-right">
+        <form class="search-box" action="#" method="GET">
+            <span class="search-icon">🔍</span>
+            <input 
+            type="text" 
+            name="search" 
+            placeholder="<%= safeSearchPlaceholder %>">
+        </form>
+
+        <% if (shouldShowNotification) { %>
+            <button class="notification-button" type="button" aria-label="Notifications">
+                <span class="notification-icon">🔔</span>
+
+                <% if (safeNotificationCount > 0) { %>
+                    <span class="notification-badge">
+                        <%= safeNotificationCount %>
+                    </span>
+                <% } %>
+            </button>
+        <% } %>
+      <div class="user-box">
+        <div class="avatar">
+            <% if (safeAvatarUrl) { %>
+                <img src="<%= safeAvatarUrl %>" alt="<%= safeFirstName %>" />
+                <% } else { %>
+                       <span><%= userInitial %></span>
+                <% } %>
+                </div>
+
+        <div class="user-info">
+            <strong>Hello <%= safeFirstName %></strong>
+            <span><%= safeRoleLabel %></span>
+        </div>
+        <span class="user-chevron">⌄</span>
+     </div>
+    </div>
+
+</header>
