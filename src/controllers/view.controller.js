@@ -225,6 +225,22 @@ class ViewController {
       });
     }
   }
+
+  static async logout(req, res) {
+    clearAuthCookie(res);
+    return res.redirect(
+      buildRedirectPath("/views/login", "Logged out successfully"),
+    );
+  }
+
+  // when a user tries to access something they are not allowed to access,
+  // this method returns a 403 response and displays the not-authorized page.
+  static renderNotAuthorized(req, res) {
+    return res.status(403).render("not-authorized", {
+      title: "Not Authorized",
+      user: req.user || null,
+    });
+  }
 }
 
 module.exports = ViewController;

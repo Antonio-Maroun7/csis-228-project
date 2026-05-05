@@ -27,4 +27,7 @@ router.get(
   viewController.renderClientHome,
 );
 
+router.get("/views/logout", requireViewAuth, viewController.logout);
+router.get("/views/not-authorized", viewController.renderNotAuthorized);
+
 module.exports = router;
