@@ -5,6 +5,7 @@
 
 const AuthService = require("../services/auth.service");
 const CategoryService = require("../services/category.service");
+const ServicesService = require("../services/services.service");
 
 function buildFeedbackState(req = {}) {
   const query = req.query || {};
@@ -69,6 +70,40 @@ function getCategoryIcon(categoryName = "") {
   return "▦";
 }
 
+function getServiceIcon(serviceName = "") {
+  const name = String(serviceName).toLowerCase();
+  if (name.includes("haircut")) return "✂️";
+  if (name.includes("cut")) return "✂️";
+  if (name.includes("color")) return "🎨";
+  if (name.includes("blow")) return "💨";
+  if (name.includes("styling")) return "💇";
+  if (name.includes("keratin")) return "✨";
+  if (name.includes("beard")) return "🧔";
+  if (name.includes("facial")) return "🧖";
+  if (name.includes("skin")) return "🧖";
+  if (name.includes("massage")) return "💆";
+  if (name.includes("doctor")) return "🩺";
+  if (name.includes("consult")) return "🩺";
+  if (name.includes("therapy")) return "🧘";
+  if (name.includes("advisor")) return "💬";
+
+  return "▦";
+}
+
+function formatPrice(value) {
+  const dollar = Number(value) || 0;
+
+  if (!dollar) {
+    return "Free";
+  }
+
+  if (Number.isInteger(dollar)) {
+    return `$${dollar}`;
+  }
+
+  return `$${dollar.toFixed(2)}`;
+}
+
 function decorateCategoriesForView(categories = []) {
   return categories
     .filter((category) => category && category.is_active !== false)
@@ -90,6 +125,41 @@ function decorateCategoriesForView(categories = []) {
             0,
         ),
         icon: getCategoryIcon(categoryName),
+        featured: index === 1,
+      };
+    });
+}
+
+function decorateServicesForView(services = []) {
+  return services
+    .filter((service) => service && service.is_active !== false)
+    .map((service, index) => {
+      const serviceName = service.name || service.service_name || "Service";
+
+      const durationMin =
+        service.default_duration_min ||
+        service.service_default_duration_min ||
+        service.duration_min ||
+        0;
+
+      const priceCents =
+        service.base_price_cents ||
+        service.service_base_price_cents ||
+        service.default_price_cents ||
+        service.price_cents ||
+        0;
+
+      return {
+        id: service.id || service.service_id,
+        categoryId: service.category_id || service.categoryId,
+        name: serviceName,
+        description:
+          service.description ||
+          service.service_description ||
+          "Professional service with trusted care.",
+        durationMin: Number(durationMin) || 0,
+        priceLabel: formatPriceFromCents(priceCents),
+        icon: getServiceIcon(serviceName),
         featured: index === 1,
       };
     });
@@ -327,6 +397,60 @@ class ViewController {
         message: err.message || "Could not load categories",
         messageType: "error",
       });
+    }
+  }
+
+  static async renderServicesByCategory(req, res) {
+    try {
+      const categoryId = req.params.categoryId;
+
+      const dbcategories = await CategoryService.getAllCategories();
+      const dbservices = await ServicesService.getServicesByCategory(
+        req.params.categoryId,
+      );
+
+      const categoryName =
+        dbcategories.name || dbcategories.category_name || "Category";
+
+      const services = decorateServicesForView(dbservices);
+
+      const user = req.user || null;
+      const firstName = getFirstName(user);
+
+      return res.render("services-by-catgeory", {
+        title: `${categoryName} Services`,
+        user,
+        firstName,
+        role: "client",
+        activePage: "client-home",
+        breadcrumbMain: "Home",
+        breadcrumbMiddle: "Categories",
+        breadcrumbSub: categoryName,
+        category: {
+          id: dbCategory.id || categoryId,
+          name: categoryName,
+          description:
+            dbCategory.description ||
+            "Choose a service to view details and book your appointment.",
+          icon: getCategoryIcon(categoryName),
+        },
+        services,
+        stats: {
+          availableServices: services.length,
+          upcomingAppointments: 0,
+          favoriteServices: 0,
+        },
+        message: req.query?.type === "error" ? req.query.message : null,
+        messageType: req.query?.type || null,
+      });
+    } catch (err) {
+      res.redirect(
+        buildRedirectPath(
+          "/views/client-home",
+          err.message || "Could not load services",
+          "error",
+        ),
+      );
     }
   }
 

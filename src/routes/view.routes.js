@@ -30,4 +30,14 @@ router.get(
 router.get("/views/logout", requireViewAuth, viewController.logout);
 router.get("/views/not-authorized", viewController.renderNotAuthorized);
 
+router.get(
+  "/views/services-by-category/:categoryId",
+  requireViewAuth,
+  requireViewRole(["client"]),
+  viewController.renderServicesByCategory,
+);
+
+router.get("/views/logout", requireViewAuth, viewController.logout);
+router.get("/views/not-authorized", viewController.renderNotAuthorized);
+
 module.exports = router;

@@ -71,6 +71,11 @@
             ? breadcrumbMain
             : "Home";
 
+    const safeBreadcrumbMiddle =
+        typeof breadcrumbMiddle !== "undefined" && breadcrumbMiddle
+            ? breadcrumbMiddle
+            : null;
+
     const safeBreadcrumbSub =
         typeof breadcrumbSub !== "undefined" && breadcrumbSub
             ? breadcrumbSub
@@ -124,6 +129,12 @@
 <header class="dashboard-topbar">
     <div class="breadcrumb">
         <span class="active-crumb"><%= safeBreadcrumbMain %></span>
+
+        <% if (safeBreadcrumbMiddle) { %>
+            <span>/</span>
+            <span class="active-crumb"><%= safeBreadcrumbMiddle %></span>
+        <% } %>
+
         <span>/</span>
         <span><%= safeBreadcrumbSub %></span>
     </div>
