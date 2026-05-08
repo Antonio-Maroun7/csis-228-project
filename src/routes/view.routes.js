@@ -8,10 +8,8 @@ const {
   requireViewRole,
 } = require("../middleware/viewAuth.middleware");
 
-/**
- * Public pages
- */
 router.get("/", viewController.redirectToLogin);
+
 router.get("/views/login", viewController.renderLogin);
 router.post("/views/login", viewController.login);
 
@@ -27,14 +25,25 @@ router.get(
   viewController.renderClientHome,
 );
 
-router.get("/views/logout", requireViewAuth, viewController.logout);
-router.get("/views/not-authorized", viewController.renderNotAuthorized);
-
 router.get(
   "/views/services-by-category/:categoryId",
   requireViewAuth,
   requireViewRole(["client"]),
   viewController.renderServicesByCategory,
+);
+
+router.get(
+  "/views/book-appointment/:serviceId",
+  requireViewAuth,
+  requireViewRole(["client"]),
+  viewController.renderBookAppointment,
+);
+
+router.post(
+  "/views/book-appointment",
+  requireViewAuth,
+  requireViewRole(["client"]),
+  viewController.bookAppointment,
 );
 
 router.get("/views/logout", requireViewAuth, viewController.logout);

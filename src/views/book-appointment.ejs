@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%= typeof title !== "undefined" ? title : "Book Appointment" %></title>
+
+    <link rel="stylesheet" href="/styles/dashboard.css" />
+    <link rel="stylesheet" href="/styles/book-appointment.css" />
+</head>
+
+<body class="book-appointment-body">
+    <%
+        const safeRole = typeof role !== "undefined" && role ? role : "client";
+        const safeActivePage = typeof activePage !== "undefined" && activePage ? activePage : "book-appointment";
+        const safeFirstName = typeof firstName !== "undefined" && firstName ? firstName : "Client";
+
+        const safeBreadcrumbMain =
+            typeof breadcrumbMain !== "undefined" && breadcrumbMain ? breadcrumbMain : "Home";
+
+        const safeBreadcrumbMiddle =
+            typeof breadcrumbMiddle !== "undefined" && breadcrumbMiddle ? breadcrumbMiddle : "Categories";
+
+        const safeBreadcrumbSub =
+            typeof breadcrumbSub !== "undefined" && breadcrumbSub ? breadcrumbSub : "Book Appointment";
+
+        const safeService =
+            typeof service !== "undefined" && service ? service : {};
+
+        const safeStaffList =
+            typeof staffList !== "undefined" && Array.isArray(staffList) ? staffList : [];
+
+        const safeTimeSlots =
+            typeof timeSlots !== "undefined" && Array.isArray(timeSlots) ? timeSlots : [];
+
+        const safeTodayISO =
+            typeof todayISO !== "undefined" && todayISO ? todayISO : new Date().toISOString().split("T")[0];
+
+        const safeUserFullname =
+            typeof userFullname !== "undefined" && userFullname ? userFullname : safeFirstName;
+
+        const safeUserEmail =
+            typeof userEmail !== "undefined" && userEmail ? userEmail : "";
+
+        const safeUserPhone =
+            typeof userPhone !== "undefined" && userPhone ? userPhone : "Not provided";
+
+        const safeCategoryName =
+            typeof categoryName !== "undefined" && categoryName ? categoryName : "Category";
+
+        const safeCategoryId =
+            safeService.categoryId || safeService.category_id || "";
+
+        const firstStaff = safeStaffList.length > 0 ? safeStaffList[0] : null;
+    %>
+
+    <main class="dashboard-page">
+        <section class="dashboard">
+
+            <%- include("./partials/dashboard-sidebar", {
+                role: safeRole,
+                activePage: safeActivePage
+            }) %>
+
+            <section class="dashboard-main">
+                <%- include("./partials/dashboard-topbar", {
+                    breadcrumbMain: safeBreadcrumbMain,
+                    breadcrumbMiddle: safeBreadcrumbMiddle,
+                    breadcrumbSub: safeBreadcrumbSub,
+                    firstName: safeFirstName,
+                    role: safeRole,
+                    showNotification: false,
+                    searchPlaceholder: "Search services, categories..."
+                }) %>
+
+                <div class="dashboard-content ba-content">
+
+                    <% if (typeof message !== "undefined" && message && messageType === "error") { %>
+                        <div class="ba-error-banner">
+                            <span>⚠</span>
+                            <%= message %>
+                        </div>
+                    <% } %>
+
+                    <div class="ba-layout">
+
+                        <!-- LEFT SIDE -->
+                        <div class="ba-left-col">
+
+                            <div class="ba-page-heading">
+                                <h2>Book Appointment</h2>
+                                <p>Complete your booking details and confirm your appointment.</p>
+                            </div>
+
+                            <form id="bookingForm" method="POST" action="/views/book-appointment" class="ba-form" novalidate>
+                                <input type="hidden" name="service_id" value="<%= safeService.id || '' %>" />
+                                <input type="hidden" name="appointment_time" id="hiddenTime" value="" />
+
+                                <!-- SELECTED SERVICE -->
+                                <section class="card ba-section ba-selected-section">
+                                    <div class="ba-corner-badge">
+                                        <span>✓</span>
+                                    </div>
+
+                                    <h3 class="ba-section-title">Selected Service</h3>
+
+                                    <div class="ba-service-row">
+                                        <div class="ba-service-icon-wrap">
+                                            <span class="ba-service-icon">
+                                                <%= safeService.icon || "▦" %>
+                                            </span>
+                                        </div>
+
+                                        <div class="ba-service-body">
+                                            <h4><%= safeService.name || "Service" %></h4>
+
+                                            <p>
+                                                <%= safeService.description || "Professional service with trusted care." %>
+                                            </p>
+
+                                            <div class="ba-service-tags">
+                                                <span class="ba-tag">◷ <%= safeService.durationMin || 0 %> min</span>
+                                                <span class="ba-tag"><%= safeService.priceLabel || "Free" %></span>
+                                                <span class="ba-tag ba-tag-cat">⌁ <%= safeCategoryName %></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </section>
+
+                                <!-- APPOINTMENT DETAILS -->
+                                <section class="card ba-section ba-appointment-section">
+                                    <h3 class="ba-section-title">Appointment Details</h3>
+
+                                    <div class="ba-details-grid">
+                                        <div class="ba-field-group">
+                                            <label class="ba-label" for="staffSelect">Select Staff</label>
+
+                                            <% if (safeStaffList.length === 0) { %>
+                                                <div class="ba-no-staff">
+                                                    No staff available for this service at the moment.
+                                                </div>
+                                            <% } else { %>
+                                                <div class="ba-select-wrap">
+                                                    <select id="staffSelect" name="staff_id" class="ba-select" required>
+                                                        <option value="" disabled selected>— Choose a staff member —</option>
+
+                                                        <% safeStaffList.forEach(function(staff) { %>
+                                                            <option value="<%= staff.id %>"><%= staff.name %></option>
+                                                        <% }); %>
+                                                    </select>
+
+                                                    <span class="ba-select-arrow">⌄</span>
+                                                </div>
+                                            <% } %>
+                                        </div>
+
+                                        <div class="ba-field-group">
+                                            <label class="ba-label" for="appointmentDate">Appointment Date</label>
+
+                                            <div class="ba-input-wrap">
+                                                <span class="ba-input-icon">▣</span>
+
+                                                <input
+                                                    id="appointmentDate"
+                                                    type="date"
+                                                    name="appointment_date"
+                                                    class="ba-input ba-input-padded"
+                                                    min="<%= safeTodayISO %>"
+                                                    required
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="ba-field-group ba-field-full">
+                                        <label class="ba-label">Time Slot</label>
+
+                                        <div class="ba-time-slots" id="timeSlots">
+                                            <% safeTimeSlots.forEach(function(slot, index) { %>
+                                                <button
+                                                    type="button"
+                                                    class="ba-time-btn <%= index === 3 ? 'selected' : '' %>"
+                                                    data-value="<%= slot.value %>"
+                                                >
+                                                    <%= slot.label %>
+                                                </button>
+                                            <% }); %>
+                                        </div>
+                                    </div>
+
+                                    <div class="ba-field-group ba-field-full">
+                                        <label class="ba-label" for="appointmentNotes">
+                                            Notes / Special Requests
+                                        </label>
+
+                                        <textarea
+                                            id="appointmentNotes"
+                                            name="appointment_notes"
+                                            class="ba-textarea"
+                                            rows="2"
+                                            placeholder="Any special requests or notes for your appointment..."
+                                        ></textarea>
+                                    </div>
+                                </section>
+
+                                <!-- USER DETAILS -->
+                                <section class="card ba-section ba-user-section">
+                                    <h3 class="ba-section-title">Your Details</h3>
+
+                                    <div class="ba-user-grid">
+                                        <div class="ba-field-group">
+                                            <label class="ba-label">Full Name</label>
+                                            <input type="text" class="ba-input ba-input-readonly" value="<%= safeUserFullname %>" readonly />
+                                        </div>
+
+                                        <div class="ba-field-group">
+                                            <label class="ba-label">Email</label>
+                                            <input type="email" class="ba-input ba-input-readonly" value="<%= safeUserEmail %>" readonly />
+                                        </div>
+
+                                        <div class="ba-field-group">
+                                            <label class="ba-label">Phone</label>
+                                            <input type="text" class="ba-input ba-input-readonly" value="<%= safeUserPhone %>" readonly />
+                                        </div>
+                                    </div>
+                                </section>
+                            </form>
+                        </div>
+
+                        <!-- RIGHT SIDE -->
+                        <aside class="ba-right-col">
+
+                            <article class="ba-promo">
+                                <img
+                                    src="/images/RelaxSelf.png"
+                                    alt="Relax, refresh, and reveal your best self"
+                                    class="ba-promo-img"
+                                />
+                            </article>
+
+                            <article class="card ba-summary">
+                                <h3 class="ba-summary-title">Booking Summary</h3>
+
+                                <ul class="ba-summary-list">
+                                    <li>
+                                        <span class="ba-sum-icon">⌂</span>
+                                        <span class="ba-sum-key">Service</span>
+                                        <span class="ba-sum-val" id="sumService">
+                                            <%= safeService.name || "—" %>
+                                        </span>
+                                    </li>
+
+                                    <li>
+                                        <span class="ba-sum-icon">♙</span>
+                                        <span class="ba-sum-key">Staff</span>
+                                        <span class="ba-sum-val" id="sumStaff">
+                                            <%= firstStaff ? firstStaff.name : "—" %>
+                                        </span>
+                                    </li>
+
+                                    <li>
+                                        <span class="ba-sum-icon">▣</span>
+                                        <span class="ba-sum-key">Date</span>
+                                        <span class="ba-sum-val" id="sumDate">—</span>
+                                    </li>
+
+                                    <li>
+                                        <span class="ba-sum-icon">◷</span>
+                                        <span class="ba-sum-key">Time</span>
+                                        <span class="ba-sum-val" id="sumTime">—</span>
+                                    </li>
+
+                                    <li>
+                                        <span class="ba-sum-icon">◷</span>
+                                        <span class="ba-sum-key">Duration</span>
+                                        <span class="ba-sum-val">
+                                            <%= safeService.durationMin || 0 %> min
+                                        </span>
+                                    </li>
+                                </ul>
+
+                                <div class="ba-summary-divider"></div>
+
+                                <ul class="ba-summary-list">
+                                    <li>
+                                        <span class="ba-sum-icon">$</span>
+                                        <span class="ba-sum-key">Price</span>
+                                        <span class="ba-sum-val">
+                                            <%= safeService.priceLabel || "Free" %>
+                                        </span>
+                                    </li>
+
+                                    <li>
+                                        <span class="ba-sum-icon">▣</span>
+                                        <span class="ba-sum-key">Booking Fee</span>
+                                        <span class="ba-sum-val">$0</span>
+                                    </li>
+                                </ul>
+
+                                <div class="ba-summary-total">
+                                    <span>Total</span>
+                                    <strong><%= safeService.priceLabel || "$0" %></strong>
+                                </div>
+
+                                <% if (safeStaffList.length > 0) { %>
+                                    <button type="submit" form="bookingForm" class="ba-confirm-btn" id="confirmBtn">
+                                        <span>▣</span>
+                                        Confirm Booking
+                                    </button>
+                                <% } else { %>
+                                    <button type="button" class="ba-confirm-btn" disabled>
+                                        No staff available
+                                    </button>
+                                <% } %>
+
+                                <a
+                                    href="<%= safeCategoryId ? '/views/services-by-category/' + safeCategoryId : '/views/client-home' %>"
+                                    class="ba-back-btn"
+                                >
+                                    Back to Services
+                                </a>
+                            </article>
+                        </aside>
+                    </div>
+                </div>
+            </section>
+        </section>
+    </main>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const staffSelect = document.getElementById("staffSelect");
+            const dateInput = document.getElementById("appointmentDate");
+            const hiddenTime = document.getElementById("hiddenTime");
+            const sumStaff = document.getElementById("sumStaff");
+            const sumDate = document.getElementById("sumDate");
+            const sumTime = document.getElementById("sumTime");
+            const timeButtons = document.querySelectorAll(".ba-time-btn");
+            const bookingForm = document.getElementById("bookingForm");
+            const confirmBtn = document.getElementById("confirmBtn");
+
+            if (staffSelect && sumStaff) {
+                staffSelect.addEventListener("change", function () {
+                    const selectedOption = staffSelect.options[staffSelect.selectedIndex];
+                    sumStaff.textContent = selectedOption ? selectedOption.text.trim() : "—";
+                });
+
+                if (staffSelect.options.length === 2) {
+                    staffSelect.selectedIndex = 1;
+                    sumStaff.textContent = staffSelect.options[1].text.trim();
+                }
+            }
+
+            if (dateInput && sumDate) {
+                dateInput.addEventListener("change", function () {
+                    if (!dateInput.value) {
+                        sumDate.textContent = "—";
+                        return;
+                    }
+
+                    const date = new Date(dateInput.value + "T00:00:00");
+
+                    sumDate.textContent = date.toLocaleDateString("en-US", {
+                        year: "numeric",
+                        month: "short",
+                        day: "numeric",
+                    });
+                });
+            }
+
+            const selectedButton =
+                document.querySelector(".ba-time-btn.selected") || timeButtons[0];
+
+            if (selectedButton && hiddenTime && sumTime) {
+                hiddenTime.value = selectedButton.dataset.value || "";
+                sumTime.textContent = selectedButton.textContent.trim();
+            }
+
+            timeButtons.forEach(function (button) {
+                button.addEventListener("click", function () {
+                    timeButtons.forEach(function (btn) {
+                        btn.classList.remove("selected");
+                    });
+
+                    button.classList.add("selected");
+
+                    if (hiddenTime) {
+                        hiddenTime.value = button.dataset.value || "";
+                    }
+
+                    if (sumTime) {
+                        sumTime.textContent = button.textContent.trim();
+                    }
+                });
+            });
+
+            if (bookingForm && confirmBtn) {
+                bookingForm.addEventListener("submit", function (event) {
+                    const hasStaff = staffSelect && staffSelect.value;
+                    const hasDate = dateInput && dateInput.value;
+                    const hasTime = hiddenTime && hiddenTime.value;
+
+                    if (!hasStaff || !hasDate || !hasTime) {
+                        event.preventDefault();
+                        alert("Please select a staff member, date, and time slot before confirming.");
+                        return;
+                    }
+
+                    confirmBtn.disabled = true;
+                    confirmBtn.innerHTML = "Booking...";
+                });
+            }
+        });
+    </script>
+</body>
+</html>

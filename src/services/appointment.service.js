@@ -81,8 +81,7 @@ class AppointmentService {
           service.service_default_duration_min;
 
         const price =
-          assignedService.staff_price_cents ??
-          service.service_default_price_cents;
+          assignedService.staff_price_cents ?? service.service_base_price_cents;
 
         totalDuration += duration;
         totalPrice += price;

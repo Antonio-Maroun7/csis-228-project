@@ -7,16 +7,14 @@
 
     <nav class="nav">
         <% if (role === "client") { %>
-            <a class="nav-link <%= activePage === 'client-home' ? 'active' : '' %>" href="/views/client-home">
+            <a class="nav-link <%= activePage === 'client-home' || activePage === 'book-appointment' ? 'active' : '' %>" href="/views/client-home">
                 <span class="nav-icon">🏠</span>
                 <span>Home</span>
             </a>
-
             <a class="nav-link <%= activePage === 'my-appointments' ? 'active' : '' %>" href="/views/my-appointments">
                 <span class="nav-icon">📅</span>
                 <span>My Appointments</span>
             </a>
-
             <a class="nav-link <%= activePage === 'profile' ? 'active' : '' %>" href="/views/profile">
                 <span class="nav-icon">👤</span>
                 <span>Profile</span>
@@ -25,60 +23,40 @@
 
         <% if (role === "staff") { %>
             <a class="nav-link <%= activePage === 'staff-dashboard' ? 'active' : '' %>" href="/views/staff-dashboard">
-                <span class="nav-icon">🏠</span>
-                <span>Home</span>
+                <span class="nav-icon">🏠</span><span>Home</span>
             </a>
-
             <a class="nav-link <%= activePage === 'staff-appointments' ? 'active' : '' %>" href="/views/staff-appointments">
-                <span class="nav-icon">📅</span>
-                <span>My Appointments</span>
+                <span class="nav-icon">📅</span><span>My Appointments</span>
             </a>
-
             <a class="nav-link <%= activePage === 'staff-services' ? 'active' : '' %>" href="/views/staff-services">
-                <span class="nav-icon">🧾</span>
-                <span>My Services</span>
+                <span class="nav-icon">🧾</span><span>My Services</span>
             </a>
-
             <a class="nav-link <%= activePage === 'staff-profile' ? 'active' : '' %>" href="/views/staff-profile">
-                <span class="nav-icon">👤</span>
-                <span>Profile</span>
+                <span class="nav-icon">👤</span><span>Profile</span>
             </a>
         <% } %>
 
         <% if (role === "admin") { %>
             <a class="nav-link <%= activePage === 'admin-dashboard' ? 'active' : '' %>" href="/views/admin-dashboard">
-                <span class="nav-icon">🏠</span>
-                <span>Home</span>
+                <span class="nav-icon">🏠</span><span>Home</span>
             </a>
-
             <a class="nav-link <%= activePage === 'manage-users' ? 'active' : '' %>" href="/views/manage-users">
-                <span class="nav-icon">👥</span>
-                <span>Manage Users</span>
+                <span class="nav-icon">👥</span><span>Manage Users</span>
             </a>
-
             <a class="nav-link <%= activePage === 'admin-categories' ? 'active' : '' %>" href="/views/admin-categories">
-                <span class="nav-icon">▦</span>
-                <span>Categories</span>
+                <span class="nav-icon">▦</span><span>Categories</span>
             </a>
-
             <a class="nav-link <%= activePage === 'admin-services' ? 'active' : '' %>" href="/views/admin-services">
-                <span class="nav-icon">🧾</span>
-                <span>Services</span>
+                <span class="nav-icon">🧾</span><span>Services</span>
             </a>
-
             <a class="nav-link <%= activePage === 'admin-staff-services' ? 'active' : '' %>" href="/views/admin-staff-services">
-                <span class="nav-icon">👥</span>
-                <span>Staff Services</span>
+                <span class="nav-icon">👥</span><span>Staff Services</span>
             </a>
-
             <a class="nav-link <%= activePage === 'admin-appointments' ? 'active' : '' %>" href="/views/admin-appointments">
-                <span class="nav-icon">📅</span>
-                <span>All Appointments</span>
+                <span class="nav-icon">📅</span><span>All Appointments</span>
             </a>
-
             <a class="nav-link <%= activePage === 'admin-profile' ? 'active' : '' %>" href="/views/admin-profile">
-                <span class="nav-icon">👤</span>
-                <span>Profile</span>
+                <span class="nav-icon">👤</span><span>Profile</span>
             </a>
         <% } %>
 
