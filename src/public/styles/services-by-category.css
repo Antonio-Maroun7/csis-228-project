@@ -1,0 +1,342 @@
+.dashboard-message {
+  margin-bottom: 12px;
+  padding: 10px 14px;
+  border-radius: 12px;
+  font-weight: 800;
+}
+
+.dashboard-message.error {
+  background: #fef2f2;
+  color: #991b1b;
+}
+
+/* =========================
+   PAGE CONTENT
+========================= */
+
+.services-content {
+  padding-top: 16px;
+  padding-bottom: 18px;
+}
+
+.services-top-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 350px;
+  gap: 20px;
+  align-items: start;
+  margin-bottom: 20px;
+}
+
+.services-left-area {
+  min-width: 0;
+}
+
+/* =========================
+   SUMMARY CARDS
+========================= */
+
+.services-summary-layout {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  margin-bottom: 24px;
+}
+
+.services-summary-card {
+  height: 82px;
+  padding: 14px 15px;
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  border-radius: 15px;
+}
+
+.services-summary-icon {
+  width: 48px;
+  height: 48px;
+  flex: 0 0 48px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--primary-soft);
+  color: var(--primary);
+  font-size: 1.25rem;
+}
+
+.services-summary-info {
+  min-width: 0;
+}
+
+.services-summary-card strong {
+  display: block;
+  color: var(--dark);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.48rem;
+  line-height: 0.95;
+  font-weight: 800;
+}
+
+.services-summary-card span {
+  display: block;
+  margin-top: 4px;
+  color: #334155;
+  font-size: 0.78rem;
+  font-weight: 800;
+  line-height: 1.12;
+}
+
+.services-summary-card small {
+  display: block;
+  margin-top: 3px;
+  color: var(--muted);
+  font-size: 0.7rem;
+  line-height: 1.15;
+}
+
+/* =========================
+   PROMO IMAGE
+========================= */
+
+.services-promo-image-card {
+  width: 100%;
+  height: 180px;
+  overflow: hidden;
+  border-radius: 15px;
+  border: 1px solid rgba(15, 143, 140, 0.14);
+  box-shadow: var(--card-shadow);
+  background: transparent;
+}
+
+.services-promo-image-card img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  object-position: center;
+}
+
+/* =========================
+   TITLE
+========================= */
+
+.services-title h2 {
+  margin: 0 0 7px;
+  color: var(--dark);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 2.18rem;
+  line-height: 1.02;
+  letter-spacing: -0.04em;
+  font-weight: 800;
+}
+
+.services-title p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.92rem;
+  line-height: 1.4;
+}
+
+/* =========================
+   SERVICE GRID
+========================= */
+
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.service-card {
+  min-height: 156px;
+  padding: 18px 20px;
+  display: grid;
+  grid-template-columns: 72px minmax(0, 1fr);
+  align-items: center;
+  gap: 16px;
+  border-radius: 17px;
+  transition: 0.2s ease;
+}
+
+.service-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 16px 38px rgba(15, 23, 42, 0.11);
+}
+
+.service-card.featured {
+  position: relative;
+  overflow: hidden;
+  border: 0;
+  background: linear-gradient(135deg, #0f8f8c 0%, #087674 100%);
+  color: white;
+}
+
+.service-card.featured::after {
+  content: "🌿";
+  position: absolute;
+  right: 20px;
+  top: 36px;
+  font-size: 4rem;
+  opacity: 0.08;
+}
+
+.service-icon {
+  width: 68px;
+  height: 68px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: #ecfbf8;
+  color: var(--primary);
+  font-size: 1.9rem;
+}
+
+.service-card.featured .service-icon {
+  background: rgba(255, 255, 255, 0.92);
+  color: var(--primary);
+}
+
+.service-info {
+  min-width: 0;
+  position: relative;
+  z-index: 2;
+}
+
+.service-info h3 {
+  margin: 0 0 6px;
+  color: var(--dark);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.18rem;
+  line-height: 1.08;
+  font-weight: 800;
+}
+
+.service-card.featured .service-info h3 {
+  color: white;
+}
+
+.service-info p {
+  min-height: 34px;
+  margin: 0 0 10px;
+  color: #526172;
+  font-size: 0.8rem;
+  line-height: 1.38;
+}
+
+.service-card.featured .service-info p {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.service-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+
+.service-meta span {
+  min-width: 66px;
+  height: 25px;
+  padding: 0 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background: #f3f7f6;
+  color: #334155;
+  font-size: 0.74rem;
+  font-weight: 800;
+}
+
+.service-meta span:last-child {
+  background: #fff1e6;
+  color: #334155;
+}
+
+.service-card.featured .service-meta span {
+  background: rgba(255, 255, 255, 0.18);
+  color: white;
+}
+
+.service-action-button {
+  width: 154px;
+  height: 32px;
+  font-size: 0.78rem;
+  border-radius: 10px;
+}
+
+.service-card.featured .service-action-button {
+  background: white;
+  border-color: white;
+  color: var(--primary-dark);
+}
+
+.service-card.featured .service-action-button:hover {
+  background: #ecfbf8;
+  color: var(--primary-dark);
+}
+
+/* =========================
+   EMPTY STATE
+========================= */
+
+.empty-state {
+  padding: 30px;
+  text-align: center;
+}
+
+.empty-state h3 {
+  margin: 0 0 8px;
+  color: var(--dark);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.4rem;
+}
+
+.empty-state p {
+  margin: 0 0 18px;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+.search-empty-state {
+  margin-top: 12px;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 1250px) {
+  .services-top-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .services-promo-image-card {
+    height: 160px;
+  }
+
+  .services-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 900px) {
+  .services-summary-layout,
+  .services-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .service-card {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    text-align: center;
+  }
+
+  .service-meta {
+    justify-content: center;
+  }
+
+  .services-promo-image-card {
+    height: 145px;
+  }
+}

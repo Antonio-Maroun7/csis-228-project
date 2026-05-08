@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title><%= typeof title !== "undefined" ? title : "Services" %></title>
+
+    <link rel="stylesheet" href="/styles/dashboard.css" />
+    <link rel="stylesheet" href="/styles/services-by-category.css" />
+</head>
+
+<body>
+    <%
+        const safeRole =
+            typeof role !== "undefined" && role
+                ? role
+                : "client";
+
+        const safeActivePage =
+            typeof activePage !== "undefined" && activePage
+                ? activePage
+                : "client-home";
+
+        const safeFirstName =
+            typeof firstName !== "undefined" && firstName
+                ? firstName
+                : "Client";
+
+        const safeBreadcrumbMain =
+            typeof breadcrumbMain !== "undefined" && breadcrumbMain
+                ? breadcrumbMain
+                : "Home";
+
+        const safeBreadcrumbMiddle =
+            typeof breadcrumbMiddle !== "undefined" && breadcrumbMiddle
+                ? breadcrumbMiddle
+                : "Categories";
+
+        const safeBreadcrumbSub =
+            typeof breadcrumbSub !== "undefined" && breadcrumbSub
+                ? breadcrumbSub
+                : "Services";
+
+        const safeCategory =
+            typeof category !== "undefined" && category
+                ? category
+                : {
+                    id: null,
+                    name: "Services",
+                    description: "Choose a service to view details and book your appointment.",
+                    icon: "▦",
+                };
+
+        const serviceList =
+            typeof services !== "undefined" && Array.isArray(services)
+                ? services
+                : [];
+
+        const pageStats =
+            typeof stats !== "undefined" && stats
+                ? stats
+                : {
+                    availableServices: serviceList.length,
+                    upcomingAppointments: 0,
+                    favoriteServices: 0,
+                };
+    %>
+
+    <main class="dashboard-page">
+        <section class="dashboard">
+            <%- include("./partials/dashboard-sidebar", {
+                role: safeRole,
+                activePage: safeActivePage
+            }) %>
+
+            <section class="dashboard-main">
+                <%- include("./partials/dashboard-topbar", {
+                    breadcrumbMain: safeBreadcrumbMain,
+                    breadcrumbMiddle: safeBreadcrumbMiddle,
+                    breadcrumbSub: safeBreadcrumbSub,
+                    firstName: safeFirstName,
+                    role: safeRole,
+                    showNotification: false,
+                    searchPlaceholder: "Search services, categories..."
+                }) %>
+
+                <div class="dashboard-content services-content">
+                    <% if (typeof message !== "undefined" && message && messageType === "error") { %>
+                        <div class="dashboard-message error">
+                            <%= message %>
+                        </div>
+                    <% } %>
+
+                    <section class="services-top-layout">
+                        <div class="services-left-area">
+                            <section class="services-summary-layout">
+                                <article class="services-summary-card card">
+                                    <div class="services-summary-icon">▦</div>
+
+                                    <div class="services-summary-info">
+                                        <strong><%= pageStats.availableServices %></strong>
+                                        <span>Available Services</span>
+                                        <small>In the <%= safeCategory.name %> category</small>
+                                    </div>
+                                </article>
+
+                                <article class="services-summary-card card">
+                                    <div class="services-summary-icon">📅</div>
+
+                                    <div class="services-summary-info">
+                                        <strong><%= pageStats.upcomingAppointments %></strong>
+                                        <span>Upcoming Appointments</span>
+                                        <small>Next one coming soon</small>
+                                    </div>
+                                </article>
+
+                                <article class="services-summary-card card">
+                                    <div class="services-summary-icon">♡</div>
+
+                                    <div class="services-summary-info">
+                                        <strong><%= pageStats.favoriteServices %></strong>
+                                        <span>Favorite Services</span>
+                                        <small>Your go-to services</small>
+                                    </div>
+                                </article>
+                            </section>
+
+                            <section class="services-title">
+                                <h2><%= safeCategory.name %> Services</h2>
+
+                                <p>
+                                    Choose a service to view details and book your appointment.
+                                </p>
+                            </section>
+                        </div>
+
+                        <article class="services-promo-image-card">
+                            <img
+                                src="/images/client-wellness-banner.png"
+                                alt="Booking wellness banner"
+                            />
+                        </article>
+                    </section>
+
+                    <% if (!serviceList.length) { %>
+                        <section class="empty-state card">
+                            <h3>No services available</h3>
+
+                            <p>
+                                There are no active services for this category right now.
+                            </p>
+
+                            <a class="outline-button" href="/views/client-home">
+                                Back to Categories
+                            </a>
+                        </section>
+                    <% } else { %>
+                        <section class="services-grid" id="servicesGrid">
+                            <% serviceList.forEach(function(service, index) { %>
+                                <article
+                                    class="service-card card <%= service.featured ? 'featured' : '' %>"
+                                    data-service-card
+                                    data-search-text="<%= `${service.name || ''} ${service.description || ''}`.toLowerCase() %>"
+                                >
+                                    <div class="service-icon">
+                                        <%= service.icon || "🧾" %>
+                                    </div>
+
+                                    <div class="service-info">
+                                        <h3>
+                                            <%= service.name %>
+                                        </h3>
+
+                                        <p>
+                                            <%= service.description || "Professional service with trusted care." %>
+                                        </p>
+
+                                        <div class="service-meta">
+                                            <span>⏱ <%= service.durationMin || 0 %> min</span>
+                                            <span><%= service.priceLabel || "$0" %></span>
+                                        </div>
+
+                                        <a
+                                            class="outline-button service-action-button"
+                                            href="/views/book-appointment/<%= service.id %>"
+                                        >
+                                            Book Now
+                                        </a>
+                                    </div>
+                                </article>
+                            <% }) %>
+                        </section>
+
+                        <section
+                            class="empty-state card search-empty-state"
+                            id="searchEmptyState"
+                            hidden
+                        >
+                            <h3>No matching services</h3>
+
+                            <p>
+                                Try searching with another service name or description.
+                            </p>
+                        </section>
+                    <% } %>
+                </div>
+            </section>
+        </section>
+    </main>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const searchForm = document.getElementById("dashboardSearchForm");
+            const searchInput = document.getElementById("dashboardSearchInput");
+            const serviceCards = document.querySelectorAll("[data-service-card]");
+            const searchEmptyState = document.getElementById("searchEmptyState");
+
+            if (searchForm) {
+                searchForm.addEventListener("submit", function (event) {
+                    event.preventDefault();
+                });
+            }
+
+            if (searchInput) {
+                searchInput.addEventListener("input", function () {
+                    const searchValue = searchInput.value.trim().toLowerCase();
+                    let visibleCount = 0;
+
+                    serviceCards.forEach(function (card) {
+                        const searchText = card.dataset.searchText || "";
+                        const shouldShow = searchText.includes(searchValue);
+
+                        card.style.display = shouldShow ? "" : "none";
+
+                        if (shouldShow) {
+                            visibleCount += 1;
+                        }
+                    });
+
+                    if (searchEmptyState) {
+                        searchEmptyState.hidden = visibleCount !== 0;
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>
