@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="/styles/client-home.css" />
 </head>
 
-<body>
+<body class="client-home-body">
     <%
         const safeRole =
             typeof role !== "undefined" && role
@@ -71,92 +71,84 @@
 
                 <div class="dashboard-content">
                     <% if (typeof message !== "undefined" && message && messageType === "error") { %>
-                        <div class="dashboard-message error">
-                            <%= message %>
-                        </div>
+                        <div class="ch-message error"><%= message %></div>
                     <% } %>
 
-                    <section class="client-home-header">
-                        <div class="client-home-left">
-                            <section class="summary-layout">
-                                <article class="summary-card card">
-                                    <div class="summary-icon">▦</div>
-
-                                    <div class="summary-info">
+                    <!-- ── Top row: stat cards (left) + promo card (right) ── -->
+                    <div class="ch-header">
+                        <div class="ch-left">
+                            <!-- Stat cards -->
+                            <div class="ch-stats">
+                                <article class="ch-stat-card card">
+                                    <div class="ch-stat-icon ch-icon-teal">▦</div>
+                                    <div class="ch-stat-body">
                                         <strong><%= pageStats.availableCategories %></strong>
                                         <span>Available Categories</span>
                                         <small>Explore a wide range</small>
                                     </div>
                                 </article>
 
-                                <article class="summary-card card">
-                                    <div class="summary-icon">📅</div>
-
-                                    <div class="summary-info">
+                                <article class="ch-stat-card card">
+                                    <div class="ch-stat-icon ch-icon-blue">📅</div>
+                                    <div class="ch-stat-body">
                                         <strong><%= pageStats.upcomingAppointments %></strong>
                                         <span>Upcoming Appointments</span>
                                         <small>Next one coming soon</small>
                                     </div>
                                 </article>
 
-                                <article class="summary-card card">
-                                    <div class="summary-icon">♡</div>
-
-                                    <div class="summary-info">
+                                <article class="ch-stat-card card">
+                                    <div class="ch-stat-icon ch-icon-pink">♡</div>
+                                    <div class="ch-stat-body">
                                         <strong><%= pageStats.favoriteServices %></strong>
                                         <span>Favorite Services</span>
                                         <small>Your go-to services</small>
                                     </div>
                                 </article>
-                            </section>
+                            </div>
 
-                            <section class="page-title">
+                            <!-- Browse title -->
+                            <div class="ch-browse-title">
                                 <h2>Browse Categories</h2>
-
-                                <p>
-                                    Select a category to explore services and book an appointment.
-                                </p>
-                            </section>
+                                <p>Select a category to explore services and book an appointment.</p>
+                            </div>
                         </div>
 
-                        <article class="promo-image-card">
+                        <!-- Promo card -->
+                        <article class="ch-promo-card card">
                             <img
                                 src="/images/client-wellness-banner.png"
-                                alt="Wellness banner"
-                                class="promo-banner-image"
+                                alt="Wellness booking banner"
+                                class="ch-promo-banner"
                             />
                         </article>
-                    </section>
+                    </div>
 
+                    <!-- ── Category grid ── -->
                     <% if (!categoryList.length) { %>
-                        <section class="empty-state card">
+                        <section class="ch-empty card">
                             <h3>No categories available</h3>
-
-                            <p>
-                                There are no active categories in the database right now.
-                            </p>
+                            <p>There are no active categories in the database right now.</p>
                         </section>
                     <% } else { %>
-                        <section class="category-grid" id="categoryGrid">
+                        <section class="ch-grid" id="categoryGrid">
                             <% categoryList.forEach(function(category) { %>
                                 <article
-                                    class="category-card card <%= category.featured ? 'featured' : '' %>"
+                                    class="ch-cat-card card <%= category.featured ? 'ch-featured' : '' %>"
                                     data-category-card
                                     data-search-text="<%= `${category.name || ''} ${category.description || ''}`.toLowerCase() %>"
                                 >
-                                    <div class="category-icon">
+                                    <div class="ch-cat-icon">
                                         <%= category.icon || "▦" %>
                                     </div>
 
-                                    <h3>
-                                        <%= category.name %>
-                                    </h3>
+                                    <h3><%= category.name %></h3>
 
                                     <p>
                                         <%= category.description || "Explore available services and book your appointment" %>
                                     </p>
 
-                                    <div class="service-badge">
+                                    <div class="ch-badge">
                                         <%= category.servicesCount || 0 %> Services
                                     </div>
 
@@ -171,15 +163,12 @@
                         </section>
 
                         <section
-                            class="empty-state card search-empty-state"
+                            class="ch-empty card ch-search-empty"
                             id="searchEmptyState"
                             hidden
                         >
                             <h3>No matching categories</h3>
-
-                            <p>
-                                Try searching with another category name or description.
-                            </p>
+                            <p>Try searching with another category name or description.</p>
                         </section>
                     <% } %>
                 </div>
@@ -189,35 +178,29 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            const searchForm = document.getElementById("dashboardSearchForm");
+            const searchForm  = document.getElementById("dashboardSearchForm");
             const searchInput = document.getElementById("dashboardSearchInput");
-            const categoryCards = document.querySelectorAll("[data-category-card]");
+            const categoryCards    = document.querySelectorAll("[data-category-card]");
             const searchEmptyState = document.getElementById("searchEmptyState");
 
             if (searchForm) {
-                searchForm.addEventListener("submit", function (event) {
-                    event.preventDefault();
-                });
+                searchForm.addEventListener("submit", function (e) { e.preventDefault(); });
             }
 
             if (searchInput) {
                 searchInput.addEventListener("input", function () {
-                    const searchValue = searchInput.value.trim().toLowerCase();
-                    let visibleCount = 0;
+                    const val = searchInput.value.trim().toLowerCase();
+                    let visible = 0;
 
                     categoryCards.forEach(function (card) {
-                        const searchText = card.dataset.searchText || "";
-                        const shouldShow = searchText.includes(searchValue);
-
-                        card.style.display = shouldShow ? "" : "none";
-
-                        if (shouldShow) {
-                            visibleCount += 1;
-                        }
+                        const text = card.dataset.searchText || "";
+                        const show = text.includes(val);
+                        card.style.display = show ? "" : "none";
+                        if (show) visible++;
                     });
 
                     if (searchEmptyState) {
-                        searchEmptyState.hidden = visibleCount !== 0;
+                        searchEmptyState.hidden = visible !== 0;
                     }
                 });
             }
