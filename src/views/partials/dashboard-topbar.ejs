@@ -76,6 +76,11 @@
             ? breadcrumbMiddle
             : null;
 
+    const safeBreadcrumbMiddle2 =
+        typeof breadcrumbMiddle2 !== "undefined" && breadcrumbMiddle2
+            ? breadcrumbMiddle2
+            : null;
+
     const safeBreadcrumbSub =
         typeof breadcrumbSub !== "undefined" && breadcrumbSub
             ? breadcrumbSub
@@ -133,6 +138,11 @@
         <% if (safeBreadcrumbMiddle) { %>
             <span>/</span>
             <span class="active-crumb"><%= safeBreadcrumbMiddle %></span>
+        <% } %>
+
+        <% if (safeBreadcrumbMiddle2) { %>
+            <span>/</span>
+            <span class="active-crumb"><%= safeBreadcrumbMiddle2 %></span>
         <% } %>
 
         <span>/</span>

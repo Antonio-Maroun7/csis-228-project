@@ -4,52 +4,34 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title><%= typeof title !== "undefined" ? title : "Book Appointment" %></title>
-
     <link rel="stylesheet" href="/styles/dashboard.css" />
     <link rel="stylesheet" href="/styles/book-appointment.css" />
 </head>
 
 <body class="book-appointment-body">
     <%
-        const safeRole = typeof role !== "undefined" && role ? role : "client";
-        const safeActivePage = typeof activePage !== "undefined" && activePage ? activePage : "book-appointment";
-        const safeFirstName = typeof firstName !== "undefined" && firstName ? firstName : "Client";
+        const safeRole        = typeof role        !== "undefined" && role        ? role        : "client";
+        const safeActivePage  = typeof activePage  !== "undefined" && activePage  ? activePage  : "book-appointment";
+        const safeFirstName   = typeof firstName   !== "undefined" && firstName   ? firstName   : "Client";
 
-        const safeBreadcrumbMain =
-            typeof breadcrumbMain !== "undefined" && breadcrumbMain ? breadcrumbMain : "Home";
+        const safeService     = typeof service     !== "undefined" && service     ? service     : {};
+        const safeStaffList   = typeof staffList   !== "undefined" && Array.isArray(staffList)  ? staffList  : [];
+        const safeTimeSlots   = typeof timeSlots   !== "undefined" && Array.isArray(timeSlots)  ? timeSlots  : [];
+        const safeTodayISO    = typeof todayISO    !== "undefined" && todayISO    ? todayISO    : new Date().toISOString().split("T")[0];
 
-        const safeBreadcrumbMiddle =
-            typeof breadcrumbMiddle !== "undefined" && breadcrumbMiddle ? breadcrumbMiddle : "Categories";
+        const safeUserFullname = typeof userFullname !== "undefined" && userFullname ? userFullname : safeFirstName;
+        const safeUserEmail    = typeof userEmail    !== "undefined" && userEmail    ? userEmail    : "";
+        const safeUserPhone    = typeof userPhone    !== "undefined" && userPhone    ? userPhone    : "Not provided";
+        const safeCategoryName = typeof categoryName !== "undefined" && categoryName ? categoryName : "Category";
+        const safeCategoryId   = safeService.categoryId || safeService.category_id || "";
 
-        const safeBreadcrumbSub =
-            typeof breadcrumbSub !== "undefined" && breadcrumbSub ? breadcrumbSub : "Book Appointment";
+        const safeStats = typeof stats !== "undefined" && stats ? stats : {};
 
-        const safeService =
-            typeof service !== "undefined" && service ? service : {};
-
-        const safeStaffList =
-            typeof staffList !== "undefined" && Array.isArray(staffList) ? staffList : [];
-
-        const safeTimeSlots =
-            typeof timeSlots !== "undefined" && Array.isArray(timeSlots) ? timeSlots : [];
-
-        const safeTodayISO =
-            typeof todayISO !== "undefined" && todayISO ? todayISO : new Date().toISOString().split("T")[0];
-
-        const safeUserFullname =
-            typeof userFullname !== "undefined" && userFullname ? userFullname : safeFirstName;
-
-        const safeUserEmail =
-            typeof userEmail !== "undefined" && userEmail ? userEmail : "";
-
-        const safeUserPhone =
-            typeof userPhone !== "undefined" && userPhone ? userPhone : "Not provided";
-
-        const safeCategoryName =
-            typeof categoryName !== "undefined" && categoryName ? categoryName : "Category";
-
-        const safeCategoryId =
-            safeService.categoryId || safeService.category_id || "";
+        /* Breadcrumbs: Home / Categories / <categoryName> / Book Appointment */
+        const bMain   = "Home";
+        const bMid    = "Categories";
+        const bMid2   = safeCategoryName;
+        const bSub    = "Book Appointment";
 
         const firstStaff = safeStaffList.length > 0 ? safeStaffList[0] : null;
     %>
@@ -64,27 +46,58 @@
 
             <section class="dashboard-main">
                 <%- include("./partials/dashboard-topbar", {
-                    breadcrumbMain: safeBreadcrumbMain,
-                    breadcrumbMiddle: safeBreadcrumbMiddle,
-                    breadcrumbSub: safeBreadcrumbSub,
-                    firstName: safeFirstName,
-                    role: safeRole,
-                    showNotification: false,
+                    breadcrumbMain:    bMain,
+                    breadcrumbMiddle:  bMid,
+                    breadcrumbMiddle2: bMid2,
+                    breadcrumbSub:     bSub,
+                    firstName:         safeFirstName,
+                    role:              safeRole,
+                    showNotification:  false,
                     searchPlaceholder: "Search services, categories..."
                 }) %>
 
                 <div class="dashboard-content ba-content">
 
                     <% if (typeof message !== "undefined" && message && messageType === "error") { %>
-                        <div class="ba-error-banner">
-                            <span>⚠</span>
-                            <%= message %>
-                        </div>
+                        <div class="ba-error-banner"><span>⚠</span> <%= message %></div>
                     <% } %>
 
+                    <!-- ─── STAT CARDS ROW ─────────────────────────────── -->
+                    <div class="ba-stats-row">
+
+                        <div class="ba-stat-card">
+                            <div class="ba-stat-icon ba-stat-icon-teal">📅</div>
+                            <div class="ba-stat-info">
+                                <div class="ba-stat-service-name"><%= safeService.name || "Service" %></div>
+                                <div class="ba-stat-label">Selected Service</div>
+                                <div class="ba-stat-sub">You're booking this service</div>
+                            </div>
+                        </div>
+
+                        <div class="ba-stat-card">
+                            <div class="ba-stat-icon ba-stat-icon-blue">📅</div>
+                            <div class="ba-stat-info">
+                                <div class="ba-stat-number"><%= safeStats.upcomingAppointments || 0 %></div>
+                                <div class="ba-stat-label">Upcoming Appointments</div>
+                                <div class="ba-stat-sub"><%= safeStats.nextAppointmentLabel || "Next one after booking" %></div>
+                            </div>
+                        </div>
+
+                        <div class="ba-stat-card">
+                            <div class="ba-stat-icon ba-stat-icon-pink">❤</div>
+                            <div class="ba-stat-info">
+                                <div class="ba-stat-number"><%= safeStats.favoriteServices || 0 %></div>
+                                <div class="ba-stat-label">Favorite Services</div>
+                                <div class="ba-stat-sub">Your go-to services</div>
+                            </div>
+                        </div>
+
+                    </div><!-- /.ba-stats-row -->
+
+                    <!-- ─── TWO-COLUMN LAYOUT ──────────────────────────── -->
                     <div class="ba-layout">
 
-                        <!-- LEFT SIDE -->
+                        <!-- LEFT COLUMN -->
                         <div class="ba-left-col">
 
                             <div class="ba-page-heading">
@@ -93,10 +106,10 @@
                             </div>
 
                             <form id="bookingForm" method="POST" action="/views/book-appointment" class="ba-form" novalidate>
-                                <input type="hidden" name="service_id" value="<%= safeService.id || '' %>" />
+                                <input type="hidden" name="service_id"       value="<%= safeService.id || '' %>" />
                                 <input type="hidden" name="appointment_time" id="hiddenTime" value="" />
 
-                                <!-- SELECTED SERVICE -->
+                                <!-- SELECTED SERVICE ─────────────────── -->
                                 <section class="card ba-section ba-selected-section">
                                     <div class="ba-corner-badge">
                                         <span>✓</span>
