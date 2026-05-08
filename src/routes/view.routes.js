@@ -46,6 +46,40 @@ router.post(
   viewController.bookAppointment,
 );
 
+/* ── Profile — shared view for all roles ─────────────────────── */
+router.get(
+  "/views/profile",
+  requireViewAuth,
+  requireViewRole(["client"]),
+  viewController.renderProfile,
+);
+
+router.get(
+  "/views/staff-profile",
+  requireViewAuth,
+  requireViewRole(["staff"]),
+  viewController.renderProfile,
+);
+
+router.get(
+  "/views/admin-profile",
+  requireViewAuth,
+  requireViewRole(["admin"]),
+  viewController.renderProfile,
+);
+
+router.post(
+  "/views/profile/update",
+  requireViewAuth,
+  viewController.updateProfile,
+);
+
+router.post(
+  "/views/profile/change-password",
+  requireViewAuth,
+  viewController.changePassword,
+);
+
 router.get("/views/logout", requireViewAuth, viewController.logout);
 router.get("/views/not-authorized", viewController.renderNotAuthorized);
 

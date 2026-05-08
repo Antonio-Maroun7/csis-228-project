@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%= typeof title !== "undefined" ? title : "Profile" %></title>
+    <link rel="stylesheet" href="/styles/dashboard.css" />
+    <link rel="stylesheet" href="/styles/profile.css" />
+</head>
+
+<body class="profile-body">
+    <%
+        const safeRole       = typeof role       !== "undefined" && role       ? role       : "client";
+        const safeActivePage = typeof activePage !== "undefined" && activePage ? activePage : "profile";
+        const safeFirstName  = typeof firstName  !== "undefined" && firstName  ? firstName  : "User";
+
+        const safeUser = typeof user !== "undefined" && user ? user : {};
+        const safeFullname  = safeUser.fullname  || safeUser.user_fullname  || safeFirstName;
+        const safeEmail     = safeUser.email     || safeUser.user_email     || "";
+        const safePhone     = safeUser.phone     || safeUser.user_phone     || "Not provided";
+        const safeUserRole  = safeUser.role      || safeUser.user_role      || safeRole;
+
+        const safeRedirectPath = typeof profileRedirectPath !== "undefined" && profileRedirectPath
+            ? profileRedirectPath
+            : "/views/profile";
+
+        const roleLabel = safeUserRole.charAt(0).toUpperCase() + safeUserRole.slice(1).toLowerCase();
+
+        const safeMessage     = typeof message     !== "undefined" ? message     : null;
+        const safeMessageType = typeof messageType !== "undefined" ? messageType : null;
+    %>
+
+    <main class="dashboard-page">
+        <section class="dashboard">
+
+            <%- include("./partials/dashboard-sidebar", {
+                role: safeRole,
+                activePage: safeActivePage
+            }) %>
+
+            <section class="dashboard-main">
+                <%- include("./partials/dashboard-topbar", {
+                    breadcrumbMain:    "Home",
+                    breadcrumbMiddle:  null,
+                    breadcrumbMiddle2: null,
+                    breadcrumbSub:     "Profile",
+                    firstName:         safeFirstName,
+                    role:              safeRole,
+                    showNotification:  false,
+                    searchPlaceholder: "Search services, categories..."
+                }) %>
+
+                <div class="dashboard-content pf-content">
+
+                    <!-- ── Feedback banner ──────────────────────── -->
+                    <% if (safeMessage) { %>
+                        <div class="pf-banner pf-banner--<%= safeMessageType === 'error' ? 'error' : 'success' %>">
+                            <span><%= safeMessageType === "error" ? "⚠" : "✓" %></span>
+                            <%= safeMessage %>
+                        </div>
+                    <% } %>
+
+                    <div class="pf-stack">
+
+                        <!-- ── HEADER CARD ────────────────────── -->
+                        <article class="pf-card pf-header-card">
+                            <div class="pf-header-body">
+                                <h2 class="pf-name"><%= safeFullname %></h2>
+
+                                <div class="pf-contact-row">
+                                    <span class="pf-contact-icon">✉</span>
+                                    <span class="pf-contact-text"><%= safeEmail %></span>
+                                </div>
+
+                                <div class="pf-contact-row">
+                                    <span class="pf-contact-icon">📞</span>
+                                    <span class="pf-contact-text"><%= safePhone %></span>
+                                </div>
+
+                                <span class="pf-role-badge"><%= roleLabel %></span>
+                            </div>
+
+                            <div class="pf-header-actions">
+                                <button
+                                    class="pf-edit-btn"
+                                    type="button"
+                                    id="editProfileToggle"
+                                    aria-expanded="false"
+                                >
+                                    <span class="pf-edit-icon">✎</span>
+                                    Edit Profile
+                                </button>
+                            </div>
+
+                            <div class="pf-header-decoration" aria-hidden="true">🌿</div>
+
+                            <!-- Inline edit form (hidden by default) -->
+                            <div class="pf-edit-form-wrap" id="editFormWrap" hidden>
+                                <form
+                                    class="pf-edit-form"
+                                    method="POST"
+                                    action="/views/profile/update"
+                                    id="editProfileForm"
+                                >
+                                    <div class="pf-edit-grid">
+                                        <div class="pf-edit-field">
+                                            <label class="pf-edit-label" for="editFullname">Full Name</label>
+                                            <input
+                                                id="editFullname"
+                                                type="text"
+                                                name="user_fullname"
+                                                class="pf-edit-input"
+                                                value="<%= safeFullname %>"
+                                                required
+                                                autocomplete="name"
+                                            />
+                                        </div>
+
+                                        <div class="pf-edit-field">
+                                            <label class="pf-edit-label" for="editEmail">Email Address</label>
+                                            <input
+                                                id="editEmail"
+                                                type="email"
+                                                name="user_email"
+                                                class="pf-edit-input"
+                                                value="<%= safeEmail %>"
+                                                required
+                                                autocomplete="email"
+                                            />
+                                        </div>
+
+                                        <div class="pf-edit-field">
+                                            <label class="pf-edit-label" for="editPhone">Phone Number</label>
+                                            <input
+                                                id="editPhone"
+                                                type="tel"
+                                                name="user_phone"
+                                                class="pf-edit-input"
+                                                value="<%= safePhone !== 'Not provided' ? safePhone : '' %>"
+                                                placeholder="+1 (555) 000-0000"
+                                                autocomplete="tel"
+                                            />
+                                        </div>
+                                    </div>
+
+                                    <div class="pf-edit-actions">
+                                        <button type="submit" class="pf-save-btn">Save Changes</button>
+                                        <button type="button" class="pf-cancel-btn" id="cancelEditBtn">Cancel</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </article>
+
+                        <!-- ── PERSONAL INFORMATION ───────────── -->
+                        <article class="pf-card">
+                            <h3 class="pf-section-title">Personal Information</h3>
+
+                            <div class="pf-info-grid">
+                                <div class="pf-info-item">
+                                    <span class="pf-info-icon">👤</span>
+                                    <div class="pf-info-detail">
+                                        <span class="pf-info-label">Full Name</span>
+                                        <span class="pf-info-value"><%= safeFullname %></span>
+                                    </div>
+                                </div>
+
+                                <div class="pf-info-item">
+                                    <span class="pf-info-icon">📅</span>
+                                    <div class="pf-info-detail">
+                                        <span class="pf-info-label">Member Since</span>
+                                        <span class="pf-info-value">—</span>
+                                    </div>
+                                </div>
+
+                                <div class="pf-info-item">
+                                    <span class="pf-info-icon">✉</span>
+                                    <div class="pf-info-detail">
+                                        <span class="pf-info-label">Email Address</span>
+                                        <span class="pf-info-value"><%= safeEmail || "—" %></span>
+                                    </div>
+                                </div>
+
+                                <div class="pf-info-item">
+                                    <span class="pf-info-icon">🛡</span>
+                                    <div class="pf-info-detail">
+                                        <span class="pf-info-label">Account Type</span>
+                                        <span class="pf-info-value"><%= roleLabel %></span>
+                                    </div>
+                                </div>
+
+                                <div class="pf-info-item">
+                                    <span class="pf-info-icon">📞</span>
+                                    <div class="pf-info-detail">
+                                        <span class="pf-info-label">Phone Number</span>
+                                        <span class="pf-info-value"><%= safePhone %></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </article>
+
+                        <!-- ── CHANGE PASSWORD ────────────────── -->
+                        <article class="pf-card">
+                            <h3 class="pf-section-title">Change Password</h3>
+
+                            <form
+                                class="pf-password-form"
+                                method="POST"
+                                action="/views/profile/change-password"
+                                id="passwordForm"
+                                novalidate
+                            >
+                                <div class="pf-pw-grid">
+                                    <div class="pf-pw-field">
+                                        <label class="pf-pw-label" for="currentPassword">Current Password</label>
+                                        <div class="pf-pw-input-wrap">
+                                            <span class="pf-pw-icon">🔒</span>
+                                            <input
+                                                id="currentPassword"
+                                                type="password"
+                                                name="current_password"
+                                                class="pf-pw-input"
+                                                placeholder="Enter current password"
+                                                autocomplete="current-password"
+                                            />
+                                        </div>
+                                    </div>
+
+                                    <div class="pf-pw-field">
+                                        <label class="pf-pw-label" for="newPassword">New Password</label>
+                                        <div class="pf-pw-input-wrap">
+                                            <span class="pf-pw-icon">🔒</span>
+                                            <input
+                                                id="newPassword"
+                                                type="password"
+                                                name="new_password"
+                                                class="pf-pw-input"
+                                                placeholder="Enter new password"
+                                                autocomplete="new-password"
+                                            />
+                                        </div>
+                                    </div>
+
+                                    <div class="pf-pw-field">
+                                        <label class="pf-pw-label" for="confirmPassword">Confirm New Password</label>
+                                        <div class="pf-pw-input-wrap">
+                                            <span class="pf-pw-icon">🔒</span>
+                                            <input
+                                                id="confirmPassword"
+                                                type="password"
+                                                name="confirm_password"
+                                                class="pf-pw-input"
+                                                placeholder="Confirm new password"
+                                                autocomplete="new-password"
+                                            />
+                                        </div>
+                                    </div>
+
+                                    <div class="pf-pw-btn-wrap">
+                                        <button type="submit" class="pf-update-btn">Update Password</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </article>
+
+                    </div><!-- /.pf-stack -->
+                </div><!-- /.pf-content -->
+            </section>
+        </section>
+    </main>
+
+    <script>
+        (function () {
+            const toggle      = document.getElementById("editProfileToggle");
+            const formWrap    = document.getElementById("editFormWrap");
+            const cancelBtn   = document.getElementById("cancelEditBtn");
+
+            if (toggle && formWrap) {
+                toggle.addEventListener("click", function () {
+                    const isOpen = toggle.getAttribute("aria-expanded") === "true";
+                    toggle.setAttribute("aria-expanded", String(!isOpen));
+                    formWrap.hidden = isOpen;
+                    toggle.textContent = isOpen ? "✎ Edit Profile" : "✕ Cancel Edit";
+                });
+            }
+
+            if (cancelBtn && formWrap && toggle) {
+                cancelBtn.addEventListener("click", function () {
+                    formWrap.hidden = true;
+                    toggle.setAttribute("aria-expanded", "false");
+                    toggle.innerHTML = '<span class="pf-edit-icon">✎</span> Edit Profile';
+                });
+            }
+
+            /* Client-side password match check */
+            const pwForm    = document.getElementById("passwordForm");
+            const newPwInput = document.getElementById("newPassword");
+            const confInput  = document.getElementById("confirmPassword");
+
+            if (pwForm && newPwInput && confInput) {
+                pwForm.addEventListener("submit", function (e) {
+                    if (newPwInput.value !== confInput.value) {
+                        e.preventDefault();
+                        alert("New passwords do not match. Please try again.");
+                    }
+                });
+            }
+        })();
+    </script>
+</body>
+</html>

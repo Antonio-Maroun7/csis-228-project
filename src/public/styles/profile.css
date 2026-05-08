@@ -1,0 +1,562 @@
+/* ================================================================
+   PROFILE — viewport-fitting layout
+   All rules scoped to .profile-body
+   ================================================================ */
+
+/* ── Body / page shell ───────────────────────────────────────── */
+.profile-body {
+  overflow: hidden;
+}
+
+.profile-body .dashboard-page {
+  padding: 10px 18px;
+  height: 100vh;
+  min-height: unset;
+  align-items: flex-start;
+  background:
+    radial-gradient(
+      circle at top left,
+      rgba(15, 143, 140, 0.07),
+      transparent 26%
+    ),
+    #f2faf9;
+}
+
+.profile-body .dashboard {
+  height: calc(100vh - 20px);
+  max-width: 1480px;
+  overflow: hidden;
+  border-radius: 22px;
+}
+
+.profile-body .dashboard-main {
+  height: 100%;
+  overflow: hidden;
+}
+
+/* ── Topbar ──────────────────────────────────────────────────── */
+.profile-body .dashboard-topbar {
+  height: 58px;
+  min-height: 58px;
+  padding: 0 28px;
+  flex-shrink: 0;
+}
+
+/* ── Dashboard content ───────────────────────────────────────── */
+.profile-body .dashboard-content {
+  flex: 1;
+  min-height: 0;
+  padding: 18px 28px 18px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── pf-content wrapper ──────────────────────────────────────── */
+.pf-content {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: transparent;
+}
+
+/* ── Feedback banner ─────────────────────────────────────────── */
+.pf-banner {
+  flex-shrink: 0;
+  margin-bottom: 12px;
+  padding: 8px 14px;
+  border-radius: 10px;
+  font-size: 0.83rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.pf-banner--success {
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  color: #166534;
+}
+
+.pf-banner--error {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #991b1b;
+}
+
+/* ── Stack of cards ──────────────────────────────────────────── */
+.pf-stack {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+
+.pf-stack::-webkit-scrollbar {
+  display: none;
+}
+
+/* ── Shared card ─────────────────────────────────────────────── */
+.pf-card {
+  flex-shrink: 0;
+  position: relative;
+  background: #fff;
+  border: 1px solid rgba(226, 232, 240, 0.9);
+  border-radius: 18px;
+  box-shadow: 0 4px 18px rgba(15, 23, 42, 0.07);
+  padding: 26px 32px;
+  overflow: hidden;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   HEADER CARD
+   ══════════════════════════════════════════════════════════════ */
+.pf-header-card {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.pf-header-body {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+  flex: 1;
+}
+
+.pf-name {
+  margin: 0 0 4px;
+  color: #0f172a;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.85rem;
+  font-weight: 900;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+.pf-contact-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.pf-contact-icon {
+  font-size: 0.88rem;
+  color: #64748b;
+  flex-shrink: 0;
+  width: 18px;
+  text-align: center;
+}
+
+.pf-contact-text {
+  color: #475569;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.pf-role-badge {
+  display: inline-flex;
+  align-items: center;
+  margin-top: 6px;
+  padding: 4px 14px;
+  border-radius: 999px;
+  background: #e6f7f5;
+  color: #087674;
+  font-size: 0.78rem;
+  font-weight: 800;
+  border: 1px solid rgba(15, 143, 140, 0.15);
+  align-self: flex-start;
+}
+
+/* ── Edit Profile button ─────────────────────────────────────── */
+.pf-header-actions {
+  flex-shrink: 0;
+  padding-top: 2px;
+}
+
+.pf-edit-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  height: 36px;
+  padding: 0 18px;
+  border: 1.5px solid #0f8f8c;
+  border-radius: 10px;
+  background: #fff;
+  color: #087674;
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    background 0.15s,
+    color 0.15s;
+  white-space: nowrap;
+}
+
+.pf-edit-btn:hover {
+  background: #edf9f7;
+}
+
+.pf-edit-icon {
+  font-size: 0.9rem;
+}
+
+/* ── Decorative leaf ─────────────────────────────────────────── */
+.pf-header-decoration {
+  position: absolute;
+  right: 28px;
+  bottom: 14px;
+  font-size: 5rem;
+  color: rgba(15, 143, 140, 0.1);
+  pointer-events: none;
+  line-height: 1;
+  z-index: 0;
+  transform: rotate(-15deg);
+}
+
+/* ── Inline edit form ────────────────────────────────────────── */
+.pf-edit-form-wrap {
+  flex-basis: 100%;
+  width: 100%;
+  margin-top: 18px;
+  padding-top: 18px;
+  border-top: 1px solid #e2e8f0;
+}
+
+/* Make header card flex-wrap so form takes full row */
+.pf-header-card {
+  flex-wrap: wrap;
+}
+
+.pf-edit-form {
+  width: 100%;
+}
+
+.pf-edit-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin-bottom: 14px;
+}
+
+.pf-edit-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.pf-edit-label {
+  color: #334155;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.pf-edit-input {
+  height: 38px;
+  padding: 0 12px;
+  border: 1.5px solid #d1d9e0;
+  border-radius: 9px;
+  background: #fff;
+  color: #0f172a;
+  font-family: inherit;
+  font-size: 0.88rem;
+  outline: none;
+  transition:
+    border-color 0.15s,
+    box-shadow 0.15s;
+}
+
+.pf-edit-input:focus {
+  border-color: #0f8f8c;
+  box-shadow: 0 0 0 3px rgba(15, 143, 140, 0.1);
+}
+
+.pf-edit-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.pf-save-btn {
+  height: 38px;
+  padding: 0 22px;
+  border: none;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #0f8f8c, #087674);
+  color: #fff;
+  font-family: inherit;
+  font-size: 0.88rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition:
+    box-shadow 0.15s,
+    transform 0.15s;
+  box-shadow: 0 4px 14px rgba(15, 143, 140, 0.26);
+}
+
+.pf-save-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(15, 143, 140, 0.32);
+}
+
+.pf-cancel-btn {
+  height: 38px;
+  padding: 0 18px;
+  border: 1.5px solid #d1d9e0;
+  border-radius: 10px;
+  background: #fff;
+  color: #64748b;
+  font-family: inherit;
+  font-size: 0.88rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: border-color 0.15s;
+}
+
+.pf-cancel-btn:hover {
+  border-color: #94a3b8;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   SECTION TITLE (shared by personal info + change password)
+   ══════════════════════════════════════════════════════════════ */
+.pf-section-title {
+  margin: 0 0 18px;
+  color: #064e4b;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.08rem;
+  font-weight: 900;
+  line-height: 1;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #e8f0ee;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   PERSONAL INFORMATION CARD
+   ══════════════════════════════════════════════════════════════ */
+.pf-info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px 32px;
+}
+
+.pf-info-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.pf-info-icon {
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  display: grid;
+  place-items: center;
+  border-radius: 9px;
+  background: #f1faf9;
+  font-size: 0.95rem;
+  color: #087674;
+  margin-top: 2px;
+}
+
+.pf-info-detail {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.pf-info-label {
+  color: #94a3b8;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  text-transform: none;
+}
+
+.pf-info-value {
+  color: #0f172a;
+  font-size: 0.9rem;
+  font-weight: 700;
+  line-height: 1.3;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 280px;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   CHANGE PASSWORD CARD
+   ══════════════════════════════════════════════════════════════ */
+.pf-password-form {
+  width: 100%;
+}
+
+.pf-pw-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr auto;
+  gap: 14px;
+  align-items: flex-end;
+}
+
+.pf-pw-field {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.pf-pw-label {
+  color: #334155;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.pf-pw-input-wrap {
+  position: relative;
+}
+
+.pf-pw-icon {
+  position: absolute;
+  left: 11px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 0.82rem;
+  pointer-events: none;
+  line-height: 1;
+}
+
+.pf-pw-input {
+  width: 100%;
+  height: 40px;
+  padding: 0 12px 0 34px;
+  border: 1.5px solid #d1d9e0;
+  border-radius: 10px;
+  background: #fff;
+  color: #0f172a;
+  font-family: inherit;
+  font-size: 0.88rem;
+  outline: none;
+  transition:
+    border-color 0.15s,
+    box-shadow 0.15s;
+}
+
+.pf-pw-input:focus {
+  border-color: #0f8f8c;
+  box-shadow: 0 0 0 3px rgba(15, 143, 140, 0.1);
+}
+
+.pf-pw-input::placeholder {
+  color: #94a3b8;
+}
+
+.pf-pw-btn-wrap {
+  display: flex;
+  align-items: flex-end;
+}
+
+.pf-update-btn {
+  height: 40px;
+  padding: 0 22px;
+  border: none;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #0f8f8c, #087674);
+  color: #fff;
+  font-family: inherit;
+  font-size: 0.88rem;
+  font-weight: 800;
+  cursor: pointer;
+  white-space: nowrap;
+  box-shadow: 0 4px 14px rgba(15, 143, 140, 0.26);
+  transition:
+    box-shadow 0.15s,
+    transform 0.15s;
+}
+
+.pf-update-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(15, 143, 140, 0.32);
+}
+
+/* ── Active sidebar link (profile pages) ─────────────────────── */
+.profile-body .nav-link.active {
+  background: linear-gradient(135deg, #10938f, #087674);
+  color: #fff;
+  box-shadow: 0 10px 24px rgba(15, 143, 140, 0.22);
+}
+
+.profile-body .nav-link.active .nav-icon,
+.profile-body .nav-link.active span {
+  color: #fff;
+}
+
+/* ── Extra-short screens ─────────────────────────────────────── */
+@media (max-height: 700px) {
+  .profile-body .dashboard-topbar {
+    height: 52px;
+    min-height: 52px;
+  }
+
+  .profile-body .dashboard-content {
+    padding: 12px 22px 12px;
+  }
+
+  .pf-stack {
+    gap: 10px;
+  }
+
+  .pf-card {
+    padding: 18px 24px;
+  }
+
+  .pf-name {
+    font-size: 1.5rem;
+  }
+
+  .pf-info-grid {
+    gap: 12px 24px;
+  }
+}
+
+/* ── Narrow screens ──────────────────────────────────────────── */
+@media (max-width: 900px) {
+  .pf-pw-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .pf-pw-btn-wrap {
+    grid-column: span 2;
+  }
+
+  .pf-update-btn {
+    width: 100%;
+  }
+}
+
+@media (max-width: 720px) {
+  .pf-info-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .pf-edit-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .pf-pw-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .pf-pw-btn-wrap {
+    grid-column: span 1;
+  }
+}
