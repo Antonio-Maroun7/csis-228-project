@@ -507,23 +507,43 @@
   height: 36px;
 }
 
+/* ── Stats row — hidden (removed from HTML, kept for safety) ─── */
+.ba-stats-row,
+.ba-stat-card,
+.ba-stat-icon,
+.ba-stat-info {
+  display: none !important;
+}
+
 /* ── Right — promo image card ────────────────────────────────── */
 .ba-promo {
   flex-shrink: 0;
   width: 100%;
-  height: 155px;
-  border-radius: 16px;
+  height: 170px;
+  padding: 0;
+  margin: 0;
+  border-radius: 17px;
   overflow: hidden;
   box-shadow: 0 6px 22px rgba(15, 23, 42, 0.13);
-  border: 1px solid rgba(15, 143, 140, 0.12);
-  background: #0b817e;
+  border: 1px solid rgba(15, 143, 140, 0.18);
+  background: transparent;
+  display: block;
+  position: relative;
+}
+
+.ba-promo::before,
+.ba-promo::after {
+  content: none !important;
+  display: none !important;
 }
 
 .ba-promo-img {
   width: 100%;
   height: 100%;
   display: block;
+  border-radius: 17px;
   object-fit: fill;
+  object-position: center;
 }
 
 /* ── Booking summary card ────────────────────────────────────── */
@@ -801,7 +821,7 @@
     overflow: visible;
   }
   .ba-promo {
-    height: 180px;
+    height: 170px;
   }
 }
 

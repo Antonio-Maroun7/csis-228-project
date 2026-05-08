@@ -62,38 +62,6 @@
                         <div class="ba-error-banner"><span>⚠</span> <%= message %></div>
                     <% } %>
 
-                    <!-- ─── STAT CARDS ROW ─────────────────────────────── -->
-                    <div class="ba-stats-row">
-
-                        <div class="ba-stat-card">
-                            <div class="ba-stat-icon ba-stat-icon-teal">📅</div>
-                            <div class="ba-stat-info">
-                                <div class="ba-stat-service-name"><%= safeService.name || "Service" %></div>
-                                <div class="ba-stat-label">Selected Service</div>
-                                <div class="ba-stat-sub">You're booking this service</div>
-                            </div>
-                        </div>
-
-                        <div class="ba-stat-card">
-                            <div class="ba-stat-icon ba-stat-icon-blue">📅</div>
-                            <div class="ba-stat-info">
-                                <div class="ba-stat-number"><%= safeStats.upcomingAppointments || 0 %></div>
-                                <div class="ba-stat-label">Upcoming Appointments</div>
-                                <div class="ba-stat-sub"><%= safeStats.nextAppointmentLabel || "Next one after booking" %></div>
-                            </div>
-                        </div>
-
-                        <div class="ba-stat-card">
-                            <div class="ba-stat-icon ba-stat-icon-pink">❤</div>
-                            <div class="ba-stat-info">
-                                <div class="ba-stat-number"><%= safeStats.favoriteServices || 0 %></div>
-                                <div class="ba-stat-label">Favorite Services</div>
-                                <div class="ba-stat-sub">Your go-to services</div>
-                            </div>
-                        </div>
-
-                    </div><!-- /.ba-stats-row -->
-
                     <!-- ─── TWO-COLUMN LAYOUT ──────────────────────────── -->
                     <div class="ba-layout">
 
