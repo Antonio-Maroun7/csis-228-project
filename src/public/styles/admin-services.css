@@ -1,0 +1,662 @@
+/* ================================================================
+   admin-services.css
+   Styles specific to the Admin Services page.
+   Prefix: as-
+   Reuses: .admin-badge, .admin-feedback, .admin-avatar from admin.css
+   ================================================================ */
+
+/* ── Page header ─────────────────────────────────────────────── */
+.as-page-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.as-page-title {
+  margin: 0 0 4px;
+  font-size: 1.65rem;
+  font-weight: 900;
+  color: var(--dark, #14313b);
+  line-height: 1.2;
+}
+
+.as-page-subtitle {
+  margin: 0;
+  font-size: 0.88rem;
+  color: var(--muted, #64748b);
+}
+
+/* ── Create Service button ───────────────────────────────────── */
+.as-btn-add {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 10px 20px;
+  background: var(--primary, #0f8f8c);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-size: 0.88rem;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  transition:
+    background 0.15s ease,
+    box-shadow 0.15s ease;
+  box-shadow: 0 3px 10px rgba(15, 143, 140, 0.25);
+  flex-shrink: 0;
+}
+
+.as-btn-add:hover {
+  background: var(--primary-dark, #087674);
+  box-shadow: 0 5px 16px rgba(15, 143, 140, 0.35);
+}
+
+/* ── Feedback close button ───────────────────────────────────── */
+.as-feedback-close {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: inherit;
+  font-size: 1rem;
+  line-height: 1;
+  opacity: 0.7;
+  padding: 0 2px;
+  flex-shrink: 0;
+}
+
+.as-feedback-close:hover {
+  opacity: 1;
+}
+
+/* ── Table card ──────────────────────────────────────────────── */
+.as-card {
+  background: #fff;
+  border: 1px solid rgba(226, 232, 240, 0.9);
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(15, 23, 42, 0.06);
+  overflow: hidden;
+}
+
+/* ── Toolbar ─────────────────────────────────────────────────── */
+.as-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 18px;
+  border-bottom: 1px solid #f1f5f9;
+  flex-wrap: wrap;
+}
+
+.as-search-wrap {
+  position: relative;
+  flex: 1;
+  min-width: 180px;
+}
+
+.as-search-icon {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--muted, #94a3b8);
+  pointer-events: none;
+}
+
+.as-search-input {
+  padding: 7px 12px 7px 32px;
+  border: 1px solid var(--border, #e5e7eb);
+  border-radius: 8px;
+  font-size: 0.84rem;
+  width: 100%;
+  outline: none;
+  transition: border-color 0.14s;
+  color: var(--dark, #14313b);
+  box-sizing: border-box;
+}
+
+.as-search-input:focus {
+  border-color: var(--primary, #0f8f8c);
+  box-shadow: 0 0 0 3px rgba(15, 143, 140, 0.08);
+}
+
+.as-filter-select,
+.as-sort-select {
+  padding: 7px 10px;
+  border: 1px solid var(--border, #e5e7eb);
+  border-radius: 8px;
+  font-size: 0.84rem;
+  color: var(--dark, #14313b);
+  background: #fff;
+  cursor: pointer;
+  outline: none;
+  transition: border-color 0.14s;
+  white-space: nowrap;
+  min-width: 140px;
+}
+
+.as-filter-select:focus,
+.as-sort-select:focus {
+  border-color: var(--primary, #0f8f8c);
+  box-shadow: 0 0 0 3px rgba(15, 143, 140, 0.08);
+}
+
+/* ── Table ───────────────────────────────────────────────────── */
+.as-table-outer {
+  overflow-x: auto;
+}
+
+.as-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+}
+
+.as-table thead th {
+  padding: 11px 16px;
+  text-align: left;
+  font-size: 0.74rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted, #64748b);
+  background: #f8fafc;
+  border-bottom: 1px solid var(--border, #e5e7eb);
+  white-space: nowrap;
+}
+
+.as-table tbody tr {
+  border-bottom: 1px solid #f1f5f9;
+  transition: background 0.13s ease;
+}
+
+.as-table tbody tr:last-child {
+  border-bottom: none;
+}
+
+.as-table tbody tr:hover {
+  background: #f8fffe;
+}
+
+.as-table tbody td {
+  padding: 12px 16px;
+  vertical-align: middle;
+  color: var(--text, #1f2937);
+}
+
+/* ── Service cell (icon + name) ──────────────────────────────── */
+.as-svc-cell {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.as-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+
+/* Cycling icon background colors — assigned by JS class as-color-0 … as-color-7 */
+.as-icon.as-color-0 {
+  background: #e6fffb;
+}
+.as-icon.as-color-1 {
+  background: #f5f3ff;
+}
+.as-icon.as-color-2 {
+  background: #fff7ed;
+}
+.as-icon.as-color-3 {
+  background: #eff6ff;
+}
+.as-icon.as-color-4 {
+  background: #fdf2f8;
+}
+.as-icon.as-color-5 {
+  background: #f0fdf4;
+}
+.as-icon.as-color-6 {
+  background: #fffbeb;
+}
+.as-icon.as-color-7 {
+  background: #f8fafc;
+}
+
+.as-svc-name {
+  font-weight: 700;
+  color: var(--dark, #14313b);
+  line-height: 1.3;
+}
+
+.as-svc-id {
+  font-size: 0.76rem;
+  color: var(--muted, #64748b);
+}
+
+/* ── Description cell ────────────────────────────────────────── */
+.as-desc-cell {
+  color: var(--muted, #64748b);
+  font-size: 0.85rem;
+  max-width: 250px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ── Duration / Price cells ──────────────────────────────────── */
+.as-duration-cell,
+.as-price-cell {
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Category badge ──────────────────────────────────────────── */
+.as-cat-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  background: var(--primary-soft, #e6fffb);
+  color: var(--primary, #0f8f8c);
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+/* ── Action buttons ──────────────────────────────────────────── */
+.as-action-cell {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: nowrap;
+}
+
+.as-btn-edit,
+.as-btn-del {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 12px;
+  border-radius: 7px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.14s ease;
+  white-space: nowrap;
+  border: 1.5px solid;
+}
+
+.as-btn-edit {
+  border-color: var(--primary, #0f8f8c);
+  color: var(--primary, #0f8f8c);
+  background: transparent;
+}
+
+.as-btn-edit:hover {
+  background: var(--primary, #0f8f8c);
+  color: #fff;
+}
+
+.as-btn-del {
+  border-color: #ef4444;
+  color: #ef4444;
+  background: transparent;
+}
+
+.as-btn-del:hover {
+  background: #ef4444;
+  color: #fff;
+}
+
+/* ── Table footer ────────────────────────────────────────────── */
+.as-table-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 18px;
+  border-top: 1px solid #f1f5f9;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.as-showing {
+  font-size: 0.84rem;
+  color: var(--muted, #64748b);
+  font-weight: 600;
+}
+
+/* ── Pagination ──────────────────────────────────────────────── */
+.as-pagination {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.as-page-btn {
+  min-width: 32px;
+  height: 32px;
+  padding: 0 8px;
+  border: 1px solid var(--border, #e5e7eb);
+  border-radius: 7px;
+  background: #fff;
+  color: var(--dark, #14313b);
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.14s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.as-page-btn:hover:not(:disabled):not(.active) {
+  border-color: var(--primary, #0f8f8c);
+  color: var(--primary, #0f8f8c);
+  background: var(--primary-soft, #e6fffb);
+}
+
+.as-page-btn.active {
+  background: var(--primary, #0f8f8c);
+  border-color: var(--primary, #0f8f8c);
+  color: #fff;
+}
+
+.as-page-btn:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+/* ── Empty state ─────────────────────────────────────────────── */
+.as-empty-cell {
+  padding: 40px 16px !important;
+  text-align: center;
+}
+
+/* ── Number cell ─────────────────────────────────────────────── */
+.as-num-cell {
+  color: var(--muted, #94a3b8) !important;
+  font-size: 0.8rem !important;
+  width: 44px;
+}
+
+/* ================================================================
+   Modals
+   ================================================================ */
+
+.as-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(20, 49, 59, 0.45);
+  z-index: 999;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.as-overlay.open {
+  display: flex;
+}
+
+.as-modal {
+  background: #fff;
+  border-radius: 18px;
+  width: 100%;
+  max-width: 520px;
+  max-height: calc(100vh - 48px);
+  overflow-y: auto;
+  box-shadow: 0 20px 60px rgba(15, 23, 42, 0.22);
+  display: flex;
+  flex-direction: column;
+  scrollbar-width: none;
+}
+
+.as-modal::-webkit-scrollbar {
+  display: none;
+}
+
+.as-modal-sm {
+  max-width: 420px;
+}
+
+.as-modal-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px 16px;
+  border-bottom: 1px solid var(--border, #e5e7eb);
+  flex-shrink: 0;
+}
+
+.as-modal-title {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--dark, #14313b);
+}
+
+.as-modal-close {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.1rem;
+  color: var(--muted, #94a3b8);
+  padding: 2px 6px;
+  border-radius: 6px;
+  transition: 0.14s;
+}
+
+.as-modal-close:hover {
+  background: #f1f5f9;
+  color: var(--dark, #14313b);
+}
+
+.as-modal-body {
+  padding: 20px 24px;
+}
+
+.as-del-msg {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--muted, #4b5563);
+  line-height: 1.6;
+}
+
+/* ── Form inside modal ───────────────────────────────────────── */
+.as-form {
+  padding: 20px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.as-form-row {
+  display: flex;
+  gap: 14px;
+}
+
+.as-form-row .as-form-group {
+  flex: 1;
+  min-width: 0;
+}
+
+.as-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.as-label {
+  font-size: 0.84rem;
+  font-weight: 700;
+  color: var(--dark, #14313b);
+}
+
+.as-req {
+  color: #ef4444;
+}
+
+.as-input {
+  padding: 9px 12px;
+  border: 1px solid var(--border, #e5e7eb);
+  border-radius: 9px;
+  font-size: 0.87rem;
+  color: var(--dark, #14313b);
+  outline: none;
+  transition: border-color 0.14s;
+  background: #fff;
+  font-family: inherit;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.as-input:focus {
+  border-color: var(--primary, #0f8f8c);
+  box-shadow: 0 0 0 3px rgba(15, 143, 140, 0.09);
+}
+
+.as-textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.as-form-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 0 24px 20px;
+}
+
+.as-btn-cancel {
+  padding: 9px 20px;
+  border: 1.5px solid var(--border, #e5e7eb);
+  border-radius: 9px;
+  background: #fff;
+  color: var(--muted, #64748b);
+  font-size: 0.87rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.14s;
+}
+
+.as-btn-cancel:hover {
+  border-color: var(--dark, #14313b);
+  color: var(--dark, #14313b);
+}
+
+.as-btn-submit {
+  padding: 9px 22px;
+  border: none;
+  border-radius: 9px;
+  background: var(--primary, #0f8f8c);
+  color: #fff;
+  font-size: 0.87rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.14s;
+  box-shadow: 0 3px 10px rgba(15, 143, 140, 0.22);
+}
+
+.as-btn-submit:hover {
+  background: var(--primary-dark, #087674);
+}
+
+.as-btn-delete {
+  padding: 9px 22px;
+  border: none;
+  border-radius: 9px;
+  background: #ef4444;
+  color: #fff;
+  font-size: 0.87rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.14s;
+  box-shadow: 0 3px 10px rgba(239, 68, 68, 0.22);
+}
+
+.as-btn-delete:hover {
+  background: #dc2626;
+}
+
+/* ================================================================
+   Layout fix — scoped to admin-services-body only.
+   Full chain: dashboard → main → content → card → table-outer
+   ONLY as-table-outer scrolls. Everything else is locked in place.
+   ================================================================ */
+
+/* 0. Force the implicit grid row to fill the fixed container height. */
+.admin-services-body .dashboard {
+  grid-template-rows: 1fr;
+}
+
+/* 1. Grid column: must fill its row track exactly, clip overflow */
+.admin-services-body .dashboard-main {
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* 2. Content area: locked to its flex share, becomes a column layout. */
+.admin-services-body .dashboard-content {
+  overflow: hidden !important;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 3. Feedback banner — fixed, never shrinks */
+.admin-services-body .admin-feedback {
+  flex-shrink: 0;
+  margin-bottom: 10px;
+}
+
+/* 4. Page header row (title + Add button) — fixed, never shrinks */
+.admin-services-body .as-page-header {
+  flex-shrink: 0;
+}
+
+/* 5. Table card — eats all remaining vertical space */
+.admin-services-body .as-card {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 6. Toolbar — fixed, never shrinks */
+.admin-services-body .as-toolbar {
+  flex-shrink: 0;
+}
+
+/* 7. Footer — fixed, never shrinks */
+.admin-services-body .as-table-footer {
+  flex-shrink: 0;
+}
+
+/* 8. THE ONLY scrolling zone */
+.admin-services-body .as-table-outer {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 transparent;
+}
+
+.admin-services-body .as-table-outer::-webkit-scrollbar {
+  width: 5px;
+}
+
+.admin-services-body .as-table-outer::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 99px;
+}

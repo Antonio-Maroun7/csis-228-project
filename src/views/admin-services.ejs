@@ -6,6 +6,7 @@
     <title><%= title %> | Smart Booking</title>
     <link rel="stylesheet" href="/styles/dashboard.css" />
     <link rel="stylesheet" href="/styles/admin.css" />
+    <link rel="stylesheet" href="/styles/admin-services.css" />
 </head>
 <body class="admin-services-body">
 <div class="dashboard-page">
@@ -19,59 +20,91 @@
             breadcrumbSub: 'Services',
             firstName,
             role,
-            searchPlaceholder: 'Search services...'
+            searchPlaceholder: 'Search services, categories...',
+            showNotification: false
         }) %>
 
         <div class="dashboard-content">
 
             <% if (message) { %>
-            <div class="admin-feedback <%= messageType %>"><%= message %></div>
+            <div class="admin-feedback <%= messageType %>">
+                <span><%= message %></span>
+                <button class="as-feedback-close" type="button" onclick="this.parentElement.remove()">&#x2715;</button>
+            </div>
             <% } %>
 
-            <div class="admin-section-header">
-                <div class="page-title" style="margin-bottom:0">
-                    <h2 style="margin:0 0 4px;font-size:1.7rem">Services</h2>
-                    <p style="margin:0">All services available in the system</p>
+            <!-- Page Header -->
+            <div class="as-page-header">
+                <div>
+                    <h2 class="as-page-title">Manage Services</h2>
+                    <p class="as-page-subtitle">Create, update, and manage available services.</p>
                 </div>
+                <button class="as-btn-add" type="button" id="openAddModal">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2z"/>
+                    </svg>
+                    Create Service
+                </button>
             </div>
 
-            <div class="admin-table-wrap" style="margin-top:18px">
-                <% if (services && services.length > 0) { %>
-                <table class="admin-table">
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Service</th>
-                            <th>Description</th>
-                            <th>Duration</th>
-                            <th>Base Price</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <% services.forEach(function(svc, i) { %>
-                        <tr>
-                            <td style="color:var(--muted);font-size:0.8rem"><%= i + 1 %></td>
-                            <td>
-                                <div class="admin-icon-cell">
-                                    <div class="admin-icon-bubble"><%= svc.icon %></div>
-                                    <span style="font-weight:700;color:var(--dark)"><%= svc.name %></span>
-                                </div>
-                            </td>
-                            <td style="color:var(--muted);max-width:280px"><%= svc.description || '—' %></td>
-                            <td style="white-space:nowrap"><%= svc.durationMin ? svc.durationMin + ' min' : '—' %></td>
-                            <td class="admin-amount"><%= svc.priceLabel %></td>
-                            <td><span class="admin-badge <%= svc.isActive ? 'active' : 'inactive' %>"><%= svc.isActive ? 'Active' : 'Inactive' %></span></td>
-                        </tr>
-                        <% }); %>
-                    </tbody>
-                </table>
-                <% } else { %>
-                <div class="admin-empty">
-                    <div class="admin-empty-icon">🧾</div>
-                    <p>No services found.</p>
+            <!-- Table Card -->
+            <div class="as-card">
+                <!-- Toolbar -->
+                <div class="as-toolbar">
+                    <div class="as-search-wrap">
+                        <svg class="as-search-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                        </svg>
+                        <input type="text" id="asSearchInput" class="as-search-input" placeholder="Search services by name or description..." />
+                    </div>
+                    <select id="asCategoryFilter" class="as-filter-select">
+                        <option value="">All Categories</option>
+                    </select>
+                    <select id="asSortSelect" class="as-sort-select">
+                        <option value="name_asc">Sort by: Name (A–Z)</option>
+                        <option value="name_desc">Sort by: Name (Z–A)</option>
+                        <option value="price_asc">Sort by: Price (Low–High)</option>
+                        <option value="price_desc">Sort by: Price (High–Low)</option>
+                        <option value="duration_asc">Sort by: Duration (Short–Long)</option>
+                    </select>
                 </div>
-                <% } %>
+
+                <!-- Table -->
+                <div class="as-table-outer">
+                    <table class="as-table">
+                        <colgroup>
+                            <col />
+                            <col />
+                            <col />
+                            <col />
+                            <col />
+                            <col />
+                            <col />
+                            <col />
+                        </colgroup>
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Service</th>
+                                <th>Category</th>
+                                <th>Duration</th>
+                                <th>Price</th>
+                                <th>Description</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="asTableBody">
+                            <!-- Populated by admin-services.js -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Footer -->
+                <div class="as-table-footer">
+                    <span id="asShowingText" class="as-showing">Showing 0 to 0 of 0 services</span>
+                    <div class="as-pagination" id="asPagination"></div>
+                </div>
             </div>
 
         </div><!-- /.dashboard-content -->
@@ -79,5 +112,124 @@
 
 </div>
 </div>
+
+<!-- ADD SERVICE MODAL -->
+<div class="as-overlay" id="addModalOverlay">
+    <div class="as-modal">
+        <div class="as-modal-head">
+            <h3 class="as-modal-title">Create New Service</h3>
+            <button class="as-modal-close" type="button" data-close="addModalOverlay">&#x2715;</button>
+        </div>
+        <form class="as-form" method="POST" action="/views/admin-services/create">
+            <div class="as-form-group">
+                <label class="as-label">Service Name <span class="as-req">*</span></label>
+                <input type="text" name="service_name" class="as-input" placeholder="e.g. Classic Haircut" required />
+            </div>
+            <div class="as-form-group">
+                <label class="as-label">Description</label>
+                <textarea name="service_description" class="as-input as-textarea" placeholder="Short description of this service" rows="3"></textarea>
+            </div>
+            <div class="as-form-group">
+                <label class="as-label">Category <span class="as-req">*</span></label>
+                <select name="category_id" id="addCategorySelect" class="as-input" required>
+                    <option value="">Select a category</option>
+                </select>
+            </div>
+            <div class="as-form-row">
+                <div class="as-form-group">
+                    <label class="as-label">Duration (minutes) <span class="as-req">*</span></label>
+                    <input type="number" name="service_duration_min" class="as-input" placeholder="e.g. 30" min="1" required />
+                </div>
+                <div class="as-form-group">
+                    <label class="as-label">Base Price ($) <span class="as-req">*</span></label>
+                    <input type="number" name="service_price" class="as-input" placeholder="e.g. 25" min="0" step="0.01" required />
+                </div>
+            </div>
+            <div class="as-form-group">
+                <label class="as-label">Status</label>
+                <select name="service_is_active" class="as-input">
+                    <option value="true">Active</option>
+                    <option value="false">Inactive</option>
+                </select>
+            </div>
+            <div class="as-form-actions">
+                <button type="button" class="as-btn-cancel" data-close="addModalOverlay">Cancel</button>
+                <button type="submit" class="as-btn-submit">Create Service</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- EDIT SERVICE MODAL -->
+<div class="as-overlay" id="editModalOverlay">
+    <div class="as-modal">
+        <div class="as-modal-head">
+            <h3 class="as-modal-title">Edit Service</h3>
+            <button class="as-modal-close" type="button" data-close="editModalOverlay">&#x2715;</button>
+        </div>
+        <form class="as-form" method="POST" id="editServiceForm" action="#">
+            <div class="as-form-group">
+                <label class="as-label">Service Name <span class="as-req">*</span></label>
+                <input type="text" name="service_name" id="editSvcName" class="as-input" required />
+            </div>
+            <div class="as-form-group">
+                <label class="as-label">Description</label>
+                <textarea name="service_description" id="editSvcDesc" class="as-input as-textarea" rows="3"></textarea>
+            </div>
+            <div class="as-form-group">
+                <label class="as-label">Category <span class="as-req">*</span></label>
+                <select name="category_id" id="editCategorySelect" class="as-input" required>
+                    <option value="">Select a category</option>
+                </select>
+            </div>
+            <div class="as-form-row">
+                <div class="as-form-group">
+                    <label class="as-label">Duration (minutes) <span class="as-req">*</span></label>
+                    <input type="number" name="service_duration_min" id="editSvcDuration" class="as-input" min="1" required />
+                </div>
+                <div class="as-form-group">
+                    <label class="as-label">Base Price ($) <span class="as-req">*</span></label>
+                    <input type="number" name="service_price" id="editSvcPrice" class="as-input" min="0" step="0.01" required />
+                </div>
+            </div>
+            <div class="as-form-group">
+                <label class="as-label">Status</label>
+                <select name="service_is_active" id="editSvcStatus" class="as-input">
+                    <option value="true">Active</option>
+                    <option value="false">Inactive</option>
+                </select>
+            </div>
+            <div class="as-form-actions">
+                <button type="button" class="as-btn-cancel" data-close="editModalOverlay">Cancel</button>
+                <button type="submit" class="as-btn-submit">Save Changes</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- DELETE CONFIRM MODAL -->
+<div class="as-overlay" id="deleteModalOverlay">
+    <div class="as-modal as-modal-sm">
+        <div class="as-modal-head">
+            <h3 class="as-modal-title">Delete Service</h3>
+            <button class="as-modal-close" type="button" data-close="deleteModalOverlay">&#x2715;</button>
+        </div>
+        <div class="as-modal-body">
+            <p class="as-del-msg">Are you sure you want to delete <strong id="deleteSvcName">this service</strong>? This action cannot be undone.</p>
+        </div>
+        <form method="POST" id="deleteServiceForm" action="#">
+            <div class="as-form-actions">
+                <button type="button" class="as-btn-cancel" data-close="deleteModalOverlay">Cancel</button>
+                <button type="submit" class="as-btn-delete">Delete</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    var ALL_SERVICES = <%- JSON.stringify(services || []) %>;
+    var ALL_CATEGORIES = <%- JSON.stringify(categories || []) %>;
+</script>
+<script src="/scripts/admin-services.js"></script>
 </body>
 </html>

@@ -141,6 +141,27 @@ router.get(
   adminServiceView.renderAdminServices,
 );
 
+router.post(
+  "/views/admin-services/create",
+  requireViewAuth,
+  requireViewRole(["admin"]),
+  adminServiceView.adminCreateService,
+);
+
+router.post(
+  "/views/admin-services/:id/update",
+  requireViewAuth,
+  requireViewRole(["admin"]),
+  adminServiceView.adminUpdateService,
+);
+
+router.post(
+  "/views/admin-services/:id/delete",
+  requireViewAuth,
+  requireViewRole(["admin"]),
+  adminServiceView.adminDeleteService,
+);
+
 router.get(
   "/views/admin-staff-services",
   requireViewAuth,

@@ -148,5 +148,17 @@ class ServicesRepository {
     const { rows } = await pool.query(q, params);
     return ServiceEntity.fromRow(rows[0]);
   }
+
+  /**
+   * Permanently deletes a service row by id.
+   * Side effects: deletes one row from services.
+   * @param {number|string} service_id
+   * @returns {Promise<boolean>}
+   */
+  static async deleteService(service_id) {
+    const q = `DELETE FROM services WHERE service_id = $1`;
+    await pool.query(q, [service_id]);
+    return true;
+  }
 }
 module.exports = ServicesRepository;

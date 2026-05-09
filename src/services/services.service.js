@@ -111,5 +111,23 @@ class ServicesService {
       throw err;
     }
   }
+
+  /**
+   * Permanently deletes a service by id.
+   * @param {number|string} id
+   * @returns {Promise<boolean>}
+   */
+  static async deleteService(id) {
+    try {
+      const existing = await ServiceRepository.findServiceById(id);
+      if (!existing) {
+        throw new Error("Service not found");
+      }
+      return await ServiceRepository.deleteService(id);
+    } catch (err) {
+      console.log(err.message);
+      throw err;
+    }
+  }
 }
 module.exports = ServicesService;
