@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%= title %> | Smart Booking</title>
+    <link rel="stylesheet" href="/styles/dashboard.css" />
+    <link rel="stylesheet" href="/styles/admin.css" />
+</head>
+<body class="admin-appointments-body">
+<div class="dashboard-page">
+<div class="dashboard">
+
+    <%- include('partials/dashboard-sidebar', { role, activePage }) %>
+
+    <main class="dashboard-main">
+        <%- include('partials/dashboard-topbar', {
+            breadcrumbMain: 'Home',
+            breadcrumbSub: 'All Appointments',
+            firstName,
+            role,
+            searchPlaceholder: 'Search appointments...'
+        }) %>
+
+        <div class="dashboard-content">
+
+            <% if (message) { %>
+            <div class="admin-feedback <%= messageType %>"><%= message %></div>
+            <% } %>
+
+            <div class="admin-section-header">
+                <div class="page-title" style="margin-bottom:0">
+                    <h2 style="margin:0 0 4px;font-size:1.7rem">All Appointments</h2>
+                    <p style="margin:0">Every appointment in the system</p>
+                </div>
+            </div>
+
+            <div class="admin-table-wrap" style="margin-top:18px">
+                <% if (appointments && appointments.length > 0) { %>
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Client</th>
+                            <th>Service</th>
+                            <th>Staff</th>
+                            <th>Date &amp; Time</th>
+                            <th>Status</th>
+                            <th>Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% appointments.forEach(function(appt, i) { %>
+                        <tr>
+                            <td style="color:var(--muted);font-size:0.8rem"><%= i + 1 %></td>
+                            <td>
+                                <div class="admin-client-cell">
+                                    <div class="admin-avatar"><%= appt.clientInitials %></div>
+                                    <div>
+                                        <div class="admin-client-name"><%= appt.clientName %></div>
+                                        <div class="admin-client-email"><%= appt.clientEmail %></div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td style="font-weight:600"><%= appt.serviceName %></td>
+                            <td style="color:var(--muted)"><%= appt.staffName %></td>
+                            <td style="white-space:nowrap"><%= appt.dateTimeStr %></td>
+                            <td><span class="admin-badge <%= appt.status %>"><%= appt.status %></span></td>
+                            <td class="admin-amount"><%= appt.priceLabel %></td>
+                        </tr>
+                        <% }); %>
+                    </tbody>
+                </table>
+                <% } else { %>
+                <div class="admin-empty">
+                    <div class="admin-empty-icon">📅</div>
+                    <p>No appointments found.</p>
+                </div>
+                <% } %>
+            </div>
+
+        </div><!-- /.dashboard-content -->
+    </main>
+
+</div>
+</div>
+</body>
+</html>

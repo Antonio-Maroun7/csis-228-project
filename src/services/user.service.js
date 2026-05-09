@@ -74,6 +74,39 @@ class UserService {
   }
 
   /**
+   * Creates a new user from the admin panel with any role.
+   * Side effects: inserts one row into users with a hashed password.
+   * @param {{ user_fullname: string, user_email: string, user_phone: string|null, user_password: string, user_role: string, user_is_active: boolean }} data
+   * @returns {Promise<Object>}
+   * @throws {Error} When email already exists or creation fails.
+   */
+  static async adminCreateUser({
+    user_fullname,
+    user_email,
+    user_phone,
+    user_password,
+    user_role,
+    user_is_active,
+  }) {
+    const existing = await AuthRepository.findUserByEmail(user_email);
+    if (existing) {
+      throw new Error("email already exists");
+    }
+    const entity = await AuthRepository.createUser({
+      user_fullname,
+      user_email,
+      user_password,
+      user_role: user_role || "client",
+      user_phone: user_phone || null,
+      user_is_active: user_is_active !== false,
+    });
+    if (!entity) {
+      throw new Error("create failed");
+    }
+    return UserDto.toResponseDto(entity);
+  }
+
+  /**
    * Deletes a user by id.
    * Side effects: removes one user row from the database.
    * @param {number|string} user_id

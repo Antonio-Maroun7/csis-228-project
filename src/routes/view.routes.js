@@ -83,6 +83,70 @@ router.get(
   viewController.renderProfile,
 );
 
+/* ── Admin management views ───────────────────────────────────── */
+router.get(
+  "/views/admin-dashboard",
+  requireViewAuth,
+  requireViewRole(["admin"]),
+  viewController.renderAdminDashboard,
+);
+
+router.get(
+  "/views/manage-users",
+  requireViewAuth,
+  requireViewRole(["admin"]),
+  viewController.renderManageUsers,
+);
+
+router.get(
+  "/views/admin-categories",
+  requireViewAuth,
+  requireViewRole(["admin"]),
+  viewController.renderAdminCategories,
+);
+
+router.get(
+  "/views/admin-services",
+  requireViewAuth,
+  requireViewRole(["admin"]),
+  viewController.renderAdminServices,
+);
+
+router.get(
+  "/views/admin-staff-services",
+  requireViewAuth,
+  requireViewRole(["admin"]),
+  viewController.renderAdminStaffServices,
+);
+
+router.get(
+  "/views/admin-appointments",
+  requireViewAuth,
+  requireViewRole(["admin"]),
+  viewController.renderAdminAppointments,
+);
+
+router.post(
+  "/views/manage-users/create",
+  requireViewAuth,
+  requireViewRole(["admin"]),
+  viewController.adminCreateUser,
+);
+
+router.post(
+  "/views/manage-users/:id/update",
+  requireViewAuth,
+  requireViewRole(["admin"]),
+  viewController.adminUpdateUser,
+);
+
+router.post(
+  "/views/manage-users/:id/delete",
+  requireViewAuth,
+  requireViewRole(["admin"]),
+  viewController.adminDeleteUser,
+);
+
 router.post(
   "/views/profile/update",
   requireViewAuth,

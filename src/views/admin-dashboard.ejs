@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%= title %> | Smart Booking</title>
+    <link rel="stylesheet" href="/styles/dashboard.css" />
+    <link rel="stylesheet" href="/styles/admin.css" />
+</head>
+<body class="admin-dashboard-body">
+<div class="dashboard-page">
+<div class="dashboard">
+
+    <%- include('partials/dashboard-sidebar', { role, activePage }) %>
+
+    <main class="dashboard-main">
+        <%- include('partials/dashboard-topbar', {
+            breadcrumbMain: 'Home',
+            breadcrumbSub: 'Dashboard',
+            firstName,
+            role,
+            searchPlaceholder: 'Search users, services, appointments...'
+        }) %>
+
+        <div class="dashboard-content">
+
+            <% if (message) { %>
+            <div class="admin-feedback <%= messageType %>"><%= message %></div>
+            <% } %>
+
+            <div class="page-title">
+                <h2>Admin Dashboard</h2>
+                <p>Welcome back, <%= firstName %>. Here's what's happening today.</p>
+            </div>
+
+            <!-- Stats Row -->
+            <div class="admin-stats-row">
+                <div class="admin-stat-card">
+                    <div class="admin-stat-icon teal">👥</div>
+                    <div class="admin-stat-info">
+                        <div class="admin-stat-value"><%= stats.totalUsers %></div>
+                        <div class="admin-stat-label">Total Users</div>
+                    </div>
+                </div>
+                <div class="admin-stat-card">
+                    <div class="admin-stat-icon orange">▦</div>
+                    <div class="admin-stat-info">
+                        <div class="admin-stat-value"><%= stats.totalCategories %></div>
+                        <div class="admin-stat-label">Categories</div>
+                    </div>
+                </div>
+                <div class="admin-stat-card">
+                    <div class="admin-stat-icon teal">🧾</div>
+                    <div class="admin-stat-info">
+                        <div class="admin-stat-value"><%= stats.totalServices %></div>
+                        <div class="admin-stat-label">Services</div>
+                    </div>
+                </div>
+                <div class="admin-stat-card">
+                    <div class="admin-stat-icon purple">📅</div>
+                    <div class="admin-stat-info">
+                        <div class="admin-stat-value"><%= stats.totalAppointments %></div>
+                        <div class="admin-stat-label">Appointments</div>
+                    </div>
+                </div>
+                <div class="admin-stat-card">
+                    <div class="admin-stat-icon orange">⏳</div>
+                    <div class="admin-stat-info">
+                        <div class="admin-stat-value"><%= stats.pendingAppointments %></div>
+                        <div class="admin-stat-label">Pending</div>
+                    </div>
+                </div>
+                <div class="admin-stat-card">
+                    <div class="admin-stat-icon green">✅</div>
+                    <div class="admin-stat-info">
+                        <div class="admin-stat-value"><%= stats.completedAppointments %></div>
+                        <div class="admin-stat-label">Completed</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="admin-section-header">
+                <h3 class="admin-section-title">Quick Actions</h3>
+            </div>
+            <div class="admin-quick-actions">
+                <a class="admin-action-card" href="/views/manage-users">
+                    <div class="admin-action-icon">👥</div>
+                    <div class="admin-action-title">Manage Users</div>
+                    <div class="admin-action-desc">View and manage all system users</div>
+                    <div class="admin-action-arrow">View Users →</div>
+                </a>
+                <a class="admin-action-card" href="/views/admin-categories">
+                    <div class="admin-action-icon">▦</div>
+                    <div class="admin-action-title">Categories</div>
+                    <div class="admin-action-desc">Organize service categories</div>
+                    <div class="admin-action-arrow">View Categories →</div>
+                </a>
+                <a class="admin-action-card" href="/views/admin-services">
+                    <div class="admin-action-icon">🧾</div>
+                    <div class="admin-action-title">Services</div>
+                    <div class="admin-action-desc">Manage all available services</div>
+                    <div class="admin-action-arrow">View Services →</div>
+                </a>
+                <a class="admin-action-card" href="/views/admin-staff-services">
+                    <div class="admin-action-icon">👤</div>
+                    <div class="admin-action-title">Staff Services</div>
+                    <div class="admin-action-desc">Manage staff assignments</div>
+                    <div class="admin-action-arrow">View Assignments →</div>
+                </a>
+                <a class="admin-action-card" href="/views/admin-appointments">
+                    <div class="admin-action-icon">📅</div>
+                    <div class="admin-action-title">Appointments</div>
+                    <div class="admin-action-desc">View all system appointments</div>
+                    <div class="admin-action-arrow">View All →</div>
+                </a>
+            </div>
+
+            <!-- Recent Appointments -->
+            <div class="admin-section-header">
+                <h3 class="admin-section-title">Recent Appointments</h3>
+                <a class="outline-button" href="/views/admin-appointments">View All</a>
+            </div>
+
+            <div class="admin-table-wrap">
+                <% if (recentAppointments && recentAppointments.length > 0) { %>
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>Client</th>
+                            <th>Service</th>
+                            <th>Staff</th>
+                            <th>Date &amp; Time</th>
+                            <th>Status</th>
+                            <th>Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% recentAppointments.forEach(function(appt) { %>
+                        <tr>
+                            <td>
+                                <div class="admin-client-cell">
+                                    <div class="admin-avatar"><%= appt.clientInitials %></div>
+                                    <div>
+                                        <div class="admin-client-name"><%= appt.clientName %></div>
+                                        <div class="admin-client-email"><%= appt.clientEmail %></div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td><%= appt.serviceName %></td>
+                            <td><%= appt.staffName %></td>
+                            <td><%= appt.dateTimeStr %></td>
+                            <td><span class="admin-badge <%= appt.status %>"><%= appt.status %></span></td>
+                            <td class="admin-amount"><%= appt.priceLabel %></td>
+                        </tr>
+                        <% }); %>
+                    </tbody>
+                </table>
+                <% } else { %>
+                <div class="admin-empty">
+                    <div class="admin-empty-icon">📅</div>
+                    <p>No appointments yet.</p>
+                </div>
+                <% } %>
+            </div>
+
+        </div><!-- /.dashboard-content -->
+    </main>
+
+</div><!-- /.dashboard -->
+</div><!-- /.dashboard-page -->
+</body>
+</html>

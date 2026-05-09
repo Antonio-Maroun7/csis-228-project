@@ -128,6 +128,11 @@
             ? showNotification
             : safeRole === "admin" || safeRole === "staff";
 
+    const safeShowTopbarSearch =
+        typeof showTopbarSearch !== "undefined"
+            ? showTopbarSearch
+            : true;
+
     const userInitial = safeFirstName.charAt(0).toUpperCase();
 %>
 
@@ -150,6 +155,7 @@
     </div>
 
     <div class="topbar-right">
+        <% if (safeShowTopbarSearch) { %>
         <form class="search-box" action="#" method="GET" id="dashboardSearchForm">
             <span class="search-icon">🔍</span>
 
@@ -161,8 +167,9 @@
                 autocomplete="off"
             />
         </form>
+        <% } %>
 
-        <% if (shouldShowNotification) { %>
+        <% if (shouldShowNotification && safeShowTopbarSearch) { %>
             <button class="notification-button" type="button" aria-label="Notifications">
                 <span class="notification-icon">🔔</span>
 

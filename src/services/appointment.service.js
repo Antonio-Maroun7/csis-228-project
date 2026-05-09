@@ -409,6 +409,15 @@ class AppointmentService {
   }
 
   /**
+   * Returns all appointments with rich join data for the admin view.
+   * Joins client name, staff name, service name, category, duration, and price.
+   * @returns {Promise<Array<Object>>}
+   */
+  static async getAllAppointments() {
+    return AppointmentRepository.findAllAppointmentsRich();
+  }
+
+  /**
    * Returns appointments created between two provided dates.
    * @param {string|Date} start_date
    * @param {string|Date} end_date

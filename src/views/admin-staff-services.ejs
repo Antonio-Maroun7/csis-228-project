@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%= title %> | Smart Booking</title>
+    <link rel="stylesheet" href="/styles/dashboard.css" />
+    <link rel="stylesheet" href="/styles/admin.css" />
+</head>
+<body class="admin-staff-services-body">
+<div class="dashboard-page">
+<div class="dashboard">
+
+    <%- include('partials/dashboard-sidebar', { role, activePage }) %>
+
+    <main class="dashboard-main">
+        <%- include('partials/dashboard-topbar', {
+            breadcrumbMain: 'Home',
+            breadcrumbSub: 'Staff Services',
+            firstName,
+            role,
+            searchPlaceholder: 'Search staff assignments...'
+        }) %>
+
+        <div class="dashboard-content">
+
+            <% if (message) { %>
+            <div class="admin-feedback <%= messageType %>"><%= message %></div>
+            <% } %>
+
+            <div class="admin-section-header">
+                <div class="page-title" style="margin-bottom:0">
+                    <h2 style="margin:0 0 4px;font-size:1.7rem">Staff Services</h2>
+                    <p style="margin:0">All staff-to-service assignments with optional overrides</p>
+                </div>
+            </div>
+
+            <div class="admin-table-wrap" style="margin-top:18px">
+                <% if (staffServices && staffServices.length > 0) { %>
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Staff Member</th>
+                            <th>Service</th>
+                            <th>Override Duration</th>
+                            <th>Override Price</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% staffServices.forEach(function(ss, i) { %>
+                        <%
+                            const staffInitials = (ss.staffName || '?').trim()
+                                .split(/\s+/).slice(0,2)
+                                .map(function(w){ return w.charAt(0).toUpperCase(); }).join('');
+                        %>
+                        <tr>
+                            <td style="color:var(--muted);font-size:0.8rem"><%= i + 1 %></td>
+                            <td>
+                                <div class="admin-client-cell">
+                                    <div class="admin-avatar"><%= staffInitials %></div>
+                                    <span style="font-weight:700;color:var(--dark)"><%= ss.staffName %></span>
+                                </div>
+                            </td>
+                            <td style="font-weight:600"><%= ss.serviceName %></td>
+                            <td style="color:var(--muted)"><%= ss.durationMin ? ss.durationMin + ' min' : '—' %></td>
+                            <td class="admin-amount"><%= ss.priceLabel || '—' %></td>
+                        </tr>
+                        <% }); %>
+                    </tbody>
+                </table>
+                <% } else { %>
+                <div class="admin-empty">
+                    <div class="admin-empty-icon">👥</div>
+                    <p>No staff service assignments found.</p>
+                </div>
+                <% } %>
+            </div>
+
+        </div><!-- /.dashboard-content -->
+    </main>
+
+</div>
+</div>
+</body>
+</html>

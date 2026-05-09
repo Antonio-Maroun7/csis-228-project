@@ -333,6 +333,51 @@ function generateTimeSlots() {
   ];
 }
 
+function decorateAdminAppointmentsForView(rows = []) {
+  return rows.map((row) => {
+    const rawStart = row.appointment_start_at
+      ? new Date(row.appointment_start_at)
+      : null;
+
+    let dateTimeStr = "";
+
+    if (rawStart && !isNaN(rawStart.getTime())) {
+      const day = String(rawStart.getDate()).padStart(2, "0");
+      const month = MONTH_ABBRS[rawStart.getMonth()];
+      const year = rawStart.getFullYear();
+      const h = rawStart.getHours();
+      const m = String(rawStart.getMinutes()).padStart(2, "0");
+      const ampm = h >= 12 ? "PM" : "AM";
+      const h12 = h % 12 === 0 ? 12 : h % 12;
+      dateTimeStr = `${month} ${day} ${year} ${String(h12).padStart(2, "0")}:${m} ${ampm}`;
+    }
+
+    const status = row.appointment_status || "pending";
+    const clientInitials = (row.client_name || "?")
+      .trim()
+      .split(/\s+/)
+      .slice(0, 2)
+      .map((w) => w.charAt(0).toUpperCase())
+      .join("");
+
+    return {
+      id: row.appointment_id,
+      clientName: row.client_name || "Unknown Client",
+      clientEmail: row.client_email || "",
+      clientInitials,
+      staffName: row.staff_name || "TBA",
+      serviceName: row.service_name || "N/A",
+      categoryName: row.category_name || "",
+      dateTimeStr,
+      rawStartAt: rawStart,
+      status,
+      priceLabel: formatPrice(row.price_cents || 0),
+      durationMin: Number(row.duration_min || 0),
+      notes: row.appointment_notes || "",
+    };
+  });
+}
+
 async function getLoggedInUser(req) {
   const tokenUser = req.user || null;
 
@@ -913,6 +958,440 @@ class ViewController {
           "error",
         ),
       );
+    }
+  }
+
+  /* ── Admin Dashboard ───────────────────────────────────────── */
+
+  static async renderAdminDashboard(req, res) {
+    try {
+      const user = await getLoggedInUser(req);
+      const firstName = getFirstName(user);
+
+      const [allUsers, allCategories, allServices, allAppointments] =
+        await Promise.all([
+          UserService.getAllUsers(),
+          CategoryService.getAllCategories(),
+          ServicesService.getServices(),
+          AppointmentService.getAllAppointments(),
+        ]);
+
+      const stats = {
+        totalUsers: allUsers.length,
+        totalCategories: allCategories.length,
+        totalServices: allServices.length,
+        totalAppointments: allAppointments.length,
+        pendingAppointments: allAppointments.filter(
+          (a) => (a.appointment_status || a.status) === "pending",
+        ).length,
+        completedAppointments: allAppointments.filter(
+          (a) => (a.appointment_status || a.status) === "completed",
+        ).length,
+      };
+
+      const recentAppointments = decorateAdminAppointmentsForView(
+        allAppointments.slice(0, 10),
+      );
+
+      return res.render("admin-dashboard", {
+        title: "Admin Dashboard",
+        user,
+        firstName,
+        role: "admin",
+        activePage: "admin-dashboard",
+        breadcrumbMain: "Home",
+        breadcrumbSub: "Dashboard",
+        stats,
+        recentAppointments,
+        ...buildFeedbackState(req),
+      });
+    } catch (err) {
+      const user = req.user || null;
+      const firstName = getFirstName(user);
+
+      return res.render("admin-dashboard", {
+        title: "Admin Dashboard",
+        user,
+        firstName,
+        role: "admin",
+        activePage: "admin-dashboard",
+        breadcrumbMain: "Home",
+        breadcrumbSub: "Dashboard",
+        stats: {
+          totalUsers: 0,
+          totalCategories: 0,
+          totalServices: 0,
+          totalAppointments: 0,
+          pendingAppointments: 0,
+          completedAppointments: 0,
+        },
+        recentAppointments: [],
+        message: err.message || "Could not load dashboard data",
+        messageType: "error",
+      });
+    }
+  }
+
+  /* ── Admin Manage Users ────────────────────────────────────── */
+
+  static async renderManageUsers(req, res) {
+    try {
+      const user = await getLoggedInUser(req);
+      const firstName = getFirstName(user);
+
+      const allUsers = await UserService.getAllUsers();
+
+      return res.render("manage-users", {
+        title: "Manage Users",
+        user,
+        firstName,
+        role: "admin",
+        activePage: "manage-users",
+        breadcrumbMain: "Home",
+        breadcrumbSub: "Manage Users",
+        users: allUsers,
+        ...buildFeedbackState(req),
+      });
+    } catch (err) {
+      const user = req.user || null;
+      const firstName = getFirstName(user);
+
+      return res.render("manage-users", {
+        title: "Manage Users",
+        user,
+        firstName,
+        role: "admin",
+        activePage: "manage-users",
+        breadcrumbMain: "Home",
+        breadcrumbSub: "Manage Users",
+        users: [],
+        message: err.message || "Could not load users",
+        messageType: "error",
+      });
+    }
+  }
+
+  /* ── Admin Manage Users: CRUD Actions ─────────────────────── */
+
+  static async adminCreateUser(req, res) {
+    const {
+      user_fullname,
+      user_email,
+      user_phone,
+      user_password,
+      user_role,
+      user_is_active,
+    } = req.body;
+    try {
+      if (!user_fullname?.trim() || !user_email?.trim() || !user_password) {
+        return res.redirect(
+          buildRedirectPath(
+            "/views/manage-users",
+            "Full name, email, and password are required.",
+            "error",
+          ),
+        );
+      }
+      await UserService.adminCreateUser({
+        user_fullname: user_fullname.trim(),
+        user_email: user_email.trim().toLowerCase(),
+        user_phone: user_phone?.trim() || null,
+        user_password,
+        user_role: user_role || "client",
+        user_is_active: user_is_active !== "false",
+      });
+      return res.redirect(
+        buildRedirectPath("/views/manage-users", "User created successfully."),
+      );
+    } catch (err) {
+      return res.redirect(
+        buildRedirectPath(
+          "/views/manage-users",
+          err.message || "Could not create user.",
+          "error",
+        ),
+      );
+    }
+  }
+
+  static async adminUpdateUser(req, res) {
+    const userId = req.params.id;
+    const { user_fullname, user_email, user_phone, user_role, user_is_active } =
+      req.body;
+    try {
+      if (!user_fullname?.trim() || !user_email?.trim()) {
+        return res.redirect(
+          buildRedirectPath(
+            "/views/manage-users",
+            "Full name and email are required.",
+            "error",
+          ),
+        );
+      }
+      await UserService.UpdateUser(userId, {
+        user_fullname: user_fullname.trim(),
+        user_email: user_email.trim().toLowerCase(),
+        user_role: user_role || "client",
+        user_phone: user_phone?.trim() || null,
+        user_is_active: user_is_active !== "false",
+      });
+      return res.redirect(
+        buildRedirectPath("/views/manage-users", "User updated successfully."),
+      );
+    } catch (err) {
+      return res.redirect(
+        buildRedirectPath(
+          "/views/manage-users",
+          err.message || "Could not update user.",
+          "error",
+        ),
+      );
+    }
+  }
+
+  static async adminDeleteUser(req, res) {
+    const userId = req.params.id;
+    try {
+      const loggedUser = await getLoggedInUser(req);
+      if (loggedUser && String(loggedUser.id) === String(userId)) {
+        return res.redirect(
+          buildRedirectPath(
+            "/views/manage-users",
+            "You cannot delete your own account.",
+            "error",
+          ),
+        );
+      }
+      await UserService.deleteUser(userId);
+      return res.redirect(
+        buildRedirectPath("/views/manage-users", "User deleted successfully."),
+      );
+    } catch (err) {
+      return res.redirect(
+        buildRedirectPath(
+          "/views/manage-users",
+          err.message || "Could not delete user.",
+          "error",
+        ),
+      );
+    }
+  }
+
+  /* ── Admin Categories ──────────────────────────────────────── */
+
+  static async renderAdminCategories(req, res) {
+    try {
+      const user = await getLoggedInUser(req);
+      const firstName = getFirstName(user);
+
+      const dbCategories = await CategoryService.getAllCategories();
+
+      const categories = dbCategories.map((c) => ({
+        id: c.id || c.category_id,
+        name: c.name || c.category_name || "Category",
+        description: c.description || c.category_description || "",
+        isActive: c.is_active !== false,
+        icon: getCategoryIcon(c.name || c.category_name || ""),
+      }));
+
+      return res.render("admin-categories", {
+        title: "Categories",
+        user,
+        firstName,
+        role: "admin",
+        activePage: "admin-categories",
+        breadcrumbMain: "Home",
+        breadcrumbSub: "Categories",
+        categories,
+        ...buildFeedbackState(req),
+      });
+    } catch (err) {
+      const user = req.user || null;
+      const firstName = getFirstName(user);
+
+      return res.render("admin-categories", {
+        title: "Categories",
+        user,
+        firstName,
+        role: "admin",
+        activePage: "admin-categories",
+        breadcrumbMain: "Home",
+        breadcrumbSub: "Categories",
+        categories: [],
+        message: err.message || "Could not load categories",
+        messageType: "error",
+      });
+    }
+  }
+
+  /* ── Admin Services ────────────────────────────────────────── */
+
+  static async renderAdminServices(req, res) {
+    try {
+      const user = await getLoggedInUser(req);
+      const firstName = getFirstName(user);
+
+      const dbServices = await ServicesService.getServices();
+
+      const services = dbServices.map((s) => ({
+        id: s.id || s.service_id,
+        name: s.name || s.service_name || "Service",
+        description: s.description || s.service_description || "",
+        categoryId: s.category_id || s.categoryId,
+        durationMin: Number(
+          s.default_duration_min ||
+            s.service_default_duration_min ||
+            s.duration_min ||
+            0,
+        ),
+        priceLabel: formatPrice(
+          s.base_price_cents ||
+            s.service_base_price_cents ||
+            s.default_price_cents ||
+            s.price_cents ||
+            0,
+        ),
+        isActive: s.is_active !== false,
+        icon: getServiceIcon(s.name || s.service_name || ""),
+      }));
+
+      return res.render("admin-services", {
+        title: "Services",
+        user,
+        firstName,
+        role: "admin",
+        activePage: "admin-services",
+        breadcrumbMain: "Home",
+        breadcrumbSub: "Services",
+        services,
+        ...buildFeedbackState(req),
+      });
+    } catch (err) {
+      const user = req.user || null;
+      const firstName = getFirstName(user);
+
+      return res.render("admin-services", {
+        title: "Services",
+        user,
+        firstName,
+        role: "admin",
+        activePage: "admin-services",
+        breadcrumbMain: "Home",
+        breadcrumbSub: "Services",
+        services: [],
+        message: err.message || "Could not load services",
+        messageType: "error",
+      });
+    }
+  }
+
+  /* ── Admin Staff Services ──────────────────────────────────── */
+
+  static async renderAdminStaffServices(req, res) {
+    try {
+      const user = await getLoggedInUser(req);
+      const firstName = getFirstName(user);
+
+      const [allStaffServices, allUsers, allServices] = await Promise.all([
+        StaffServiceService.getAllStaffServices(),
+        UserService.getAllUsers(),
+        ServicesService.getServices(),
+      ]);
+
+      const userMap = {};
+      for (const u of allUsers) {
+        userMap[u.id] = u;
+      }
+
+      const serviceMap = {};
+      for (const s of allServices) {
+        serviceMap[s.id || s.service_id] = s;
+      }
+
+      const staffServices = allStaffServices.map((ss) => {
+        const staffUser = userMap[ss.staff_id] || null;
+        const svc = serviceMap[ss.service_id] || null;
+        return {
+          staffId: ss.staff_id,
+          serviceId: ss.service_id,
+          staffName: staffUser
+            ? staffUser.fullname || staffUser.user_fullname || "Staff"
+            : `Staff #${ss.staff_id}`,
+          serviceName: svc
+            ? svc.name || svc.service_name || "Service"
+            : `Service #${ss.service_id}`,
+          durationMin: ss.duration_min || null,
+          priceLabel: ss.price_cents ? formatPrice(ss.price_cents) : null,
+        };
+      });
+
+      return res.render("admin-staff-services", {
+        title: "Staff Services",
+        user,
+        firstName,
+        role: "admin",
+        activePage: "admin-staff-services",
+        breadcrumbMain: "Home",
+        breadcrumbSub: "Staff Services",
+        staffServices,
+        ...buildFeedbackState(req),
+      });
+    } catch (err) {
+      const user = req.user || null;
+      const firstName = getFirstName(user);
+
+      return res.render("admin-staff-services", {
+        title: "Staff Services",
+        user,
+        firstName,
+        role: "admin",
+        activePage: "admin-staff-services",
+        breadcrumbMain: "Home",
+        breadcrumbSub: "Staff Services",
+        staffServices: [],
+        message: err.message || "Could not load staff services",
+        messageType: "error",
+      });
+    }
+  }
+
+  /* ── Admin Appointments ────────────────────────────────────── */
+
+  static async renderAdminAppointments(req, res) {
+    try {
+      const user = await getLoggedInUser(req);
+      const firstName = getFirstName(user);
+
+      const allAppointments = await AppointmentService.getAllAppointments();
+      const appointments = decorateAdminAppointmentsForView(allAppointments);
+
+      return res.render("admin-appointments", {
+        title: "All Appointments",
+        user,
+        firstName,
+        role: "admin",
+        activePage: "admin-appointments",
+        breadcrumbMain: "Home",
+        breadcrumbSub: "All Appointments",
+        appointments,
+        ...buildFeedbackState(req),
+      });
+    } catch (err) {
+      const user = req.user || null;
+      const firstName = getFirstName(user);
+
+      return res.render("admin-appointments", {
+        title: "All Appointments",
+        user,
+        firstName,
+        role: "admin",
+        activePage: "admin-appointments",
+        breadcrumbMain: "Home",
+        breadcrumbSub: "All Appointments",
+        appointments: [],
+        message: err.message || "Could not load appointments",
+        messageType: "error",
+      });
     }
   }
 }

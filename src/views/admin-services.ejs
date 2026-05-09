@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%= title %> | Smart Booking</title>
+    <link rel="stylesheet" href="/styles/dashboard.css" />
+    <link rel="stylesheet" href="/styles/admin.css" />
+</head>
+<body class="admin-services-body">
+<div class="dashboard-page">
+<div class="dashboard">
+
+    <%- include('partials/dashboard-sidebar', { role, activePage }) %>
+
+    <main class="dashboard-main">
+        <%- include('partials/dashboard-topbar', {
+            breadcrumbMain: 'Home',
+            breadcrumbSub: 'Services',
+            firstName,
+            role,
+            searchPlaceholder: 'Search services...'
+        }) %>
+
+        <div class="dashboard-content">
+
+            <% if (message) { %>
+            <div class="admin-feedback <%= messageType %>"><%= message %></div>
+            <% } %>
+
+            <div class="admin-section-header">
+                <div class="page-title" style="margin-bottom:0">
+                    <h2 style="margin:0 0 4px;font-size:1.7rem">Services</h2>
+                    <p style="margin:0">All services available in the system</p>
+                </div>
+            </div>
+
+            <div class="admin-table-wrap" style="margin-top:18px">
+                <% if (services && services.length > 0) { %>
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Service</th>
+                            <th>Description</th>
+                            <th>Duration</th>
+                            <th>Base Price</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% services.forEach(function(svc, i) { %>
+                        <tr>
+                            <td style="color:var(--muted);font-size:0.8rem"><%= i + 1 %></td>
+                            <td>
+                                <div class="admin-icon-cell">
+                                    <div class="admin-icon-bubble"><%= svc.icon %></div>
+                                    <span style="font-weight:700;color:var(--dark)"><%= svc.name %></span>
+                                </div>
+                            </td>
+                            <td style="color:var(--muted);max-width:280px"><%= svc.description || '—' %></td>
+                            <td style="white-space:nowrap"><%= svc.durationMin ? svc.durationMin + ' min' : '—' %></td>
+                            <td class="admin-amount"><%= svc.priceLabel %></td>
+                            <td><span class="admin-badge <%= svc.isActive ? 'active' : 'inactive' %>"><%= svc.isActive ? 'Active' : 'Inactive' %></span></td>
+                        </tr>
+                        <% }); %>
+                    </tbody>
+                </table>
+                <% } else { %>
+                <div class="admin-empty">
+                    <div class="admin-empty-icon">🧾</div>
+                    <p>No services found.</p>
+                </div>
+                <% } %>
+            </div>
+
+        </div><!-- /.dashboard-content -->
+    </main>
+
+</div>
+</div>
+</body>
+</html>

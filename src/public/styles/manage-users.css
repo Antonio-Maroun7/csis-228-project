@@ -1,0 +1,651 @@
+/* ================================================================
+   manage-users.css — Styles specific to the Manage Users admin page
+   ================================================================ */
+
+/* ── Page header ─────────────────────────────────────────────── */
+.mu-page-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.mu-page-title {
+  margin: 0 0 4px;
+  font-size: 1.65rem;
+  font-weight: 900;
+  color: var(--dark, #14313b);
+  line-height: 1.2;
+}
+
+.mu-page-subtitle {
+  margin: 0;
+  font-size: 0.88rem;
+  color: var(--muted, #64748b);
+}
+
+/* ── Add New User button ─────────────────────────────────────── */
+.mu-btn-add {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 10px 20px;
+  background: var(--primary, #0f8f8c);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-size: 0.88rem;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  transition:
+    background 0.15s ease,
+    box-shadow 0.15s ease;
+  box-shadow: 0 3px 10px rgba(15, 143, 140, 0.25);
+  flex-shrink: 0;
+}
+
+.mu-btn-add:hover {
+  background: var(--primary-dark, #087674);
+  box-shadow: 0 5px 16px rgba(15, 143, 140, 0.35);
+}
+
+/* ── Table card ──────────────────────────────────────────────── */
+.mu-card {
+  background: #fff;
+  border: 1px solid rgba(226, 232, 240, 0.9);
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(15, 23, 42, 0.06);
+  overflow: hidden;
+}
+
+/* ── Toolbar (show entries + search) ────────────────────────── */
+.mu-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 18px;
+  border-bottom: 1px solid #f1f5f9;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.mu-show-entries {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.84rem;
+  color: var(--muted, #64748b);
+  font-weight: 600;
+}
+
+.mu-entries-select {
+  padding: 5px 10px;
+  border: 1px solid var(--border, #e5e7eb);
+  border-radius: 7px;
+  font-size: 0.84rem;
+  color: var(--dark, #14313b);
+  background: #fff;
+  cursor: pointer;
+  outline: none;
+  transition: border-color 0.14s;
+}
+
+.mu-entries-select:focus {
+  border-color: var(--primary, #0f8f8c);
+}
+
+.mu-search-wrap {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.mu-search-icon {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--muted, #94a3b8);
+  pointer-events: none;
+}
+
+.mu-search-input {
+  padding: 7px 12px 7px 32px;
+  border: 1px solid var(--border, #e5e7eb);
+  border-radius: 8px;
+  font-size: 0.84rem;
+  width: 220px;
+  outline: none;
+  transition: border-color 0.14s;
+  color: var(--dark, #14313b);
+}
+
+.mu-search-input:focus {
+  border-color: var(--primary, #0f8f8c);
+  box-shadow: 0 0 0 3px rgba(15, 143, 140, 0.08);
+}
+
+/* ── Table ───────────────────────────────────────────────────── */
+.mu-table-outer {
+  overflow-x: auto;
+}
+
+.mu-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+}
+
+.mu-table thead th {
+  padding: 11px 16px;
+  text-align: left;
+  font-size: 0.74rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted, #64748b);
+  background: #f8fafc;
+  border-bottom: 1px solid var(--border, #e5e7eb);
+  white-space: nowrap;
+}
+
+.mu-table tbody tr {
+  border-bottom: 1px solid #f1f5f9;
+  transition: background 0.13s ease;
+}
+
+.mu-table tbody tr:last-child {
+  border-bottom: none;
+}
+
+.mu-table tbody tr:hover {
+  background: #f8fffe;
+}
+
+.mu-table tbody td {
+  padding: 12px 16px;
+  vertical-align: middle;
+  color: var(--text, #1f2937);
+}
+
+.mu-num-cell {
+  color: var(--muted, #94a3b8) !important;
+  font-size: 0.8rem !important;
+  width: 44px;
+}
+
+.mu-muted-cell {
+  color: var(--muted, #64748b) !important;
+  font-size: 0.85rem !important;
+}
+
+.mu-empty-cell {
+  padding: 32px 16px !important;
+  text-align: center;
+}
+
+/* ── Action buttons ──────────────────────────────────────────── */
+.mu-action-cell {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: nowrap;
+}
+
+.mu-btn-edit,
+.mu-btn-del {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 12px;
+  border-radius: 7px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.14s ease;
+  white-space: nowrap;
+  border: 1.5px solid;
+}
+
+.mu-btn-edit {
+  border-color: var(--primary, #0f8f8c);
+  color: var(--primary, #0f8f8c);
+  background: transparent;
+}
+
+.mu-btn-edit:hover {
+  background: var(--primary, #0f8f8c);
+  color: #fff;
+}
+
+.mu-btn-del {
+  border-color: #ef4444;
+  color: #ef4444;
+  background: transparent;
+}
+
+.mu-btn-del:hover {
+  background: #ef4444;
+  color: #fff;
+}
+
+/* ── Table footer (showing + pagination) ─────────────────────── */
+.mu-table-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 18px;
+  border-top: 1px solid #f1f5f9;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.mu-showing {
+  font-size: 0.84rem;
+  color: var(--muted, #64748b);
+  font-weight: 600;
+}
+
+/* ── Pagination ──────────────────────────────────────────────── */
+.mu-pagination {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.mu-page-btn {
+  min-width: 32px;
+  height: 32px;
+  padding: 0 8px;
+  border: 1px solid var(--border, #e5e7eb);
+  border-radius: 7px;
+  background: #fff;
+  color: var(--dark, #14313b);
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.14s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mu-page-btn:hover:not(:disabled):not(.active) {
+  border-color: var(--primary, #0f8f8c);
+  color: var(--primary, #0f8f8c);
+  background: var(--primary-soft, #e6fffb);
+}
+
+.mu-page-btn.active {
+  background: var(--primary, #0f8f8c);
+  border-color: var(--primary, #0f8f8c);
+  color: #fff;
+}
+
+.mu-page-btn:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.mu-page-ellipsis {
+  padding: 0 4px;
+  font-size: 0.82rem;
+  color: var(--muted, #94a3b8);
+}
+
+/* ── Feedback close button ───────────────────────────────────── */
+.admin-feedback {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 12px 16px;
+  border-radius: 10px;
+  font-size: 0.87rem;
+  font-weight: 600;
+  margin-bottom: 18px;
+}
+
+.admin-feedback.success {
+  background: #f0fdf4;
+  color: #15803d;
+  border: 1px solid #bbf7d0;
+}
+
+.admin-feedback.error {
+  background: #fef2f2;
+  color: #b91c1c;
+  border: 1px solid #fecaca;
+}
+
+.mu-feedback-close {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: inherit;
+  font-size: 1rem;
+  line-height: 1;
+  opacity: 0.7;
+  padding: 0 2px;
+  flex-shrink: 0;
+}
+
+.mu-feedback-close:hover {
+  opacity: 1;
+}
+
+/* ================================================================
+   Modals
+   ================================================================ */
+
+/* ── Overlay ─────────────────────────────────────────────────── */
+.mu-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(20, 49, 59, 0.45);
+  z-index: 999;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.mu-overlay.open {
+  display: flex;
+}
+
+/* ── Modal card ──────────────────────────────────────────────── */
+.mu-modal {
+  background: #fff;
+  border-radius: 18px;
+  width: 100%;
+  max-width: 560px;
+  max-height: calc(100vh - 48px);
+  overflow-y: auto;
+  box-shadow: 0 20px 60px rgba(15, 23, 42, 0.22);
+  display: flex;
+  flex-direction: column;
+  scrollbar-width: none;
+}
+
+.mu-modal::-webkit-scrollbar {
+  display: none;
+}
+
+.mu-modal-sm {
+  max-width: 420px;
+}
+
+/* ── Modal header ────────────────────────────────────────────── */
+.mu-modal-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px 16px;
+  border-bottom: 1px solid var(--border, #e5e7eb);
+  flex-shrink: 0;
+}
+
+.mu-modal-title {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--dark, #14313b);
+}
+
+.mu-modal-close {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--muted, #94a3b8);
+  font-size: 1.1rem;
+  line-height: 1;
+  padding: 4px 6px;
+  border-radius: 6px;
+  transition:
+    color 0.14s,
+    background 0.14s;
+}
+
+.mu-modal-close:hover {
+  color: var(--dark, #14313b);
+  background: #f1f5f9;
+}
+
+/* ── Modal form ──────────────────────────────────────────────── */
+.mu-form {
+  padding: 20px 24px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.mu-form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+@media (max-width: 520px) {
+  .mu-form-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+.mu-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.mu-label {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--dark, #14313b);
+}
+
+.mu-req {
+  color: #ef4444;
+}
+
+.mu-input {
+  padding: 9px 12px;
+  border: 1.5px solid var(--border, #e5e7eb);
+  border-radius: 9px;
+  font-size: 0.88rem;
+  color: var(--dark, #14313b);
+  background: #fff;
+  outline: none;
+  transition:
+    border-color 0.14s,
+    box-shadow 0.14s;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.mu-input:focus {
+  border-color: var(--primary, #0f8f8c);
+  box-shadow: 0 0 0 3px rgba(15, 143, 140, 0.1);
+}
+
+.mu-input::placeholder {
+  color: #b0bec5;
+}
+
+/* ── Modal action row ────────────────────────────────────────── */
+.mu-form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  padding-top: 4px;
+}
+
+.mu-btn-cancel {
+  padding: 9px 20px;
+  border: 1.5px solid var(--border, #e5e7eb);
+  border-radius: 9px;
+  background: #fff;
+  color: var(--muted, #64748b);
+  font-size: 0.87rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.14s ease;
+}
+
+.mu-btn-cancel:hover {
+  border-color: var(--dark, #14313b);
+  color: var(--dark, #14313b);
+}
+
+/* ================================================================
+   Manage Users – viewport-locked scroll layout
+   All rules scoped to .manage-users-body so other pages are safe.
+
+   ROOT CAUSE FIX:
+   .dashboard uses display:grid with no grid-template-rows, so the
+   single row is "auto" height (content height) rather than the
+   grid's fixed height. That breaks every flex/overflow trick inside
+   .dashboard-main.  We fix this by forcing the row to 1fr so grid
+   items receive a bounded height.
+   ================================================================ */
+
+/* 1. Force the grid row to use the grid's fixed height */
+.manage-users-body .dashboard {
+  grid-template-rows: 1fr;
+}
+
+/* 2. Allow the grid item to shrink below its content height */
+.manage-users-body .dashboard-main {
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* 3. Convert content area to a bounded flex column; stop it scrolling */
+.manage-users-body .dashboard-content {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding-bottom: 18px;
+}
+
+/* Fixed-height elements that must not grow */
+.manage-users-body .admin-feedback {
+  flex-shrink: 0;
+}
+
+.manage-users-body .mu-page-header {
+  flex-shrink: 0;
+}
+
+/* The card fills remaining height and becomes a flex column */
+.manage-users-body .mu-card {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* Toolbar row stays fixed height */
+.manage-users-body .mu-toolbar {
+  flex-shrink: 0;
+}
+
+/* THE ONLY SCROLLING ELEMENT — the table rows area */
+.manage-users-body .mu-table-outer {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: thin;
+  scrollbar-color: #d1d5db transparent;
+}
+
+.manage-users-body .mu-table-outer::-webkit-scrollbar {
+  width: 5px;
+}
+
+.manage-users-body .mu-table-outer::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.manage-users-body .mu-table-outer::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 4px;
+}
+
+/* Sticky thead so column labels stay visible while scrolling */
+.manage-users-body .mu-table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  background: #f8fafc;
+}
+
+/* Pagination footer stays pinned at the bottom of the card */
+.manage-users-body .mu-table-footer {
+  flex-shrink: 0;
+}
+
+.mu-btn-submit {
+  padding: 9px 22px;
+  border: none;
+  border-radius: 9px;
+  background: var(--primary, #0f8f8c);
+  color: #fff;
+  font-size: 0.87rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.14s ease;
+}
+
+.mu-btn-submit:hover {
+  background: var(--primary-dark, #087674);
+}
+
+.mu-btn-danger {
+  padding: 9px 22px;
+  border: none;
+  border-radius: 9px;
+  background: #ef4444;
+  color: #fff;
+  font-size: 0.87rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.14s ease;
+}
+
+.mu-btn-danger:hover {
+  background: #dc2626;
+}
+
+/* ── Delete modal body ───────────────────────────────────────── */
+.mu-del-body {
+  padding: 24px 24px 16px;
+  text-align: center;
+}
+
+.mu-del-icon {
+  font-size: 2.5rem;
+  margin-bottom: 12px;
+}
+
+.mu-del-text {
+  margin: 0 0 6px;
+  font-size: 0.95rem;
+  color: var(--dark, #14313b);
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+.mu-del-sub {
+  margin: 0;
+  font-size: 0.82rem;
+  color: var(--muted, #94a3b8);
+}
+
+.mu-del-body + form .mu-form-actions {
+  padding: 0 24px 24px;
+}
