@@ -16,30 +16,27 @@
     <main class="dashboard-main">
         <%- include('partials/dashboard-topbar', {
             breadcrumbMain: 'Home',
-            breadcrumbSub: 'Dashboard',
+            breadcrumbSub: 'Admin Dashboard',
             firstName,
             role,
-            searchPlaceholder: 'Search users, services, appointments...'
+            searchPlaceholder: 'Search users, services, appointments...',
+            showNotification: false
         }) %>
 
-        <div class="dashboard-content">
+        <div class="dashboard-content adb-content">
 
             <% if (message) { %>
-            <div class="admin-feedback <%= messageType %>"><%= message %></div>
+            <div class="admin-feedback <%= messageType %> adb-shrink"><%= message %></div>
             <% } %>
 
-            <div class="page-title">
-                <h2>Admin Dashboard</h2>
-                <p>Welcome back, <%= firstName %>. Here's what's happening today.</p>
-            </div>
-
             <!-- Stats Row -->
-            <div class="admin-stats-row">
+            <div class="admin-stats-row adb-shrink">
                 <div class="admin-stat-card">
                     <div class="admin-stat-icon teal">👥</div>
                     <div class="admin-stat-info">
                         <div class="admin-stat-value"><%= stats.totalUsers %></div>
                         <div class="admin-stat-label">Total Users</div>
+                        <div class="admin-stat-desc">All registered users</div>
                     </div>
                 </div>
                 <div class="admin-stat-card">
@@ -47,13 +44,15 @@
                     <div class="admin-stat-info">
                         <div class="admin-stat-value"><%= stats.totalCategories %></div>
                         <div class="admin-stat-label">Categories</div>
+                        <div class="admin-stat-desc">All service categories</div>
                     </div>
                 </div>
                 <div class="admin-stat-card">
-                    <div class="admin-stat-icon teal">🧾</div>
+                    <div class="admin-stat-icon teal">📋</div>
                     <div class="admin-stat-info">
                         <div class="admin-stat-value"><%= stats.totalServices %></div>
                         <div class="admin-stat-label">Services</div>
+                        <div class="admin-stat-desc">All available services</div>
                     </div>
                 </div>
                 <div class="admin-stat-card">
@@ -61,6 +60,7 @@
                     <div class="admin-stat-info">
                         <div class="admin-stat-value"><%= stats.totalAppointments %></div>
                         <div class="admin-stat-label">Appointments</div>
+                        <div class="admin-stat-desc">All time bookings</div>
                     </div>
                 </div>
                 <div class="admin-stat-card">
@@ -68,6 +68,7 @@
                     <div class="admin-stat-info">
                         <div class="admin-stat-value"><%= stats.pendingAppointments %></div>
                         <div class="admin-stat-label">Pending</div>
+                        <div class="admin-stat-desc">Awaiting completion</div>
                     </div>
                 </div>
                 <div class="admin-stat-card">
@@ -75,93 +76,110 @@
                     <div class="admin-stat-info">
                         <div class="admin-stat-value"><%= stats.completedAppointments %></div>
                         <div class="admin-stat-label">Completed</div>
+                        <div class="admin-stat-desc">Finished appointments</div>
                     </div>
                 </div>
             </div>
 
             <!-- Quick Actions -->
-            <div class="admin-section-header">
+            <div class="admin-section-header adb-shrink">
                 <h3 class="admin-section-title">Quick Actions</h3>
             </div>
-            <div class="admin-quick-actions">
+            <div class="admin-quick-actions adb-shrink">
                 <a class="admin-action-card" href="/views/manage-users">
-                    <div class="admin-action-icon">👥</div>
+                    <div class="adb-icon-box">👥</div>
                     <div class="admin-action-title">Manage Users</div>
-                    <div class="admin-action-desc">View and manage all system users</div>
-                    <div class="admin-action-arrow">View Users →</div>
+                    <div class="admin-action-desc">View, update and manage users</div>
+                    <div class="admin-action-arrow">→</div>
                 </a>
                 <a class="admin-action-card" href="/views/admin-categories">
-                    <div class="admin-action-icon">▦</div>
+                    <div class="adb-icon-box">▦</div>
                     <div class="admin-action-title">Categories</div>
-                    <div class="admin-action-desc">Organize service categories</div>
-                    <div class="admin-action-arrow">View Categories →</div>
+                    <div class="admin-action-desc">Manage service categories</div>
+                    <div class="admin-action-arrow">→</div>
                 </a>
                 <a class="admin-action-card" href="/views/admin-services">
-                    <div class="admin-action-icon">🧾</div>
+                    <div class="adb-icon-box">📋</div>
                     <div class="admin-action-title">Services</div>
-                    <div class="admin-action-desc">Manage all available services</div>
-                    <div class="admin-action-arrow">View Services →</div>
+                    <div class="admin-action-desc">Add, update and manage services</div>
+                    <div class="admin-action-arrow">→</div>
                 </a>
                 <a class="admin-action-card" href="/views/admin-staff-services">
-                    <div class="admin-action-icon">👤</div>
+                    <div class="adb-icon-box">👤</div>
                     <div class="admin-action-title">Staff Services</div>
-                    <div class="admin-action-desc">Manage staff assignments</div>
-                    <div class="admin-action-arrow">View Assignments →</div>
+                    <div class="admin-action-desc">Assign services to staff members</div>
+                    <div class="admin-action-arrow">→</div>
                 </a>
                 <a class="admin-action-card" href="/views/admin-appointments">
-                    <div class="admin-action-icon">📅</div>
+                    <div class="adb-icon-box">📅</div>
                     <div class="admin-action-title">Appointments</div>
-                    <div class="admin-action-desc">View all system appointments</div>
-                    <div class="admin-action-arrow">View All →</div>
+                    <div class="admin-action-desc">View and manage all appointments</div>
+                    <div class="admin-action-arrow">→</div>
                 </a>
             </div>
 
-            <!-- Recent Appointments -->
-            <div class="admin-section-header">
-                <h3 class="admin-section-title">Recent Appointments</h3>
-                <a class="outline-button" href="/views/admin-appointments">View All</a>
-            </div>
-
-            <div class="admin-table-wrap">
-                <% if (recentAppointments && recentAppointments.length > 0) { %>
-                <table class="admin-table">
-                    <thead>
-                        <tr>
-                            <th>Client</th>
-                            <th>Service</th>
-                            <th>Staff</th>
-                            <th>Date &amp; Time</th>
-                            <th>Status</th>
-                            <th>Amount</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <% recentAppointments.forEach(function(appt) { %>
-                        <tr>
-                            <td>
-                                <div class="admin-client-cell">
-                                    <div class="admin-avatar"><%= appt.clientInitials %></div>
-                                    <div>
-                                        <div class="admin-client-name"><%= appt.clientName %></div>
-                                        <div class="admin-client-email"><%= appt.clientEmail %></div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td><%= appt.serviceName %></td>
-                            <td><%= appt.staffName %></td>
-                            <td><%= appt.dateTimeStr %></td>
-                            <td><span class="admin-badge <%= appt.status %>"><%= appt.status %></span></td>
-                            <td class="admin-amount"><%= appt.priceLabel %></td>
-                        </tr>
-                        <% }); %>
-                    </tbody>
-                </table>
-                <% } else { %>
-                <div class="admin-empty">
-                    <div class="admin-empty-icon">📅</div>
-                    <p>No appointments yet.</p>
+            <!-- Recent Appointments — ONLY scrollable section -->
+            <div class="adb-recent-wrap">
+                <div class="admin-section-header adb-recent-header">
+                    <h3 class="admin-section-title">Recent Appointments</h3>
+                    <a class="outline-button" href="/views/admin-appointments">View All</a>
                 </div>
-                <% } %>
+
+                <div class="adb-table-scroll">
+                    <% if (recentAppointments && recentAppointments.length > 0) { %>
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Client</th>
+                                <th>Service</th>
+                                <th>Staff</th>
+                                <th>Date &amp; Time</th>
+                                <th>Status</th>
+                                <th>Amount</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% recentAppointments.forEach(function(appt) { %>
+                            <tr>
+                                <td>
+                                    <div class="admin-client-cell">
+                                        <div class="admin-avatar"><%= appt.clientInitials %></div>
+                                        <div>
+                                            <div class="admin-client-name"><%= appt.clientName %></div>
+                                            <div class="admin-client-email"><%= appt.clientEmail %></div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="admin-client-name"><%= appt.serviceName %></div>
+                                    <% if (appt.categoryName) { %>
+                                    <div class="admin-client-email"><%= appt.categoryName %></div>
+                                    <% } %>
+                                </td>
+                                <td class="adb-staff-cell"><%= appt.staffName %></td>
+                                <td>
+                                    <% if (appt.dateStr) { %>
+                                    <div class="adb-dt-line"><span class="adb-dt-icon">📅</span><%= appt.dateStr %></div>
+                                    <div class="adb-dt-line"><span class="adb-dt-icon">⏰</span><%= appt.timeStr %></div>
+                                    <% } else { %>
+                                    <span class="adb-staff-cell"><%= appt.dateTimeStr || '—' %></span>
+                                    <% } %>
+                                </td>
+                                <td><span class="admin-badge <%= appt.status %>"><%= appt.status %></span></td>
+                                <td class="admin-amount"><%= appt.priceLabel %></td>
+                                <td><button class="adb-dots-btn" title="Actions">⋮</button></td>
+                            </tr>
+                            <% }); %>
+                        </tbody>
+                    </table>
+                    <% } else { %>
+                    <div class="admin-empty">
+                        <div class="admin-empty-icon">📅</div>
+                        <p>No recent appointments found.</p>
+                    </div>
+                    <% } %>
+                </div>
             </div>
 
         </div><!-- /.dashboard-content -->

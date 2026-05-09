@@ -38,10 +38,10 @@
 
         <% if (role === "admin") { %>
             <a class="nav-link <%= activePage === 'admin-dashboard' ? 'active' : '' %>" href="/views/admin-dashboard">
-                <span class="nav-icon">🏠</span><span>Home</span>
+                <span class="nav-icon">🏠</span><span>Dashboard</span>
             </a>
             <a class="nav-link <%= activePage === 'manage-users' ? 'active' : '' %>" href="/views/manage-users">
-                <span class="nav-icon">👥</span><span>Manage Users</span>
+                <span class="nav-icon">👤</span><span>Users</span>
             </a>
             <a class="nav-link <%= activePage === 'admin-categories' ? 'active' : '' %>" href="/views/admin-categories">
                 <span class="nav-icon">▦</span><span>Categories</span>
@@ -53,13 +53,7 @@
                 <span class="nav-icon">👥</span><span>Staff Services</span>
             </a>
             <a class="nav-link <%= activePage === 'admin-appointments' ? 'active' : '' %>" href="/views/admin-appointments">
-                <span class="nav-icon">📅</span><span>All Appointments</span>
-            </a>
-            <a class="nav-link <%= activePage === 'admin-bookings' ? 'active' : '' %>" href="/views/admin-appointments">
-                <span class="nav-icon">📋</span><span>Bookings</span>
-            </a>
-            <a class="nav-link <%= activePage === 'admin-profile' ? 'active' : '' %>" href="/views/admin-profile">
-                <span class="nav-icon">⚙️</span><span>Settings</span>
+                <span class="nav-icon">📅</span><span>Appointments</span>
             </a>
         <% } %>
 

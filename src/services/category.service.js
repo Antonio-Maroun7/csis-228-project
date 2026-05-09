@@ -111,6 +111,26 @@ class CategoryService {
       throw err;
     }
   }
+
+  /**
+   * Permanently deletes a category.
+   * Side effects: removes one row from categories.
+   * @param {number|string} id
+   * @returns {Promise<void>}
+   * @throws {Error} When category is not found or delete fails.
+   */
+  static async deleteCategory(id) {
+    try {
+      const existing = await CategoryRepository.getCategoryById(id);
+      if (!existing) {
+        throw new Error("Category not found");
+      }
+      await CategoryRepository.deleteCategory(id);
+    } catch (err) {
+      console.log(err.message);
+      throw err;
+    }
+  }
 }
 
 module.exports = CategoryService;

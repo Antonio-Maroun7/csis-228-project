@@ -245,8 +245,8 @@
   color: #c2410c;
 }
 .admin-badge.confirmed {
-  background: #eff6ff;
-  color: #1d4ed8;
+  background: #e6fffb;
+  color: #0a7370;
 }
 .admin-badge.completed {
   background: #f0fdf4;
@@ -353,4 +353,304 @@
   place-items: center;
   font-size: 1rem;
   flex-shrink: 0;
+}
+
+/* ================================================================
+   Admin Dashboard – viewport-locked scroll layout
+   All rules scoped to .admin-dashboard-body so other pages are safe.
+
+   Chain:
+   .dashboard (grid, fixed height)
+     └─ .dashboard-main (flex column)
+          └─ .adb-content (flex column, overflow hidden)
+               ├─ .adb-shrink  ← stats / title / quick actions: shrink-0
+               └─ .adb-recent-wrap ← fills remaining space, flex column
+                    └─ .adb-table-scroll ← THE ONLY ELEMENT THAT SCROLLS
+   ================================================================ */
+
+/* 1. Bound the grid row height */
+.admin-dashboard-body .dashboard {
+  grid-template-rows: 1fr;
+}
+
+/* 2. Allow the flex container to shrink */
+.admin-dashboard-body .dashboard-main {
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* 3. Turn dashboard-content into a bounded flex column */
+.admin-dashboard-body .adb-content {
+  display: flex;
+  flex-direction: column;
+  /* Outer scroll is invisible (safety net for very small screens);
+     only the adb-table-scroll inside recent-wrap has a visible scrollbar. */
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: none;
+  padding: 12px 22px;
+}
+
+.admin-dashboard-body .adb-content::-webkit-scrollbar {
+  display: none;
+}
+
+/* 4. All fixed-height sections must not grow */
+.admin-dashboard-body .adb-shrink {
+  flex-shrink: 0;
+}
+
+/* 5. The recent-appointments block fills what's left */
+.admin-dashboard-body .adb-recent-wrap {
+  flex: 1;
+  min-height: 240px; /* always at least 240px — safety guard */
+  display: flex;
+  flex-direction: column;
+  /* white card look */
+  background: #fff;
+  border: 1px solid rgba(226, 232, 240, 0.9);
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(15, 23, 42, 0.06);
+  overflow: hidden;
+}
+
+/* 6. Section header inside the card stays fixed */
+.admin-dashboard-body .adb-recent-header {
+  flex-shrink: 0;
+  padding: 16px 20px 12px;
+  border-bottom: 1px solid #f1f5f9;
+  margin-bottom: 0;
+}
+
+/* 7. THE ONLY SCROLLING ELEMENT */
+.admin-dashboard-body .adb-table-scroll {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: thin;
+  scrollbar-color: #d1d5db transparent;
+}
+
+.admin-dashboard-body .adb-table-scroll::-webkit-scrollbar {
+  width: 5px;
+}
+
+.admin-dashboard-body .adb-table-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.admin-dashboard-body .adb-table-scroll::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 4px;
+}
+
+/* 8. Sticky thead */
+.admin-dashboard-body .adb-table-scroll .admin-table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  background: #f8fafc;
+}
+
+/* ── Visual improvements to match reference ──────────────────── */
+
+/* Stat card description line */
+.admin-stat-desc {
+  margin-top: 2px;
+  font-size: 0.72rem;
+  color: var(--muted, #94a3b8);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Dashboard title inside content */
+.adb-title {
+  margin-bottom: 4px;
+}
+
+.adb-heading {
+  margin: 0 0 4px;
+  font-size: 1.9rem;
+  font-weight: 900;
+  color: var(--dark, #14313b);
+  line-height: 1.1;
+}
+
+.adb-subheading {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--muted, #64748b);
+}
+
+/* Tighten quick actions bottom margin */
+.admin-dashboard-body .admin-quick-actions {
+  margin-bottom: 8px;
+}
+
+/* Action card arrow — smaller, teal, bottom-right style */
+.admin-action-arrow {
+  margin-top: auto;
+  font-size: 1rem;
+  font-weight: 900;
+  color: var(--primary, #0f8f8c);
+  align-self: flex-end;
+}
+
+/* ── Quick action icon box ────────────────────────────────── */
+.adb-icon-box {
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  border: 1.5px solid rgba(15, 143, 140, 0.28);
+  background: rgba(230, 255, 251, 0.55);
+  display: grid;
+  place-items: center;
+  font-size: 1.3rem;
+  flex-shrink: 0;
+  margin-bottom: 8px;
+}
+
+/* ── Date / Time two-line cell ───────────────────────────── */
+.adb-dt-line {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.82rem;
+  color: var(--text, #1f2937);
+  white-space: nowrap;
+  line-height: 1.6;
+}
+
+.adb-dt-icon {
+  font-size: 0.75rem;
+  opacity: 0.7;
+}
+
+/* ── Staff cell muted color ──────────────────────────────── */
+.adb-staff-cell {
+  color: var(--muted, #64748b);
+  font-size: 0.88rem;
+}
+
+/* ── Three-dot action button ─────────────────────────────── */
+.adb-dots-btn {
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--border, #e5e7eb);
+  border-radius: 8px;
+  background: white;
+  cursor: pointer;
+  font-size: 1rem;
+  color: var(--muted, #64748b);
+  display: grid;
+  place-items: center;
+  transition: 0.15s ease;
+  line-height: 1;
+  padding: 0;
+}
+
+.adb-dots-btn:hover {
+  background: var(--primary-soft, #e6fffb);
+  border-color: var(--primary, #0f8f8c);
+  color: var(--primary, #0f8f8c);
+}
+
+/* ================================================================
+   Compact-layout overrides
+   Goal: fixed sections (stats + title + qa) ≤ 290px so that
+   adb-recent-wrap always gets ≥ 340px at a 768p screen.
+
+   Budget at 768p (content area ≈ 634px after topbar + padding):
+     Stats row:   ~80px  (card 70px + margin 8px + gap 2px)
+     Title:       ~55px  (h2 33px + gap 4px + p 18px)
+     QA header:   ~30px  (h3 22px + margin 8px)
+     QA cards:   ~116px  (card 108px + margin 8px)
+     ─────────────────────────────────────────────
+     Total fixed:        281px  →  leaves 353px for Recent ✓
+   ================================================================ */
+
+/* Stats grid */
+.admin-dashboard-body .admin-stats-row {
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.admin-dashboard-body .admin-stat-card {
+  padding: 10px 12px;
+  gap: 10px;
+  min-width: 0;
+}
+
+.admin-dashboard-body .admin-stat-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  font-size: 0.9rem;
+}
+
+.admin-dashboard-body .admin-stat-value {
+  font-size: 1.2rem;
+}
+
+.admin-dashboard-body .admin-stat-label {
+  font-size: 0.7rem;
+}
+
+.admin-dashboard-body .admin-stat-desc {
+  font-size: 0.64rem;
+}
+
+/* Title block */
+.admin-dashboard-body .adb-title {
+  margin-bottom: 4px;
+}
+
+.admin-dashboard-body .adb-heading {
+  font-size: 1.6rem;
+  margin-bottom: 3px;
+}
+
+.admin-dashboard-body .adb-subheading {
+  font-size: 0.84rem;
+}
+
+/* Quick actions section header — target ONLY the direct child of
+   adb-content (the QA header), NOT adb-recent-header inside
+   adb-recent-wrap (which already has margin-bottom: 0). */
+.admin-dashboard-body .adb-content > .admin-section-header {
+  margin-bottom: 8px;
+}
+
+/* Quick action cards */
+.admin-dashboard-body .admin-quick-actions {
+  margin-bottom: 8px;
+}
+
+.admin-dashboard-body .admin-action-card {
+  padding: 9px 12px 8px;
+  gap: 3px;
+}
+
+.admin-dashboard-body .adb-icon-box {
+  width: 30px;
+  height: 30px;
+  font-size: 0.9rem;
+  margin-bottom: 0;
+}
+
+.admin-dashboard-body .admin-action-title {
+  font-size: 0.86rem;
+}
+
+.admin-dashboard-body .admin-action-desc {
+  font-size: 0.72rem;
+  line-height: 1.25;
+}
+
+.admin-dashboard-body .admin-action-arrow {
+  font-size: 0.82rem;
+  margin-top: 2px;
 }

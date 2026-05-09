@@ -352,6 +352,21 @@ function decorateAdminAppointmentsForView(rows = []) {
       dateTimeStr = `${month} ${day} ${year} ${String(h12).padStart(2, "0")}:${m} ${ampm}`;
     }
 
+    const dateStr =
+      rawStart && !isNaN(rawStart.getTime())
+        ? `${MONTH_ABBRS[rawStart.getMonth()]} ${String(rawStart.getDate()).padStart(2, "0")}, ${rawStart.getFullYear()}`
+        : "";
+    const timeStr =
+      rawStart && !isNaN(rawStart.getTime())
+        ? (() => {
+            const h = rawStart.getHours();
+            const m = String(rawStart.getMinutes()).padStart(2, "0");
+            const ampm = h >= 12 ? "PM" : "AM";
+            const h12 = h % 12 === 0 ? 12 : h % 12;
+            return `${String(h12).padStart(2, "0")}:${m} ${ampm}`;
+          })()
+        : "";
+
     const status = row.appointment_status || "pending";
     const clientInitials = (row.client_name || "?")
       .trim()
@@ -369,6 +384,8 @@ function decorateAdminAppointmentsForView(rows = []) {
       serviceName: row.service_name || "N/A",
       categoryName: row.category_name || "",
       dateTimeStr,
+      dateStr,
+      timeStr,
       rawStartAt: rawStart,
       status,
       priceLabel: formatPrice(row.price_cents || 0),
@@ -1000,7 +1017,7 @@ class ViewController {
         role: "admin",
         activePage: "admin-dashboard",
         breadcrumbMain: "Home",
-        breadcrumbSub: "Dashboard",
+        breadcrumbSub: "Admin Dashboard",
         stats,
         recentAppointments,
         ...buildFeedbackState(req),
@@ -1016,7 +1033,7 @@ class ViewController {
         role: "admin",
         activePage: "admin-dashboard",
         breadcrumbMain: "Home",
-        breadcrumbSub: "Dashboard",
+        breadcrumbSub: "Admin Dashboard",
         stats: {
           totalUsers: 0,
           totalCategories: 0,
@@ -1187,11 +1204,11 @@ class ViewController {
       const dbCategories = await CategoryService.getAllCategories();
 
       const categories = dbCategories.map((c) => ({
-        id: c.id || c.category_id,
-        name: c.name || c.category_name || "Category",
-        description: c.description || c.category_description || "",
+        id: c.id,
+        name: c.name || "Category",
+        description: c.description || "",
         isActive: c.is_active !== false,
-        icon: getCategoryIcon(c.name || c.category_name || ""),
+        servicesCount: Number(c.servicesCount || 0),
       }));
 
       return res.render("admin-categories", {
@@ -1200,8 +1217,6 @@ class ViewController {
         firstName,
         role: "admin",
         activePage: "admin-categories",
-        breadcrumbMain: "Home",
-        breadcrumbSub: "Categories",
         categories,
         ...buildFeedbackState(req),
       });
@@ -1215,12 +1230,102 @@ class ViewController {
         firstName,
         role: "admin",
         activePage: "admin-categories",
-        breadcrumbMain: "Home",
-        breadcrumbSub: "Categories",
         categories: [],
         message: err.message || "Could not load categories",
         messageType: "error",
       });
+    }
+  }
+
+  static async adminCreateCategory(req, res) {
+    const { category_name, category_description, category_is_active } =
+      req.body;
+    try {
+      if (!category_name?.trim()) {
+        return res.redirect(
+          buildRedirectPath(
+            "/views/admin-categories",
+            "Category name is required.",
+            "error",
+          ),
+        );
+      }
+      await CategoryService.createCategory({
+        category_name: category_name.trim(),
+        category_description: category_description?.trim() || null,
+        category_is_active: category_is_active !== "false",
+      });
+      return res.redirect(
+        buildRedirectPath(
+          "/views/admin-categories",
+          "Category created successfully.",
+        ),
+      );
+    } catch (err) {
+      return res.redirect(
+        buildRedirectPath(
+          "/views/admin-categories",
+          err.message || "Could not create category.",
+          "error",
+        ),
+      );
+    }
+  }
+
+  static async adminUpdateCategory(req, res) {
+    const catId = req.params.id;
+    const { category_name, category_description, category_is_active } =
+      req.body;
+    try {
+      if (!category_name?.trim()) {
+        return res.redirect(
+          buildRedirectPath(
+            "/views/admin-categories",
+            "Category name is required.",
+            "error",
+          ),
+        );
+      }
+      await CategoryService.updateCategory(catId, {
+        category_name: category_name.trim(),
+        category_description: category_description?.trim() || null,
+        category_is_active: category_is_active !== "false",
+      });
+      return res.redirect(
+        buildRedirectPath(
+          "/views/admin-categories",
+          "Category updated successfully.",
+        ),
+      );
+    } catch (err) {
+      return res.redirect(
+        buildRedirectPath(
+          "/views/admin-categories",
+          err.message || "Could not update category.",
+          "error",
+        ),
+      );
+    }
+  }
+
+  static async adminDeleteCategory(req, res) {
+    const catId = req.params.id;
+    try {
+      await CategoryService.deleteCategory(catId);
+      return res.redirect(
+        buildRedirectPath(
+          "/views/admin-categories",
+          "Category deleted successfully.",
+        ),
+      );
+    } catch (err) {
+      return res.redirect(
+        buildRedirectPath(
+          "/views/admin-categories",
+          err.message || "Could not delete category.",
+          "error",
+        ),
+      );
     }
   }
 

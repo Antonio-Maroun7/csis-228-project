@@ -160,6 +160,19 @@ class CategoryRepository {
 
     return CategoryEntity.fromRow(rows[0]);
   }
+
+  /**
+   * Permanently deletes a category row.
+   * Side effects: deletes one row from categories.
+   * @param {number|string} category_id
+   * @returns {Promise<boolean>}
+   */
+  static async deleteCategory(category_id) {
+    const q = `DELETE FROM categories WHERE category_id = $1`;
+    const params = [category_id];
+    await pool.query(q, params);
+    return true;
+  }
 }
 
 module.exports = CategoryRepository;

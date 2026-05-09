@@ -105,6 +105,27 @@ router.get(
   viewController.renderAdminCategories,
 );
 
+router.post(
+  "/views/admin-categories/create",
+  requireViewAuth,
+  requireViewRole(["admin"]),
+  viewController.adminCreateCategory,
+);
+
+router.post(
+  "/views/admin-categories/:id/update",
+  requireViewAuth,
+  requireViewRole(["admin"]),
+  viewController.adminUpdateCategory,
+);
+
+router.post(
+  "/views/admin-categories/:id/delete",
+  requireViewAuth,
+  requireViewRole(["admin"]),
+  viewController.adminDeleteCategory,
+);
+
 router.get(
   "/views/admin-services",
   requireViewAuth,
