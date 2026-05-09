@@ -1,0 +1,265 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%= typeof title !== "undefined" ? title : "My Appointments" %></title>
+    <link rel="stylesheet" href="/styles/dashboard.css" />
+    <link rel="stylesheet" href="/styles/my-appointments.css" />
+</head>
+
+<body class="my-appointments-body">
+    <%
+        const safeRole           = typeof role           !== "undefined" && role           ? role           : "client";
+        const safeActivePage     = typeof activePage     !== "undefined" && activePage     ? activePage     : "my-appointments";
+        const safeFirstName      = typeof firstName      !== "undefined" && firstName      ? firstName      : "Client";
+        const safeBreadcrumbMain = typeof breadcrumbMain !== "undefined" ? breadcrumbMain : "Home";
+        const safeBreadcrumbSub  = typeof breadcrumbSub  !== "undefined" ? breadcrumbSub  : "My Appointments";
+        const apptList  = typeof appointments !== "undefined" && Array.isArray(appointments) ? appointments : [];
+        const pageStats = typeof stats !== "undefined" && stats ? stats : { total: 0, upcoming: 0, completed: 0, cancelled: 0 };
+        const safeMessage = typeof message     !== "undefined" ? message     : null;
+        const safeMsgType = typeof messageType !== "undefined" ? messageType : "success";
+    %>
+
+    <main class="dashboard-page">
+        <section class="dashboard">
+            <%- include("./partials/dashboard-sidebar", {
+                role: safeRole,
+                activePage: safeActivePage
+            }) %>
+
+            <section class="dashboard-main">
+                <%- include("./partials/dashboard-topbar", {
+                    breadcrumbMain:     safeBreadcrumbMain,
+                    breadcrumbSub:      safeBreadcrumbSub,
+                    firstName:          safeFirstName,
+                    role:               safeRole,
+                    showNotification:   false,
+                    searchPlaceholder:  "Search appointments, services..."
+                }) %>
+
+                <div class="dashboard-content">
+
+                    <% if (safeMessage) { %>
+                        <div class="ma-toast ma-toast--<%= safeMsgType === 'error' ? 'error' : 'success' %>">
+                            <%= safeMessage %>
+                        </div>
+                    <% } %>
+
+                    <!-- Stat cards -->
+                    <div class="ma-stats-row">
+
+                        <article class="ma-stat-card card">
+                            <div class="ma-stat-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                    <rect x="3" y="4" width="18" height="18" rx="2"/>
+                                    <line x1="16" y1="2" x2="16" y2="6"/>
+                                    <line x1="8"  y1="2" x2="8"  y2="6"/>
+                                    <line x1="3"  y1="10" x2="21" y2="10"/>
+                                </svg>
+                            </div>
+                            <div class="ma-stat-body">
+                                <strong><%= pageStats.total %></strong>
+                                <span>Total Appointments</span>
+                                <small>All your bookings</small>
+                            </div>
+                        </article>
+
+                        <article class="ma-stat-card card">
+                            <div class="ma-stat-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="10"/>
+                                    <polyline points="12 6 12 12 16 14"/>
+                                </svg>
+                            </div>
+                            <div class="ma-stat-body">
+                                <strong><%= pageStats.upcoming %></strong>
+                                <span>Upcoming</span>
+                                <small>Pending or confirmed</small>
+                            </div>
+                        </article>
+
+                        <article class="ma-stat-card card">
+                            <div class="ma-stat-icon ma-stat-icon--green">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                                    <polyline points="22 4 12 14.01 9 11.01"/>
+                                </svg>
+                            </div>
+                            <div class="ma-stat-body">
+                                <strong><%= pageStats.completed %></strong>
+                                <span>Completed</span>
+                                <small>Finished visits</small>
+                            </div>
+                        </article>
+
+                        <article class="ma-stat-card card">
+                            <div class="ma-stat-icon ma-stat-icon--red">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="10"/>
+                                    <line x1="15" y1="9"  x2="9"  y2="15"/>
+                                    <line x1="9"  y1="9"  x2="15" y2="15"/>
+                                </svg>
+                            </div>
+                            <div class="ma-stat-body">
+                                <strong><%= pageStats.cancelled %></strong>
+                                <span>Cancelled</span>
+                                <small>Cancelled bookings</small>
+                            </div>
+                        </article>
+
+                    </div>
+
+                    <!-- Heading + CTA -->
+                    <div class="ma-heading-row">
+                        <div class="ma-heading-left">
+                            <h1 class="ma-page-title">My Appointments</h1>
+                            <p class="ma-page-subtitle">View, track, and manage your upcoming and past appointments.</p>
+                        </div>
+                        <a href="/views/client-home" class="ma-book-btn">+ Book New Appointment</a>
+                    </div>
+
+                    <!-- Filter tabs -->
+                    <div class="ma-tabs" role="tablist">
+                        <button class="ma-tab ma-tab--active" data-filter="all"       role="tab">All</button>
+                        <button class="ma-tab"                data-filter="pending"    role="tab">Pending</button>
+                        <button class="ma-tab"                data-filter="confirmed"  role="tab">Confirmed</button>
+                        <button class="ma-tab"                data-filter="completed"  role="tab">Completed</button>
+                        <button class="ma-tab"                data-filter="cancelled"  role="tab">Cancelled</button>
+                    </div>
+
+                    <!-- Appointment cards -->
+                    <div class="ma-list" id="ma-list">
+
+                        <% if (apptList.length === 0) { %>
+                            <div class="ma-empty" id="ma-empty-state">
+                                <p>You have no appointments yet.</p>
+                                <a href="/views/client-home" class="ma-book-btn">Book Your First Appointment</a>
+                            </div>
+                        <% } else { %>
+
+                            <div class="ma-empty ma-empty--hidden" id="ma-filter-empty">
+                                <p>No appointments match this filter.</p>
+                            </div>
+
+                            <% apptList.forEach(function(appt) { %>
+                                <article class="ma-card card" data-status="<%= appt.status %>">
+
+                                    <!-- Left: date block -->
+                                    <div class="ma-date-block">
+                                        <span class="ma-date-month"><%= appt.monthAbbr %></span>
+                                        <span class="ma-date-day"><%= appt.dayNum %></span>
+                                        <span class="ma-date-year"><%= appt.yearNum %></span>
+                                    </div>
+
+                                    <!-- Center: details -->
+                                    <div class="ma-card-body">
+                                        <h3 class="ma-service-name"><%= appt.serviceName || "General Appointment" %></h3>
+                                        <span class="ma-category-name"><%= appt.categoryName %></span>
+
+                                        <div class="ma-details-row">
+
+                                            <div class="ma-detail-item">
+                                                <div class="ma-detail-val">
+                                                    <svg class="ma-detail-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                                                    <span><%= appt.staffName %></span>
+                                                </div>
+                                                <span class="ma-detail-lbl">Staff</span>
+                                            </div>
+
+                                            <div class="ma-detail-item">
+                                                <div class="ma-detail-val">
+                                                    <svg class="ma-detail-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                                                    <span><%= appt.timeStr %></span>
+                                                </div>
+                                                <span class="ma-detail-lbl">Time</span>
+                                            </div>
+
+                                            <div class="ma-detail-item">
+                                                <div class="ma-detail-val">
+                                                    <svg class="ma-detail-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 15 15"/></svg>
+                                                    <span><%= appt.durationMin %> min</span>
+                                                </div>
+                                                <span class="ma-detail-lbl">Duration</span>
+                                            </div>
+
+                                            <div class="ma-detail-item">
+                                                <div class="ma-detail-val">
+                                                    <span><%= appt.priceLabel %></span>
+                                                </div>
+                                                <span class="ma-detail-lbl">Price</span>
+                                            </div>
+
+                                        </div>
+
+                                        <% if (appt.notes) { %>
+                                            <p class="ma-notes">Notes: <%= appt.notes %></p>
+                                        <% } %>
+                                    </div>
+
+                                    <!-- Right: badge + buttons -->
+                                    <div class="ma-card-side">
+                                        <span class="ma-badge ma-badge--<%= appt.status %>">
+                                            <%= appt.status.charAt(0).toUpperCase() + appt.status.slice(1) %>
+                                        </span>
+                                        <div class="ma-actions">
+                                            <a
+                                                href="<%= appt.serviceId ? '/views/book-appointment/' + appt.serviceId : '/views/client-home' %>"
+                                                class="ma-btn ma-btn--outline"
+                                            >Book Again</a>
+                                            <% if (appt.canCancel) { %>
+                                                <form
+                                                    method="POST"
+                                                    action="/views/my-appointments/<%= appt.id %>/cancel"
+                                                    class="ma-cancel-form"
+                                                    onsubmit="return confirm('Cancel this appointment?')"
+                                                >
+                                                    <button type="submit" class="ma-btn ma-btn--danger">Cancel</button>
+                                                </form>
+                                            <% } %>
+                                        </div>
+                                    </div>
+
+                                </article>
+                            <% }) %>
+
+                        <% } %>
+                    </div><!-- /.ma-list -->
+
+                </div><!-- /.dashboard-content -->
+            </section><!-- /.dashboard-main -->
+        </section><!-- /.dashboard -->
+    </main>
+
+    <script>
+        (function () {
+            var tabs      = document.querySelectorAll(".ma-tab");
+            var cards     = document.querySelectorAll(".ma-card");
+            var filterMsg = document.getElementById("ma-filter-empty");
+
+            tabs.forEach(function (tab) {
+                tab.addEventListener("click", function () {
+                    tabs.forEach(function (t) { t.classList.remove("ma-tab--active"); });
+                    tab.classList.add("ma-tab--active");
+
+                    var filter  = tab.getAttribute("data-filter");
+                    var visible = 0;
+
+                    cards.forEach(function (card) {
+                        if (filter === "all" || card.getAttribute("data-status") === filter) {
+                            card.style.display = "";
+                            visible++;
+                        } else {
+                            card.style.display = "none";
+                        }
+                    });
+
+                    if (filterMsg) {
+                        filterMsg.classList.toggle("ma-empty--hidden", visible > 0);
+                    }
+                });
+            });
+        }());
+    </script>
+</body>
+</html>

@@ -112,6 +112,71 @@ function formatPrice(value) {
   return Number.isInteger(dollars) ? `$${dollars}` : `$${dollars.toFixed(2)}`;
 }
 
+const MONTH_ABBRS = [
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "May",
+  "Jun",
+  "Jul",
+  "Aug",
+  "Sep",
+  "Oct",
+  "Nov",
+  "Dec",
+];
+
+function decorateAppointmentsForView(rows = []) {
+  return rows.map((row) => {
+    const rawStart = row.appointment_start_at
+      ? new Date(row.appointment_start_at)
+      : null;
+
+    let dayNum = "";
+    let monthAbbr = "";
+    let yearNum = "";
+    let timeStr = "";
+
+    if (rawStart && !isNaN(rawStart.getTime())) {
+      dayNum = String(rawStart.getDate()).padStart(2, "0");
+      monthAbbr = MONTH_ABBRS[rawStart.getMonth()];
+      yearNum = rawStart.getFullYear();
+      const h = rawStart.getHours();
+      const m = String(rawStart.getMinutes()).padStart(2, "0");
+      const ampm = h >= 12 ? "PM" : "AM";
+      const h12 = h % 12 === 0 ? 12 : h % 12;
+      timeStr = `${String(h12).padStart(2, "0")}:${m} ${ampm}`;
+    }
+
+    const status = row.appointment_status || "pending";
+    const canCancel = ["pending", "confirmed"].includes(status);
+
+    return {
+      id: row.appointment_id,
+      serviceId: row.service_id || null,
+      rawStartAt: rawStart,
+      dayNum,
+      monthAbbr,
+      yearNum,
+      timeStr,
+      status,
+      canCancel,
+      staffName: row.staff_name || "TBA",
+      serviceName: row.service_name || null,
+      categoryName: row.category_name || "",
+      durationMin: Number(
+        row.duration_min ?? row.appointment_duration_min ?? 0,
+      ),
+      priceLabel: formatPrice(
+        row.price_cents != null ? row.price_cents : row.appointment_price_cents,
+      ),
+      notes: row.appointment_notes || "",
+      createdAt: row.appointment_created_at || null,
+    };
+  });
+}
+
 function decorateCategoriesForView(categories = []) {
   return categories
     .filter((category) => category && category.is_active !== false)
@@ -631,6 +696,85 @@ class ViewController {
       title: "Not Authorized",
       user: req.user || null,
     });
+  }
+
+  /* ── My Appointments ───────────────────────────────────────── */
+
+  static async renderMyAppointments(req, res) {
+    try {
+      const user = await getLoggedInUser(req);
+      const firstName = getFirstName(user);
+      const clientId = user?.id || user?.user_id;
+
+      const rows = await AppointmentService.getClientAppointmentsRich(clientId);
+      const appointments = decorateAppointmentsForView(rows);
+
+      const now = new Date();
+      const stats = {
+        total: appointments.length,
+        upcoming: appointments.filter(
+          (a) =>
+            ["pending", "confirmed"].includes(a.status) &&
+            a.rawStartAt &&
+            a.rawStartAt >= now,
+        ).length,
+        completed: appointments.filter((a) => a.status === "completed").length,
+        cancelled: appointments.filter((a) => a.status === "cancelled").length,
+      };
+
+      return res.render("my-appointments", {
+        title: "My Appointments",
+        user,
+        firstName,
+        role: "client",
+        activePage: "my-appointments",
+        breadcrumbMain: "Home",
+        breadcrumbSub: "My Appointments",
+        appointments,
+        stats,
+        ...buildFeedbackState(req),
+      });
+    } catch (err) {
+      const user = req.user || null;
+      const firstName = getFirstName(user);
+
+      return res.render("my-appointments", {
+        title: "My Appointments",
+        user,
+        firstName,
+        role: "client",
+        activePage: "my-appointments",
+        breadcrumbMain: "Home",
+        breadcrumbSub: "My Appointments",
+        appointments: [],
+        stats: { total: 0, upcoming: 0, completed: 0, cancelled: 0 },
+        message: err.message || "Could not load appointments",
+        messageType: "error",
+      });
+    }
+  }
+
+  static async cancelMyAppointment(req, res) {
+    const appointmentId = req.params.id;
+
+    try {
+      await AppointmentService.cancelAppointment(appointmentId);
+
+      return res.redirect(
+        buildRedirectPath(
+          "/views/my-appointments",
+          "Appointment cancelled successfully.",
+        ),
+      );
+    } catch (err) {
+      return res.redirect(
+        buildRedirectPath(
+          "/views/my-appointments",
+          err.message || "Could not cancel appointment.",
+          "error",
+        ),
+      );
+    }
   }
 
   /* ── Profile ───────────────────────────────────────────────── */

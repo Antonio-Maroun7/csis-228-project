@@ -397,6 +397,18 @@ class AppointmentService {
   }
 
   /**
+   * Returns enriched appointment rows for the My Appointments view.
+   * Joins staff name, service name, category, duration, and price.
+   * @param {number|string} client_id
+   * @returns {Promise<Array<Object>>}
+   */
+  static async getClientAppointmentsRich(client_id) {
+    const rows =
+      await AppointmentRepository.findClientAppointmentsRich(client_id);
+    return rows;
+  }
+
+  /**
    * Returns appointments created between two provided dates.
    * @param {string|Date} start_date
    * @param {string|Date} end_date

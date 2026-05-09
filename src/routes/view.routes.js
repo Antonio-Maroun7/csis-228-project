@@ -46,6 +46,21 @@ router.post(
   viewController.bookAppointment,
 );
 
+/* ── My Appointments — client view ───────────────────────────── */
+router.get(
+  "/views/my-appointments",
+  requireViewAuth,
+  requireViewRole(["client"]),
+  viewController.renderMyAppointments,
+);
+
+router.post(
+  "/views/my-appointments/:id/cancel",
+  requireViewAuth,
+  requireViewRole(["client"]),
+  viewController.cancelMyAppointment,
+);
+
 /* ── Profile — shared view for all roles ─────────────────────── */
 router.get(
   "/views/profile",

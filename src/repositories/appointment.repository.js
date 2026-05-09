@@ -207,5 +207,103 @@ class AppointmentRepository {
     const { rows } = await pool.query(q, [start_date, end_date]);
     return AppointmentWithClientEntity.fromRows(rows);
   }
+
+  /**
+   * Returns rich appointment rows for one client, joining staff name,
+   * service name, category name, duration, and price from the first
+   * appointment_item per appointment.
+   * @param {number|string} client_id
+   * @returns {Promise<Array<Object>>}
+   */
+  static async findClientAppointmentsRich(client_id) {
+    /*
+     * Fetches rich appointment data for a client.
+     *
+     * Service resolution order:
+     *   1. appointment_items row (if any) -> services -> categories
+     *   2. Fallback: first staff_service row for this staff -> services -> categories
+     *
+     * Duration / price fallback chain:
+     *   1. appointment_item value (if non-zero and exists)
+     *   2. staff_services override (if non-zero)
+     *   3. service default
+     *   4. computed from appointment start/end (duration only)
+     */
+    const q = `
+      SELECT
+        a.appointment_id,
+        a.appointment_start_at,
+        a.appointment_ends_at,
+        a.appointment_status,
+        a.appointment_notes,
+        a.appointment_created_at,
+        staff.user_fullname AS staff_name,
+
+        COALESCE(svc_ai.service_id,   svc_ss.service_id)   AS service_id,
+        COALESCE(svc_ai.service_name, svc_ss.service_name) AS service_name,
+        COALESCE(cat_ai.category_name, cat_ss.category_name) AS category_name,
+
+        COALESCE(
+          NULLIF(ai.appointment_duration_min, 0),
+          NULLIF(ss.staff_duration_min, 0),
+          NULLIF(svc_ai.service_default_duration_min, 0),
+          NULLIF(svc_ss.service_default_duration_min, 0),
+          CASE
+            WHEN a.appointment_ends_at IS NOT NULL
+             AND a.appointment_start_at IS NOT NULL
+            THEN EXTRACT(
+              EPOCH FROM (a.appointment_ends_at - a.appointment_start_at)
+            )::int / 60
+          END
+        ) AS duration_min,
+
+        COALESCE(
+          NULLIF(ai.appointment_price_cents, 0),
+          NULLIF(ss.staff_price_cents, 0),
+          NULLIF(svc_ai.service_base_price_cents, 0),
+          NULLIF(svc_ss.service_base_price_cents, 0)
+        ) AS price_cents
+
+      FROM appointments a
+
+      LEFT JOIN users staff
+        ON staff.user_id = a.staff_id
+
+      /* ── appointment_items path ───────────────────────────── */
+      LEFT JOIN (
+        SELECT DISTINCT ON (appointment_id)
+          appointment_id,
+          service_id,
+          appointment_duration_min,
+          appointment_price_cents
+        FROM appointment_items
+        ORDER BY appointment_id
+      ) ai ON ai.appointment_id = a.appointment_id
+
+      LEFT JOIN services  svc_ai ON svc_ai.service_id = ai.service_id
+      LEFT JOIN categories cat_ai ON cat_ai.category_id = svc_ai.category_id
+      LEFT JOIN staff_services ss
+        ON ss.staff_id = a.staff_id AND ss.service_id = ai.service_id
+
+      /* ── staff_services fallback path (when no items) ────── */
+      LEFT JOIN (
+        SELECT DISTINCT ON (staff_id)
+          staff_id,
+          service_id,
+          staff_duration_min,
+          staff_price_cents
+        FROM staff_services
+        ORDER BY staff_id, service_id
+      ) ss_fb ON ss_fb.staff_id = a.staff_id AND ai.appointment_id IS NULL
+
+      LEFT JOIN services   svc_ss ON svc_ss.service_id = ss_fb.service_id
+      LEFT JOIN categories cat_ss ON cat_ss.category_id = svc_ss.category_id
+
+      WHERE a.client_id = $1
+      ORDER BY a.appointment_start_at DESC
+    `;
+    const { rows } = await pool.query(q, [client_id]);
+    return rows;
+  }
 }
 module.exports = AppointmentRepository;
