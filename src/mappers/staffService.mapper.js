@@ -26,6 +26,8 @@ const entityToResponseDto = (entity) => {
     service_id: entity.service_id,
     duration_min: entity.staff_duration_min,
     price_cents: entity.staff_price_cents,
+    is_active:
+      entity.staff_is_active !== undefined ? entity.staff_is_active : true,
   };
 };
 

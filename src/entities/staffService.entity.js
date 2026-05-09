@@ -13,11 +13,14 @@ class StaffServiceEntity {
     service_id,
     staff_duration_min,
     staff_price_cents,
+    staff_is_active,
   } = {}) {
     this.staff_id = staff_id;
     this.service_id = service_id;
     this.staff_duration_min = staff_duration_min;
     this.staff_price_cents = staff_price_cents;
+    this.staff_is_active =
+      staff_is_active !== undefined ? staff_is_active : true;
   }
   /**
    * Builds one staff-service entity from a DB row.

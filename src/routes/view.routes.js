@@ -169,6 +169,27 @@ router.get(
   adminStaffServiceView.renderAdminStaffServices,
 );
 
+router.post(
+  "/views/admin-staff-services/assign",
+  requireViewAuth,
+  requireViewRole(["admin"]),
+  adminStaffServiceView.adminAssignStaffService,
+);
+
+router.post(
+  "/views/admin-staff-services/:staffId/:serviceId/update",
+  requireViewAuth,
+  requireViewRole(["admin"]),
+  adminStaffServiceView.adminUpdateStaffService,
+);
+
+router.post(
+  "/views/admin-staff-services/:staffId/:serviceId/delete",
+  requireViewAuth,
+  requireViewRole(["admin"]),
+  adminStaffServiceView.adminDeleteStaffService,
+);
+
 router.get(
   "/views/admin-appointments",
   requireViewAuth,

@@ -1,86 +1,193 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title><%= title %> | Smart Booking</title>
-    <link rel="stylesheet" href="/styles/dashboard.css" />
-    <link rel="stylesheet" href="/styles/admin.css" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title><%= title %> | Smart Booking</title>
+  <link rel="stylesheet" href="/styles/dashboard.css" />
+  <link rel="stylesheet" href="/styles/admin.css" />
+  <link rel="stylesheet" href="/styles/admin-staff-services.css" />
 </head>
 <body class="admin-staff-services-body">
 <div class="dashboard-page">
 <div class="dashboard">
 
-    <%- include('partials/dashboard-sidebar', { role, activePage }) %>
+  <%- include('partials/dashboard-sidebar', { role, activePage }) %>
 
-    <main class="dashboard-main">
-        <%- include('partials/dashboard-topbar', {
-            breadcrumbMain: 'Home',
-            breadcrumbSub: 'Staff Services',
-            firstName,
-            role,
-            searchPlaceholder: 'Search staff assignments...'
-        }) %>
+  <main class="dashboard-main">
+    <%- include('partials/dashboard-topbar', {
+      breadcrumbMain: 'Home',
+      breadcrumbSub: 'Staff Services',
+      firstName,
+      role,
+      searchPlaceholder: 'Search staff or services...',
+      showNotification: false
+    }) %>
 
-        <div class="dashboard-content">
+    <div class="dashboard-content">
 
-            <% if (message) { %>
-            <div class="admin-feedback <%= messageType %>"><%= message %></div>
-            <% } %>
+      <% if (typeof message !== 'undefined' && message) { %>
+      <div class="ss-feedback <%= messageType === 'error' ? 'error' : 'success' %>">
+        <span><%= message %></span>
+        <button type="button" class="ss-feedback-close" onclick="this.parentElement.remove()">&#x2715;</button>
+      </div>
+      <% } %>
 
-            <div class="admin-section-header">
-                <div class="page-title" style="margin-bottom:0">
-                    <h2 style="margin:0 0 4px;font-size:1.7rem">Staff Services</h2>
-                    <p style="margin:0">All staff-to-service assignments with optional overrides</p>
-                </div>
+      <!-- Page header -->
+      <div class="ss-page-header">
+        <h2 class="ss-page-title">Staff Services</h2>
+        <p class="ss-page-sub">Assign services to staff members, update overrides, and manage assignments.</p>
+      </div>
+
+      <!-- Two-panel layout -->
+      <div class="ss-two-panel">
+
+        <!-- Left: assignment table -->
+        <div class="ss-table-panel">
+          <div class="ss-table-card">
+
+            <div class="ss-card-header">
+              <div class="ss-card-icon">👥</div>
+              <h3 class="ss-card-title">Manage Staff-Service Assignments</h3>
             </div>
 
-            <div class="admin-table-wrap" style="margin-top:18px">
-                <% if (staffServices && staffServices.length > 0) { %>
-                <table class="admin-table">
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Staff Member</th>
-                            <th>Service</th>
-                            <th>Override Duration</th>
-                            <th>Override Price</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <% staffServices.forEach(function(ss, i) { %>
-                        <%
-                            const staffInitials = (ss.staffName || '?').trim()
-                                .split(/\s+/).slice(0,2)
-                                .map(function(w){ return w.charAt(0).toUpperCase(); }).join('');
-                        %>
-                        <tr>
-                            <td style="color:var(--muted);font-size:0.8rem"><%= i + 1 %></td>
-                            <td>
-                                <div class="admin-client-cell">
-                                    <div class="admin-avatar"><%= staffInitials %></div>
-                                    <span style="font-weight:700;color:var(--dark)"><%= ss.staffName %></span>
-                                </div>
-                            </td>
-                            <td style="font-weight:600"><%= ss.serviceName %></td>
-                            <td style="color:var(--muted)"><%= ss.durationMin ? ss.durationMin + ' min' : '—' %></td>
-                            <td class="admin-amount"><%= ss.priceLabel || '—' %></td>
-                        </tr>
-                        <% }); %>
-                    </tbody>
-                </table>
-                <% } else { %>
-                <div class="admin-empty">
-                    <div class="admin-empty-icon">👥</div>
-                    <p>No staff service assignments found.</p>
-                </div>
-                <% } %>
+            <div class="ss-table-outer">
+              <table class="ss-table" id="ssTable">
+                <thead>
+                  <tr>
+                    <th>Staff</th>
+                    <th>Service</th>
+                    <th>Category</th>
+                    <th>Duration Override</th>
+                    <th>Price Override</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="ssTableBody">
+                  <!-- Populated by admin-staff-services.js -->
+                </tbody>
+              </table>
+              <div class="ss-empty" id="ssEmpty" style="display:none;">
+                <div class="ss-empty-icon">👥</div>
+                <p>No staff-service assignments found.</p>
+              </div>
             </div>
 
-        </div><!-- /.dashboard-content -->
-    </main>
+            <div class="ss-table-footer">
+              <span class="ss-showing" id="ssShowing">Showing 0 to 0 of 0 entries</span>
+              <div class="ss-pagination" id="ssPagination"></div>
+            </div>
 
+          </div>
+        </div><!-- /ss-table-panel -->
+
+        <!-- Right: assignment form -->
+        <div class="ss-form-panel">
+          <div class="ss-form-card">
+
+            <div class="ss-form-header">
+              <div class="ss-card-icon">🧑‍💼</div>
+              <h3 class="ss-form-title" id="ssFormTitle">Assign Staff to Service</h3>
+            </div>
+
+            <form id="ssAssignForm" method="POST" action="/views/admin-staff-services/assign">
+
+              <!-- Hidden inputs for edit mode routing -->
+              <input type="hidden" id="ssEditStaffId" name="_editStaffId" value="" />
+              <input type="hidden" id="ssEditServiceId" name="_editServiceId" value="" />
+
+              <!-- Select Staff -->
+              <div class="ss-field">
+                <label class="ss-label" for="ssStaffSelect">Select Staff <span class="req">*</span></label>
+                <select id="ssStaffSelect" name="staff_id" class="ss-select" required>
+                  <option value="">Choose staff member...</option>
+                </select>
+              </div>
+
+              <!-- Select Service -->
+              <div class="ss-field">
+                <label class="ss-label" for="ssServiceSelect">Select Service <span class="req">*</span></label>
+                <select id="ssServiceSelect" name="service_id" class="ss-select" required>
+                  <option value="">Choose service...</option>
+                </select>
+              </div>
+
+              <!-- Duration Override -->
+              <div class="ss-field">
+                <label class="ss-label" for="ssDurationInput">Duration Override</label>
+                <div class="ss-input-suffix-wrap">
+                  <input type="number" id="ssDurationInput" name="staff_duration_min"
+                    class="ss-input" placeholder="e.g. 45" min="1" max="480" />
+                  <span class="ss-suffix">min</span>
+                </div>
+              </div>
+
+              <!-- Price Override -->
+              <div class="ss-field">
+                <label class="ss-label" for="ssPriceInput">Price Override</label>
+                <div class="ss-input-prefix-wrap">
+                  <span class="ss-prefix">$</span>
+                  <input type="number" id="ssPriceInput" name="staff_price_cents"
+                    class="ss-input" placeholder="0.00" min="0" step="0.01" />
+                </div>
+              </div>
+
+              <!-- Status -->
+              <div class="ss-field">
+                <label class="ss-label" for="ssStatusSelect">Status <span class="req">*</span></label>
+                <select id="ssStatusSelect" name="staff_is_active" class="ss-select">
+                  <option value="true">Active</option>
+                  <option value="false">Inactive</option>
+                </select>
+              </div>
+
+              <div class="ss-form-actions">
+                <button type="submit" class="ss-btn-primary" id="ssSaveBtn">
+                  💾 <span id="ssSaveBtnText">Save Assignment</span>
+                </button>
+                <button type="button" class="ss-btn-outline" id="ssClearBtn">
+                  ✕ Clear
+                </button>
+              </div>
+
+            </form>
+
+          </div>
+        </div><!-- /ss-form-panel -->
+
+      </div><!-- /ss-two-panel -->
+
+    </div><!-- /dashboard-content -->
+  </main>
 </div>
 </div>
+
+<!-- Delete confirmation modal -->
+<div class="ss-modal-overlay" id="ssDeleteModal">
+  <div class="ss-modal">
+    <div class="ss-modal-icon">🗑️</div>
+    <h4 class="ss-modal-title">Remove Assignment?</h4>
+    <p class="ss-modal-body" id="ssDeleteModalBody">
+      This will remove the assignment. This action cannot be undone.
+    </p>
+    <div class="ss-modal-footer">
+      <button type="button" class="ss-btn-outline" id="ssDeleteCancel">Cancel</button>
+      <button type="button" class="ss-modal-btn-danger" id="ssDeleteConfirm">Remove</button>
+    </div>
+  </div>
+</div>
+
+<!-- Hidden delete form -->
+<form id="ssDeleteForm" method="POST" action="" style="display:none;"></form>
+
+<!-- JS globals -->
+<script>
+  var ALL_STAFF_SERVICES = <%- JSON.stringify(staffServices || []) %>;
+  var ALL_STAFF_USERS = <%- JSON.stringify(staffUsers || []) %>;
+  var ALL_SERVICES = <%- JSON.stringify(allServices || []) %>;
+</script>
+<script src="/scripts/admin-staff-services.js"></script>
+
 </body>
 </html>

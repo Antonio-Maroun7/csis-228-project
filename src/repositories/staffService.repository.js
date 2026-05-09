@@ -20,16 +20,21 @@ class StaffServiceRepository {
    * @returns {Promise<StaffServiceEntity|null>}
    */
   static async assignServiceToStaff(staff_id, service_id, overrides = {}) {
-    const { staff_duration_min = null, staff_price_cents = null } = overrides;
+    const {
+      staff_duration_min = null,
+      staff_price_cents = null,
+      staff_is_active = true,
+    } = overrides;
     const q = `INSERT INTO staff_services
-      (staff_id,service_id,staff_duration_min,staff_price_cents)
-      VALUES($1,$2,$3,$4)
+      (staff_id,service_id,staff_duration_min,staff_price_cents,staff_is_active)
+      VALUES($1,$2,$3,$4,$5)
       RETURNING *`;
     const params = [
       staff_id,
       service_id,
       staff_duration_min,
       staff_price_cents,
+      staff_is_active,
     ];
     const { rows } = await pool.query(q, params);
     return StaffServiceEntity.fromRow(rows[0]);
@@ -108,15 +113,21 @@ class StaffServiceRepository {
     service_id,
     overrides = {},
   ) {
-    const { staff_duration_min = null, staff_price_cents = null } = overrides;
+    const {
+      staff_duration_min = null,
+      staff_price_cents = null,
+      staff_is_active = null,
+    } = overrides;
     const q = `UPDATE staff_services
               SET staff_duration_min=COALESCE($1, staff_duration_min),
-              staff_price_cents=COALESCE($2, staff_price_cents)
-              WHERE staff_id =$3 AND service_id =$4
+              staff_price_cents=COALESCE($2, staff_price_cents),
+              staff_is_active=COALESCE($3, staff_is_active)
+              WHERE staff_id =$4 AND service_id =$5
               RETURNING *`;
     const params = [
       staff_duration_min,
       staff_price_cents,
+      staff_is_active,
       staff_id,
       service_id,
     ];
