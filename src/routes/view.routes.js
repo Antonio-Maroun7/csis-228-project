@@ -1,49 +1,57 @@
 const express = require("express");
 const router = express.Router();
 
-const viewController = require("../controllers/view.controller");
+const authView = require("../controllers/views/authView.controller");
+const clientView = require("../controllers/views/clientView.controller");
+const profileView = require("../controllers/views/profileView.controller");
+const adminDashboardView = require("../controllers/views/adminDashboardView.controller");
+const adminUserView = require("../controllers/views/adminUserView.controller");
+const adminCategoryView = require("../controllers/views/adminCategoryView.controller");
+const adminServiceView = require("../controllers/views/adminServiceView.controller");
+const adminStaffServiceView = require("../controllers/views/adminStaffServiceView.controller");
+const adminAppointmentView = require("../controllers/views/adminAppointmentView.controller");
 
 const {
   requireViewAuth,
   requireViewRole,
 } = require("../middleware/viewAuth.middleware");
 
-router.get("/", viewController.redirectToLogin);
+router.get("/", authView.redirectToLogin);
 
-router.get("/views/login", viewController.renderLogin);
-router.post("/views/login", viewController.login);
+router.get("/views/login", authView.renderLogin);
+router.post("/views/login", authView.login);
 
-router.get("/views/register", viewController.renderRegister);
-router.post("/views/register", viewController.register);
+router.get("/views/register", authView.renderRegister);
+router.post("/views/register", authView.register);
 
-router.get("/views/dashboard", requireViewAuth, viewController.renderDashboard);
+router.get("/views/dashboard", requireViewAuth, authView.renderDashboard);
 
 router.get(
   "/views/client-home",
   requireViewAuth,
   requireViewRole(["client"]),
-  viewController.renderClientHome,
+  clientView.renderClientHome,
 );
 
 router.get(
   "/views/services-by-category/:categoryId",
   requireViewAuth,
   requireViewRole(["client"]),
-  viewController.renderServicesByCategory,
+  clientView.renderServicesByCategory,
 );
 
 router.get(
   "/views/book-appointment/:serviceId",
   requireViewAuth,
   requireViewRole(["client"]),
-  viewController.renderBookAppointment,
+  clientView.renderBookAppointment,
 );
 
 router.post(
   "/views/book-appointment",
   requireViewAuth,
   requireViewRole(["client"]),
-  viewController.bookAppointment,
+  clientView.bookAppointment,
 );
 
 /* ── My Appointments — client view ───────────────────────────── */
@@ -51,14 +59,14 @@ router.get(
   "/views/my-appointments",
   requireViewAuth,
   requireViewRole(["client"]),
-  viewController.renderMyAppointments,
+  clientView.renderMyAppointments,
 );
 
 router.post(
   "/views/my-appointments/:id/cancel",
   requireViewAuth,
   requireViewRole(["client"]),
-  viewController.cancelMyAppointment,
+  clientView.cancelMyAppointment,
 );
 
 /* ── Profile — shared view for all roles ─────────────────────── */
@@ -66,21 +74,21 @@ router.get(
   "/views/profile",
   requireViewAuth,
   requireViewRole(["client"]),
-  viewController.renderProfile,
+  profileView.renderProfile,
 );
 
 router.get(
   "/views/staff-profile",
   requireViewAuth,
   requireViewRole(["staff"]),
-  viewController.renderProfile,
+  profileView.renderProfile,
 );
 
 router.get(
   "/views/admin-profile",
   requireViewAuth,
   requireViewRole(["admin"]),
-  viewController.renderProfile,
+  profileView.renderProfile,
 );
 
 /* ── Admin management views ───────────────────────────────────── */
@@ -88,99 +96,99 @@ router.get(
   "/views/admin-dashboard",
   requireViewAuth,
   requireViewRole(["admin"]),
-  viewController.renderAdminDashboard,
+  adminDashboardView.renderAdminDashboard,
 );
 
 router.get(
   "/views/manage-users",
   requireViewAuth,
   requireViewRole(["admin"]),
-  viewController.renderManageUsers,
+  adminUserView.renderManageUsers,
 );
 
 router.get(
   "/views/admin-categories",
   requireViewAuth,
   requireViewRole(["admin"]),
-  viewController.renderAdminCategories,
+  adminCategoryView.renderAdminCategories,
 );
 
 router.post(
   "/views/admin-categories/create",
   requireViewAuth,
   requireViewRole(["admin"]),
-  viewController.adminCreateCategory,
+  adminCategoryView.adminCreateCategory,
 );
 
 router.post(
   "/views/admin-categories/:id/update",
   requireViewAuth,
   requireViewRole(["admin"]),
-  viewController.adminUpdateCategory,
+  adminCategoryView.adminUpdateCategory,
 );
 
 router.post(
   "/views/admin-categories/:id/delete",
   requireViewAuth,
   requireViewRole(["admin"]),
-  viewController.adminDeleteCategory,
+  adminCategoryView.adminDeleteCategory,
 );
 
 router.get(
   "/views/admin-services",
   requireViewAuth,
   requireViewRole(["admin"]),
-  viewController.renderAdminServices,
+  adminServiceView.renderAdminServices,
 );
 
 router.get(
   "/views/admin-staff-services",
   requireViewAuth,
   requireViewRole(["admin"]),
-  viewController.renderAdminStaffServices,
+  adminStaffServiceView.renderAdminStaffServices,
 );
 
 router.get(
   "/views/admin-appointments",
   requireViewAuth,
   requireViewRole(["admin"]),
-  viewController.renderAdminAppointments,
+  adminAppointmentView.renderAdminAppointments,
 );
 
 router.post(
   "/views/manage-users/create",
   requireViewAuth,
   requireViewRole(["admin"]),
-  viewController.adminCreateUser,
+  adminUserView.adminCreateUser,
 );
 
 router.post(
   "/views/manage-users/:id/update",
   requireViewAuth,
   requireViewRole(["admin"]),
-  viewController.adminUpdateUser,
+  adminUserView.adminUpdateUser,
 );
 
 router.post(
   "/views/manage-users/:id/delete",
   requireViewAuth,
   requireViewRole(["admin"]),
-  viewController.adminDeleteUser,
+  adminUserView.adminDeleteUser,
 );
 
 router.post(
   "/views/profile/update",
   requireViewAuth,
-  viewController.updateProfile,
+  profileView.updateProfile,
 );
 
 router.post(
   "/views/profile/change-password",
   requireViewAuth,
-  viewController.changePassword,
+  profileView.changePassword,
 );
 
-router.get("/views/logout", requireViewAuth, viewController.logout);
-router.get("/views/not-authorized", viewController.renderNotAuthorized);
+router.get("/views/logout", requireViewAuth, authView.logout);
+router.get("/views/not-authorized", authView.renderNotAuthorized);
 
 module.exports = router;
