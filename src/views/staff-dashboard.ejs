@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title><%= title %> | Smart Booking</title>
     <link rel="stylesheet" href="/styles/dashboard.css" />
-    <link rel="stylesheet" href="/styles/admin.css" />
     <link rel="stylesheet" href="/styles/staff-dashboard.css" />
 </head>
 <body class="staff-dashboard-body">
@@ -55,7 +54,7 @@
                     </div>
                 </div>
                 <div class="sd-stat-card">
-                    <div class="sd-stat-icon teal">🕐</div>
+                    <div class="sd-stat-icon orange">🕐</div>
                     <div class="sd-stat-info">
                         <div class="sd-stat-value"><%= stats.weekTotal %></div>
                         <div class="sd-stat-label">Total This Week</div>
@@ -80,7 +79,7 @@
                     <div class="sd-card-header">
                         <div class="sd-card-title">
                             <span class="sd-card-title-icon">📆</span>
-                            Today's Schedule
+                            <%= selectedDateLabel %>
                         </div>
                         <a class="sd-card-action" href="/views/staff-appointments">View full schedule</a>
                     </div>
@@ -93,7 +92,11 @@
                         <% } else { %>
                             <% todayAppointments.forEach(function(apt) { %>
                             <div class="sd-schedule-row">
-                                <div class="sd-schedule-time"><%= apt.timeStr %></div>
+                                <% var _tp = apt.timeStr.split(' '); %>
+                                <div class="sd-schedule-time">
+                                    <div class="sd-time-clock"><%= _tp[0] %></div>
+                                    <div class="sd-time-meridiem"><%= _tp[1] || '' %></div>
+                                </div>
                                 <div class="sd-avatar"><%= apt.clientInitials %></div>
                                 <div class="sd-schedule-info">
                                     <div class="sd-schedule-client"><%= apt.clientName %></div>
@@ -115,9 +118,11 @@
                 <div class="sd-card">
                     <div class="sd-card-header">
                         <div class="sd-cal-nav">
+                            <a class="sd-cal-nav-btn" href="/views/staff-dashboard?calYear=<%= prevYear %>&calMonth=<%= prevMonth %>">&#8249;</a>
                             <div class="sd-cal-month-label"><%= monthName %> <%= calYear %></div>
+                            <a class="sd-cal-nav-btn" href="/views/staff-dashboard?calYear=<%= nextYear %>&calMonth=<%= nextMonth %>">&#8250;</a>
                         </div>
-                        <button class="sd-cal-today-btn" type="button">Today</button>
+                        <a class="sd-cal-today-btn" href="/views/staff-dashboard">Today</a>
                     </div>
                     <div class="sd-card-body">
                         <div class="sd-calendar">
@@ -134,9 +139,11 @@
                                         <% if (cell === null) { %>
                                             <div class="sd-cal-cell empty"></div>
                                         <% } else { %>
-                                            <div class="sd-cal-cell <%= cell.isToday ? 'today' : '' %> <%= cell.isBusy && !cell.isToday ? 'busy' : '' %>">
+                                            <% var _cd = calYear + '-' + String(calMonth).padStart(2,'0') + '-' + String(cell.day).padStart(2,'0'); %>
+                                            <a class="sd-cal-cell<%= cell.isToday ? ' today' : '' %><%= (cell.isBusy && !cell.isToday) ? ' busy' : '' %><%= _cd === selectedDate ? ' selected' : '' %>"
+                                               href="/views/staff-dashboard?date=<%= _cd %>">
                                                 <%= cell.day %>
-                                            </div>
+                                            </a>
                                         <% } %>
                                     <% }) %>
                                 <% }) %>
@@ -184,6 +191,7 @@
                             <div class="sd-upcoming-row">
                                 <div class="sd-upcoming-when">
                                     <div class="sd-upcoming-day"><%= apt.dayLabel %></div>
+                                    <span class="sd-upcoming-arrow">›</span>
                                     <div class="sd-upcoming-time"><%= apt.timeStr %></div>
                                 </div>
                                 <div class="sd-avatar"><%= apt.clientInitials %></div>
@@ -219,9 +227,10 @@
                             <div class="sd-activity-row">
                                 <div class="sd-activity-icon"><%= act.icon %></div>
                                 <div class="sd-activity-text">
-                                    <div class="sd-activity-label"><%= act.label %></div>
-                                    <div class="sd-activity-time"><%= act.timeAgo %></div>
+                                    <div class="sd-activity-label"><%= act.title %></div>
+                                    <div class="sd-activity-desc"><%= act.description %></div>
                                 </div>
+                                <div class="sd-activity-timeago"><%= act.timeAgo %></div>
                             </div>
                             <% }) %>
                         <% } %>
@@ -234,5 +243,6 @@
     </main>
 </div><!-- /.dashboard -->
 </div><!-- /.dashboard-page -->
+<script src="/scripts/staff/staff-dashboard.js"></script>
 </body>
 </html>

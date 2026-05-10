@@ -3,7 +3,7 @@
    Scoped to: .staff-dashboard-body
    ────────────────────────────────────────────── */
 
-/* Layout fix: only the content scrolls */
+/* Layout: main fills the grid cell; sd-content handles scrolling */
 .staff-dashboard-body .dashboard {
   grid-template-rows: 1fr;
 }
@@ -12,8 +12,9 @@
   min-height: 0;
   overflow: hidden;
 }
+/* NOTE: do NOT add overflow:hidden here — .sd-content needs overflow-y:auto
+   Both classes live on the same div: <div class="dashboard-content sd-content"> */
 .staff-dashboard-body .dashboard-content {
-  overflow: hidden !important;
   display: flex;
   flex-direction: column;
 }
@@ -116,6 +117,10 @@
   background: #eff6ff;
   color: #1d4ed8;
 }
+.sd-stat-icon.orange {
+  background: #fff7ed;
+  color: #f59e0b;
+}
 
 .sd-stat-info {
   display: flex;
@@ -124,17 +129,15 @@
   min-width: 0;
 }
 .sd-stat-value {
-  font-size: 1.75rem;
+  font-size: 2rem;
   font-weight: 800;
   color: #0f172a;
   line-height: 1;
 }
 .sd-stat-label {
-  font-size: 0.78rem;
-  font-weight: 700;
+  font-size: 0.82rem;
+  font-weight: 600;
   color: #64748b;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
 }
 .sd-stat-desc {
   font-size: 0.78rem;
@@ -221,11 +224,23 @@
 }
 
 .sd-schedule-time {
-  width: 80px;
+  width: 60px;
   flex-shrink: 0;
-  font-size: 0.85rem;
-  font-weight: 700;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.sd-time-clock {
+  font-size: 0.9rem;
+  font-weight: 800;
   color: #0f8f8c;
+  line-height: 1.1;
+}
+.sd-time-meridiem {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #0f8f8c;
+  opacity: 0.8;
 }
 
 .sd-avatar {
@@ -352,23 +367,28 @@
   cursor: pointer;
   display: grid;
   place-items: center;
-  font-size: 0.8rem;
+  font-size: 1.1rem;
   color: #64748b;
   transition: background 0.15s;
+  text-decoration: none;
+  line-height: 1;
 }
 .sd-cal-nav-btn:hover {
   background: #f1f5f9;
+  color: #0f172a;
 }
 
 .sd-cal-today-btn {
   background: #e6fffb;
   border: 1px solid #0f8f8c;
   border-radius: 8px;
-  padding: 2px 10px;
+  padding: 3px 12px;
   font-size: 0.78rem;
   font-weight: 700;
   color: #0f8f8c;
   cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
 }
 
 .sd-cal-grid {
@@ -396,8 +416,21 @@
   aspect-ratio: 1;
   display: grid;
   place-items: center;
+  text-decoration: none;
+  transition:
+    background 0.15s,
+    color 0.15s;
+}
+/* Non-empty cells are <a> tags — give them pointer cursor */
+a.sd-cal-cell {
+  cursor: pointer;
+}
+a.sd-cal-cell:not(.today):not(.selected):hover {
+  background: #f0fdfa;
+  color: #0f8f8c;
 }
 .sd-cal-cell.empty {
+  cursor: default;
   background: transparent;
 }
 .sd-cal-cell.today {
@@ -410,6 +443,19 @@
   background: #e6fffb;
   color: #0f8f8c;
   font-weight: 700;
+}
+/* Selected day highlight */
+.sd-cal-cell.selected:not(.today) {
+  background: #ccfbf1;
+  color: #0f766e;
+  font-weight: 700;
+  outline: 2px solid #0f8f8c;
+  outline-offset: 1px;
+}
+/* Today AND selected: keep today's bg, add outer ring */
+.sd-cal-cell.today.selected {
+  outline: 2px solid #0a5755;
+  outline-offset: 3px;
 }
 
 .sd-cal-legend {
@@ -457,17 +503,24 @@
 
 .sd-upcoming-when {
   flex-shrink: 0;
-  width: 110px;
-  font-size: 0.82rem;
-  color: #64748b;
+  width: 120px;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
 }
 .sd-upcoming-day {
   font-weight: 700;
   color: #0f172a;
   font-size: 0.85rem;
 }
+.sd-upcoming-arrow {
+  font-size: 0.7rem;
+  color: #94a3b8;
+  display: none;
+}
 .sd-upcoming-time {
   color: #64748b;
+  font-size: 0.8rem;
 }
 
 .sd-upcoming-info {
@@ -508,13 +561,24 @@
 .sd-activity-label {
   font-size: 0.875rem;
   color: #1e293b;
-  font-weight: 500;
-  line-height: 1.4;
+  font-weight: 600;
+  line-height: 1.3;
 }
-.sd-activity-time {
-  font-size: 0.75rem;
+.sd-activity-desc {
+  font-size: 0.78rem;
+  color: #64748b;
+  margin-top: 1px;
+  line-height: 1.3;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.sd-activity-timeago {
+  font-size: 0.72rem;
   color: #94a3b8;
-  margin-top: 2px;
+  white-space: nowrap;
+  flex-shrink: 0;
+  margin-top: 3px;
 }
 
 /* ── Responsive ──────────────────────────────── */
@@ -526,6 +590,20 @@
 @media (max-width: 860px) {
   .sd-grid-row {
     grid-template-columns: 1fr;
+  }
+}
+@media (max-width: 768px) {
+  /* On mobile the body scrolls — undo height-based constraints */
+  .staff-dashboard-body .dashboard-main {
+    height: auto;
+    overflow: visible;
+  }
+  .staff-dashboard-body .dashboard-content {
+    overflow: visible;
+  }
+  .sd-content {
+    overflow-y: visible;
+    min-height: 0;
   }
 }
 @media (max-width: 600px) {

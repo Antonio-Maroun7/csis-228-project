@@ -102,21 +102,6 @@
         </section>
     </main>
 
-    <!-- NEW: JavaScript for show/hide password -->
-    <script>
-        const passwordInput = document.getElementById("user_password");
-        const togglePassword = document.getElementById("togglePassword");
-
-        togglePassword.addEventListener("click", function () {
-            const isPasswordHidden = passwordInput.type === "password";
-
-            passwordInput.type = isPasswordHidden ? "text" : "password";
-            togglePassword.textContent = isPasswordHidden ? "🙈" : "👁️";
-            togglePassword.setAttribute(
-                "aria-label",
-                isPasswordHidden ? "Hide password" : "Show password"
-            );
-        });
-    </script>
+    <script src="/scripts/auth/login.js"></script>
 </body>
 </html>

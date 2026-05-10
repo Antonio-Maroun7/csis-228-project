@@ -209,41 +209,6 @@
         </section>
     </main>
 
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const searchForm = document.getElementById("dashboardSearchForm");
-            const searchInput = document.getElementById("dashboardSearchInput");
-            const serviceCards = document.querySelectorAll("[data-service-card]");
-            const searchEmptyState = document.getElementById("searchEmptyState");
-
-            if (searchForm) {
-                searchForm.addEventListener("submit", function (event) {
-                    event.preventDefault();
-                });
-            }
-
-            if (searchInput) {
-                searchInput.addEventListener("input", function () {
-                    const searchValue = searchInput.value.trim().toLowerCase();
-                    let visibleCount = 0;
-
-                    serviceCards.forEach(function (card) {
-                        const searchText = card.dataset.searchText || "";
-                        const shouldShow = searchText.includes(searchValue);
-
-                        card.style.display = shouldShow ? "" : "none";
-
-                        if (shouldShow) {
-                            visibleCount += 1;
-                        }
-                    });
-
-                    if (searchEmptyState) {
-                        searchEmptyState.hidden = visibleCount !== 0;
-                    }
-                });
-            }
-        });
-    </script>
+    <script src="/scripts/client/services-by-category.js"></script>
 </body>
 </html>

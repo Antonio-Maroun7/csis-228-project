@@ -106,11 +106,54 @@ async function renderStaffDashboard(req, res) {
       now.getDate() + 1,
     );
 
-    // --- Today's appointments (sorted by time) ---
+    // --- Parse selected date from ?date=YYYY-MM-DD query param ---
+    const qDate = req.query.date;
+    let selectedDate, selectedYear, selectedMonth, selectedDay;
+    if (qDate && /^\d{4}-\d{2}-\d{2}$/.test(qDate)) {
+      const [y, m, d] = qDate.split("-").map(Number);
+      const testDate = new Date(y, m - 1, d);
+      if (
+        testDate.getFullYear() === y &&
+        testDate.getMonth() + 1 === m &&
+        testDate.getDate() === d
+      ) {
+        selectedYear = y;
+        selectedMonth = m;
+        selectedDay = d;
+        selectedDate = qDate;
+      }
+    }
+    if (!selectedDate) {
+      selectedYear = now.getFullYear();
+      selectedMonth = now.getMonth() + 1;
+      selectedDay = now.getDate();
+      selectedDate = `${selectedYear}-${String(selectedMonth).padStart(2, "0")}-${String(selectedDay).padStart(2, "0")}`;
+    }
+
+    // Build label for the schedule card header
+    const todayStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
+    const selectedDateLabel =
+      selectedDate === todayStr
+        ? "Today's Schedule"
+        : new Date(
+            selectedYear,
+            selectedMonth - 1,
+            selectedDay,
+          ).toLocaleDateString("en-US", {
+            weekday: "short",
+            month: "short",
+            day: "numeric",
+          });
+
+    // Date range for schedule display (may differ from actual today)
+    const selStart = new Date(selectedYear, selectedMonth - 1, selectedDay);
+    const selEnd = new Date(selectedYear, selectedMonth - 1, selectedDay + 1);
+
+    // --- Schedule for the selected date (sorted by time) ---
     const todayRows = allAppointments
       .filter((a) => {
         const start = new Date(a.appointment_start_at);
-        return start >= todayStart && start < todayEnd;
+        return start >= selStart && start < selEnd;
       })
       .sort(
         (a, b) =>
@@ -126,9 +169,13 @@ async function renderStaffDashboard(req, res) {
         status: a.appointment_status || "pending",
       }));
 
-    // --- Stats ---
-    const completedToday = todayRows.filter(
-      (a) => a.status === "completed",
+    // --- Stats (always based on actual today, not selected date) ---
+    const actualTodayRows = allAppointments.filter((a) => {
+      const start = new Date(a.appointment_start_at);
+      return start >= todayStart && start < todayEnd;
+    });
+    const completedToday = actualTodayRows.filter(
+      (a) => a.appointment_status === "completed",
     ).length;
 
     // Week range: Mon–Sun containing today
@@ -230,25 +277,40 @@ async function renderStaffDashboard(req, res) {
 
         return {
           icon,
-          label: `${label} — ${a.service_name || "Service"} for ${a.client_name || "client"}`,
+          title: label,
+          description: `${a.service_name || "Service"} for ${a.client_name || "client"}`,
           timeAgo,
           startDate,
         };
       });
 
-    // --- Calendar ---
-    const calYear = now.getFullYear();
-    const calMonth = now.getMonth() + 1; // 1-based
-    const monthName = now.toLocaleDateString("en-US", { month: "long" });
+    // --- Calendar (supports ?calYear=YYYY&calMonth=M query params for nav) ---
+    const qYear = parseInt(req.query.calYear, 10);
+    const qMonth = parseInt(req.query.calMonth, 10);
+    // Fall back to the selected date's month when no explicit cal params
+    const calYear =
+      !isNaN(qYear) && qYear > 2000 && qYear < 2100 ? qYear : selectedYear;
+    const calMonth =
+      !isNaN(qMonth) && qMonth >= 1 && qMonth <= 12 ? qMonth : selectedMonth;
+    const monthName = new Date(calYear, calMonth - 1, 1).toLocaleDateString(
+      "en-US",
+      { month: "long" },
+    );
     const busyDates = allAppointments
       .filter((a) => a.appointment_status !== "cancelled")
       .map((a) => a.appointment_start_at);
     const calendarWeeks = buildCalendarData(calYear, calMonth, busyDates);
 
+    // Compute prev/next month links for calendar navigation
+    const prevMonth = calMonth === 1 ? 12 : calMonth - 1;
+    const prevYear = calMonth === 1 ? calYear - 1 : calYear;
+    const nextMonth = calMonth === 12 ? 1 : calMonth + 1;
+    const nextYear = calMonth === 12 ? calYear + 1 : calYear;
+
     const stats = {
-      todayCount: todayRows.length,
-      todayUpcoming: todayRows.filter((a) =>
-        ["pending", "confirmed"].includes(a.status),
+      todayCount: actualTodayRows.length,
+      todayUpcoming: actualTodayRows.filter((a) =>
+        ["pending", "confirmed"].includes(a.appointment_status),
       ).length,
       completedToday,
       weekTotal,
@@ -270,6 +332,13 @@ async function renderStaffDashboard(req, res) {
       calYear,
       calMonth,
       monthName,
+      prevMonth,
+      prevYear,
+      nextMonth,
+      nextYear,
+      selectedDate,
+      selectedDay,
+      selectedDateLabel,
     });
   } catch (err) {
     console.error(

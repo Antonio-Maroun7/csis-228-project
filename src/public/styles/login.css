@@ -290,6 +290,16 @@ input[type="text"] {
   color: var(--text);
 }
 
+/* Hide browser-native password reveal (Edge, Chrome, IE) */
+input[type="password"]::-ms-reveal,
+input[type="password"]::-ms-clear {
+  display: none;
+}
+input[type="password"]::-webkit-credentials-auto-fill-button {
+  visibility: hidden;
+  pointer-events: none;
+}
+
 input::placeholder {
   color: #94a3b8;
 }

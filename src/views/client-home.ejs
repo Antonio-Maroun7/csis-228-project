@@ -187,35 +187,6 @@
         </section>
     </main>
 
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const searchForm  = document.getElementById("dashboardSearchForm");
-            const searchInput = document.getElementById("dashboardSearchInput");
-            const categoryCards    = document.querySelectorAll("[data-category-card]");
-            const searchEmptyState = document.getElementById("searchEmptyState");
-
-            if (searchForm) {
-                searchForm.addEventListener("submit", function (e) { e.preventDefault(); });
-            }
-
-            if (searchInput) {
-                searchInput.addEventListener("input", function () {
-                    const val = searchInput.value.trim().toLowerCase();
-                    let visible = 0;
-
-                    categoryCards.forEach(function (card) {
-                        const text = card.dataset.searchText || "";
-                        const show = text.includes(val);
-                        card.style.display = show ? "" : "none";
-                        if (show) visible++;
-                    });
-
-                    if (searchEmptyState) {
-                        searchEmptyState.hidden = visible !== 0;
-                    }
-                });
-            }
-        });
-    </script>
+    <script src="/scripts/client/client-home.js"></script>
 </body>
 </html>
