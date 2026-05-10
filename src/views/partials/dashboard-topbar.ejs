@@ -136,7 +136,10 @@
     const userInitial = safeFirstName.charAt(0).toUpperCase();
 %>
 
+<div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
 <header class="dashboard-topbar">
+    <button class="hamburger-btn" id="hamburgerBtnTopbar" aria-label="Open menu">&#9776;</button>
     <div class="breadcrumb">
         <span class="active-crumb"><%= safeBreadcrumbMain %></span>
 
@@ -195,3 +198,27 @@
         </div>
     </div>
 </header>
+
+<script>
+(function () {
+    var sidebar = document.getElementById('appSidebar');
+    var backdrop = document.getElementById('sidebarBackdrop');
+    var openBtn  = document.getElementById('hamburgerBtnTopbar');
+    var closeBtn = document.getElementById('sidebarCloseBtn');
+
+    function openSidebar() {
+        if (!sidebar) return;
+        sidebar.classList.add('sidebar-is-open');
+        if (backdrop) backdrop.classList.add('is-visible');
+    }
+    function closeSidebar() {
+        if (!sidebar) return;
+        sidebar.classList.remove('sidebar-is-open');
+        if (backdrop) backdrop.classList.remove('is-visible');
+    }
+
+    if (openBtn)  openBtn.addEventListener('click', openSidebar);
+    if (closeBtn) closeBtn.addEventListener('click', closeSidebar);
+    if (backdrop) backdrop.addEventListener('click', closeSidebar);
+}());
+</script>

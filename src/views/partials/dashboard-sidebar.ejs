@@ -1,4 +1,5 @@
-<aside class="sidebar">
+<aside class="sidebar" id="appSidebar">
+    <button class="sidebar-close-btn" id="sidebarCloseBtn" aria-label="Close menu">✕</button>
     <div class="logo">
         <div class="logo-icon">♧</div>
         <h1>Smart Booking</h1>
@@ -44,7 +45,7 @@
                 <span class="nav-icon">🏠</span><span>Dashboard</span>
             </a>
             <a class="nav-link <%= activePage === 'manage-users' ? 'active' : '' %>" href="/views/manage-users">
-                <span class="nav-icon">👤</span><span>Users</span>
+                <span class="nav-icon">�</span><span>Users</span>
             </a>
             <a class="nav-link <%= activePage === 'admin-categories' ? 'active' : '' %>" href="/views/admin-categories">
                 <span class="nav-icon">▦</span><span>Categories</span>
@@ -53,10 +54,13 @@
                 <span class="nav-icon">🧾</span><span>Services</span>
             </a>
             <a class="nav-link <%= activePage === 'admin-staff-services' ? 'active' : '' %>" href="/views/admin-staff-services">
-                <span class="nav-icon">👥</span><span>Staff Services</span>
+                <span class="nav-icon">👤</span><span>Staff Services</span>
             </a>
             <a class="nav-link <%= activePage === 'admin-appointments' ? 'active' : '' %>" href="/views/admin-appointments">
                 <span class="nav-icon">📅</span><span>Appointments</span>
+            </a>
+            <a class="nav-link <%= activePage === 'admin-profile' ? 'active' : '' %>" href="/views/admin-profile">
+                <span class="nav-icon">🪪</span><span>Profile</span>
             </a>
         <% } %>
 

@@ -105,6 +105,17 @@
                                         <small>Your go-to services</small>
                                     </div>
                                 </article>
+
+                                <% if (typeof weather !== 'undefined' && weather) { %>
+                                <article class="ch-stat-card ch-weather-card card">
+                                    <div class="ch-stat-icon ch-icon-weather"><%= weather.icon %></div>
+                                    <div class="ch-stat-body">
+                                        <strong><%= weather.temp %>°C</strong>
+                                        <span><%= weather.label %></span>
+                                        <small>Wind <%= weather.wind %> km/h</small>
+                                    </div>
+                                </article>
+                                <% } %>
                             </div>
 
                             <!-- Browse title -->

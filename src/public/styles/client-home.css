@@ -88,7 +88,7 @@
 /* ── Stat cards row ──────────────────────────────────────────── */
 .ch-stats {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
   gap: 14px;
 }
 
@@ -123,6 +123,15 @@
 .ch-icon-pink {
   background: #fde8f5;
   color: #c026d3;
+}
+.ch-icon-weather {
+  background: #fff3cd;
+  color: #92400e;
+  font-size: 1.5rem;
+}
+
+.ch-weather-card {
+  border-left: 3px solid #f59e0b;
 }
 
 .ch-stat-body {

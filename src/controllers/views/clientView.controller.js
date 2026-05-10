@@ -1,5 +1,6 @@
 "use strict";
 
+const https = require("https");
 const CategoryService = require("../../services/category.service");
 const ServicesService = require("../../services/services.service");
 const AppointmentService = require("../../services/appointment.service");
@@ -28,9 +29,70 @@ const {
 } = require("../../utils/views/formatView.util");
 const { getCategoryIcon } = require("../../utils/views/categoryView.mapper");
 
+/* ──────────────────────────────────────────────────────────────
+   Open-Meteo weather helper (no API key required)
+   Falls back to null gracefully — never blocks the page render
+─────────────────────────────────────────────────────────────── */
+const WEATHER_CODE_MAP = [
+  { codes: [0], label: "Clear Sky", icon: "☀️" },
+  { codes: [1, 2, 3], label: "Partly Cloudy", icon: "⛅" },
+  { codes: [45, 48], label: "Foggy", icon: "🌫️" },
+  { codes: [51, 53, 55, 61, 63, 65, 66, 67], label: "Rainy", icon: "🌧️" },
+  { codes: [71, 73, 75, 77], label: "Snowy", icon: "❄️" },
+  { codes: [80, 81, 82], label: "Showers", icon: "🌦️" },
+  { codes: [95, 96, 99], label: "Thunderstorm", icon: "⛈️" },
+];
+
+function describeWeatherCode(code) {
+  const entry = WEATHER_CODE_MAP.find((e) => e.codes.includes(code));
+  return entry || { label: "Unknown", icon: "🌡️" };
+}
+
+function fetchWeather() {
+  const lat = parseFloat(process.env.WEATHER_LAT) || 33.89;
+  const lon = parseFloat(process.env.WEATHER_LON) || 35.5;
+  const url =
+    `https://api.open-meteo.com/v1/forecast` +
+    `?latitude=${lat}&longitude=${lon}` +
+    `&current=temperature_2m,weather_code,wind_speed_10m` +
+    `&temperature_unit=celsius&wind_speed_unit=kmh`;
+
+  return new Promise((resolve) => {
+    const req = https.get(url, { timeout: 3000 }, (res) => {
+      let raw = "";
+      res.on("data", (chunk) => {
+        raw += chunk;
+      });
+      res.on("end", () => {
+        try {
+          const json = JSON.parse(raw);
+          const cur = json.current || {};
+          const desc = describeWeatherCode(cur.weather_code ?? -1);
+          resolve({
+            temp: Math.round(cur.temperature_2m ?? 0),
+            wind: Math.round(cur.wind_speed_10m ?? 0),
+            icon: desc.icon,
+            label: desc.label,
+          });
+        } catch (_) {
+          resolve(null);
+        }
+      });
+    });
+    req.on("error", () => resolve(null));
+    req.on("timeout", () => {
+      req.destroy();
+      resolve(null);
+    });
+  });
+}
+
 async function renderClientHome(req, res) {
   try {
-    const dbCategories = await CategoryService.getAllCategories();
+    const [dbCategories, weather] = await Promise.all([
+      CategoryService.getAllCategories(),
+      fetchWeather(),
+    ]);
     const categories = decorateCategoriesForView(dbCategories);
 
     const user = await getLoggedInUser(req);
@@ -45,6 +107,7 @@ async function renderClientHome(req, res) {
       breadcrumbMain: "Home",
       breadcrumbSub: "Categories",
       categories,
+      weather,
       stats: {
         availableCategories: categories.length,
         upcomingAppointments: 0,
@@ -66,6 +129,7 @@ async function renderClientHome(req, res) {
       breadcrumbMain: "Home",
       breadcrumbSub: "Categories",
       categories: [],
+      weather: null,
       stats: {
         availableCategories: 0,
         upcomingAppointments: 0,

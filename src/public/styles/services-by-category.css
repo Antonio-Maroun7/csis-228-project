@@ -1,3 +1,14 @@
+/* Body-scoped rules so scrolling works on this page */
+.services-by-category-body .dashboard-content {
+  overflow-y: auto !important;
+  display: flex;
+  flex-direction: column;
+}
+
+.services-by-category-body .dashboard-main {
+  overflow: hidden;
+}
+
 .dashboard-message {
   margin-bottom: 12px;
   padding: 10px 14px;
@@ -338,5 +349,20 @@
 
   .services-promo-image-card {
     height: 145px;
+  }
+}
+
+@media (max-width: 600px) {
+  .services-content {
+    padding-top: 10px;
+  }
+
+  .services-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .service-card {
+    padding: 16px;
   }
 }
