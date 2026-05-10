@@ -1,0 +1,538 @@
+/* ──────────────────────────────────────────────
+   staff-dashboard.css  —  sd- prefix
+   Scoped to: .staff-dashboard-body
+   ────────────────────────────────────────────── */
+
+/* Layout fix: only the content scrolls */
+.staff-dashboard-body .dashboard {
+  grid-template-rows: 1fr;
+}
+.staff-dashboard-body .dashboard-main {
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+}
+.staff-dashboard-body .dashboard-content {
+  overflow: hidden !important;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── Dashboard content wrapper ───────────────── */
+.sd-content {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 24px 28px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.sd-content::-webkit-scrollbar {
+  width: 6px;
+}
+.sd-content::-webkit-scrollbar-thumb {
+  background: rgba(15, 143, 140, 0.25);
+  border-radius: 3px;
+}
+
+/* ── Feedback banner ─────────────────────────── */
+.sd-feedback {
+  padding: 10px 16px;
+  border-radius: 10px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+.sd-feedback.success {
+  background: #d1fae5;
+  color: #065f46;
+  border: 1px solid #6ee7b7;
+}
+.sd-feedback.error {
+  background: #fee2e2;
+  color: #991b1b;
+  border: 1px solid #fca5a5;
+}
+
+/* ── Greeting row ────────────────────────────── */
+.sd-greeting {
+  flex-shrink: 0;
+}
+.sd-greeting h1 {
+  margin: 0 0 4px;
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: #0f172a;
+}
+.sd-greeting p {
+  margin: 0;
+  font-size: 0.95rem;
+  color: #64748b;
+}
+
+/* ── Stats row ───────────────────────────────── */
+.sd-stats-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  flex-shrink: 0;
+}
+
+.sd-stat-card {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  padding: 18px 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.06);
+  transition: box-shadow 0.2s;
+}
+.sd-stat-card:hover {
+  box-shadow: 0 6px 20px rgba(15, 23, 42, 0.1);
+}
+
+.sd-stat-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  font-size: 1.4rem;
+  flex-shrink: 0;
+}
+.sd-stat-icon.purple {
+  background: #f5f3ff;
+  color: #7c3aed;
+}
+.sd-stat-icon.teal {
+  background: #e6fffb;
+  color: #0f8f8c;
+}
+.sd-stat-icon.blue {
+  background: #eff6ff;
+  color: #1d4ed8;
+}
+
+.sd-stat-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.sd-stat-value {
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: #0f172a;
+  line-height: 1;
+}
+.sd-stat-label {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.sd-stat-desc {
+  font-size: 0.78rem;
+  color: #94a3b8;
+}
+
+/* ── Two-column grid rows ────────────────────── */
+.sd-grid-row {
+  display: grid;
+  grid-template-columns: 3fr 2fr;
+  gap: 16px;
+  flex-shrink: 0;
+}
+
+/* ── Card shell ──────────────────────────────── */
+.sd-card {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.06);
+  display: flex;
+  flex-direction: column;
+}
+
+.sd-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid #f1f5f9;
+  flex-shrink: 0;
+}
+.sd-card-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+.sd-card-title-icon {
+  font-size: 1rem;
+}
+
+.sd-card-action {
+  font-size: 0.82rem;
+  color: #0f8f8c;
+  text-decoration: none;
+  font-weight: 600;
+}
+.sd-card-action:hover {
+  text-decoration: underline;
+}
+
+.sd-card-body {
+  padding: 0;
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+}
+.sd-card-body::-webkit-scrollbar {
+  width: 4px;
+}
+.sd-card-body::-webkit-scrollbar-thumb {
+  background: rgba(15, 143, 140, 0.2);
+  border-radius: 2px;
+}
+
+/* ── Today's schedule rows ───────────────────── */
+.sd-schedule-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 20px;
+  border-bottom: 1px solid #f8fafc;
+  transition: background 0.15s;
+}
+.sd-schedule-row:last-child {
+  border-bottom: none;
+}
+.sd-schedule-row:hover {
+  background: #f8ffff;
+}
+
+.sd-schedule-time {
+  width: 80px;
+  flex-shrink: 0;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #0f8f8c;
+}
+
+.sd-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #0f8f8c, #087674);
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 700;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+
+.sd-schedule-info {
+  flex: 1;
+  min-width: 0;
+}
+.sd-schedule-client {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #0f172a;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.sd-schedule-service {
+  font-size: 0.78rem;
+  color: #64748b;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ── Status badges ───────────────────────────── */
+.sd-badge {
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: capitalize;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.sd-badge.confirmed {
+  background: #d1fae5;
+  color: #065f46;
+}
+.sd-badge.pending {
+  background: #fef9c3;
+  color: #92400e;
+}
+.sd-badge.completed {
+  background: #dbeafe;
+  color: #1e40af;
+}
+.sd-badge.in-progress {
+  background: #ffedd5;
+  color: #9a3412;
+}
+.sd-badge.cancelled {
+  background: #fee2e2;
+  color: #991b1b;
+}
+.sd-badge.no-show {
+  background: #f3f4f6;
+  color: #374151;
+}
+
+/* ── Empty state ─────────────────────────────── */
+.sd-empty {
+  padding: 28px 20px;
+  text-align: center;
+  color: #94a3b8;
+  font-size: 0.875rem;
+}
+.sd-empty-icon {
+  font-size: 2rem;
+  margin-bottom: 8px;
+}
+
+/* ── View-all link in footer ─────────────────── */
+.sd-card-footer {
+  padding: 12px 20px;
+  border-top: 1px solid #f1f5f9;
+  text-align: center;
+  flex-shrink: 0;
+}
+.sd-card-footer a {
+  font-size: 0.85rem;
+  color: #0f8f8c;
+  font-weight: 600;
+  text-decoration: none;
+}
+.sd-card-footer a:hover {
+  text-decoration: underline;
+}
+
+/* ── Calendar card ───────────────────────────── */
+.sd-calendar {
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.sd-cal-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.sd-cal-month-label {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+.sd-cal-nav-btn {
+  background: none;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  font-size: 0.8rem;
+  color: #64748b;
+  transition: background 0.15s;
+}
+.sd-cal-nav-btn:hover {
+  background: #f1f5f9;
+}
+
+.sd-cal-today-btn {
+  background: #e6fffb;
+  border: 1px solid #0f8f8c;
+  border-radius: 8px;
+  padding: 2px 10px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #0f8f8c;
+  cursor: pointer;
+}
+
+.sd-cal-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+}
+
+.sd-cal-day-header {
+  text-align: center;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #94a3b8;
+  padding: 4px 0;
+}
+
+.sd-cal-cell {
+  text-align: center;
+  padding: 5px 2px;
+  font-size: 0.82rem;
+  color: #334155;
+  border-radius: 50%;
+  cursor: default;
+  line-height: 1;
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+}
+.sd-cal-cell.empty {
+  background: transparent;
+}
+.sd-cal-cell.today {
+  background: #0f8f8c;
+  color: #fff;
+  font-weight: 800;
+  border-radius: 50%;
+}
+.sd-cal-cell.busy:not(.today) {
+  background: #e6fffb;
+  color: #0f8f8c;
+  font-weight: 700;
+}
+
+.sd-cal-legend {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.sd-cal-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.75rem;
+  color: #64748b;
+}
+.sd-cal-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+.sd-cal-dot.busy {
+  background: #0f8f8c;
+}
+.sd-cal-dot.available {
+  background: #1d4ed8;
+}
+.sd-cal-dot.dayoff {
+  background: #cbd5e1;
+}
+
+/* ── Upcoming appointments card ──────────────── */
+.sd-upcoming-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 20px;
+  border-bottom: 1px solid #f8fafc;
+  transition: background 0.15s;
+}
+.sd-upcoming-row:last-child {
+  border-bottom: none;
+}
+.sd-upcoming-row:hover {
+  background: #f8ffff;
+}
+
+.sd-upcoming-when {
+  flex-shrink: 0;
+  width: 110px;
+  font-size: 0.82rem;
+  color: #64748b;
+}
+.sd-upcoming-day {
+  font-weight: 700;
+  color: #0f172a;
+  font-size: 0.85rem;
+}
+.sd-upcoming-time {
+  color: #64748b;
+}
+
+.sd-upcoming-info {
+  flex: 1;
+  min-width: 0;
+}
+.sd-upcoming-client {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+.sd-upcoming-service {
+  font-size: 0.78rem;
+  color: #64748b;
+}
+
+/* ── Recent activity card ────────────────────── */
+.sd-activity-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px 20px;
+  border-bottom: 1px solid #f8fafc;
+}
+.sd-activity-row:last-child {
+  border-bottom: none;
+}
+
+.sd-activity-icon {
+  font-size: 1rem;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.sd-activity-text {
+  flex: 1;
+  min-width: 0;
+}
+.sd-activity-label {
+  font-size: 0.875rem;
+  color: #1e293b;
+  font-weight: 500;
+  line-height: 1.4;
+}
+.sd-activity-time {
+  font-size: 0.75rem;
+  color: #94a3b8;
+  margin-top: 2px;
+}
+
+/* ── Responsive ──────────────────────────────── */
+@media (max-width: 1100px) {
+  .sd-stats-row {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (max-width: 860px) {
+  .sd-grid-row {
+    grid-template-columns: 1fr;
+  }
+}
+@media (max-width: 600px) {
+  .sd-stats-row {
+    grid-template-columns: 1fr;
+  }
+  .sd-content {
+    padding: 14px;
+  }
+}

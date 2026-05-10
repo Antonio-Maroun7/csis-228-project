@@ -418,6 +418,15 @@ class AppointmentService {
   }
 
   /**
+   * Returns rich appointments for one staff member (with client name, service, duration).
+   * @param {number|string} staff_id
+   * @returns {Promise<Array<Object>>}
+   */
+  static async getStaffAppointmentsRich(staff_id) {
+    return AppointmentRepository.findStaffAppointmentsRich(staff_id);
+  }
+
+  /**
    * Returns appointments created between two provided dates.
    * @param {string|Date} start_date
    * @param {string|Date} end_date

@@ -10,6 +10,7 @@ const adminCategoryView = require("../controllers/views/adminCategoryView.contro
 const adminServiceView = require("../controllers/views/adminServiceView.controller");
 const adminStaffServiceView = require("../controllers/views/adminStaffServiceView.controller");
 const adminAppointmentView = require("../controllers/views/adminAppointmentView.controller");
+const staffDashboardView = require("../controllers/views/staffDashboardView.controller");
 
 const {
   requireViewAuth,
@@ -198,6 +199,13 @@ router.get(
 );
 
 router.post(
+  "/views/admin-appointments/:id/update-status",
+  requireViewAuth,
+  requireViewRole(["admin"]),
+  adminAppointmentView.adminUpdateAppointmentStatus,
+);
+
+router.post(
   "/views/manage-users/create",
   requireViewAuth,
   requireViewRole(["admin"]),
@@ -232,5 +240,12 @@ router.post(
 
 router.get("/views/logout", requireViewAuth, authView.logout);
 router.get("/views/not-authorized", authView.renderNotAuthorized);
+
+router.get(
+  "/views/staff-dashboard",
+  requireViewAuth,
+  requireViewRole(["staff"]),
+  staffDashboardView.renderStaffDashboard,
+);
 
 module.exports = router;

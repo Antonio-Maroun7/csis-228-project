@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%= title %> | Smart Booking</title>
+    <link rel="stylesheet" href="/styles/dashboard.css" />
+    <link rel="stylesheet" href="/styles/admin.css" />
+    <link rel="stylesheet" href="/styles/staff-dashboard.css" />
+</head>
+<body class="staff-dashboard-body">
+<div class="dashboard-page">
+<div class="dashboard">
+
+    <%- include('partials/dashboard-sidebar', { role, activePage }) %>
+
+    <main class="dashboard-main">
+        <%- include('partials/dashboard-topbar', {
+            breadcrumbMain: 'Dashboard',
+            breadcrumbSub: 'Staff Dashboard',
+            firstName,
+            role,
+            searchPlaceholder: 'Search appointments...',
+            showNotification: false
+        }) %>
+
+        <div class="dashboard-content sd-content">
+
+            <% if (message) { %>
+            <div class="sd-feedback <%= messageType %>"><%= message %></div>
+            <% } %>
+
+            <!-- Greeting -->
+            <div class="sd-greeting">
+                <h1>Welcome back, <%= firstName %>! 👋</h1>
+                <p>Here's what's happening with your schedule today.</p>
+            </div>
+
+            <!-- Stats Row -->
+            <div class="sd-stats-row">
+                <div class="sd-stat-card">
+                    <div class="sd-stat-icon purple">📅</div>
+                    <div class="sd-stat-info">
+                        <div class="sd-stat-value"><%= stats.todayCount %></div>
+                        <div class="sd-stat-label">Today's Appointments</div>
+                        <div class="sd-stat-desc"><%= stats.todayUpcoming %> upcoming</div>
+                    </div>
+                </div>
+                <div class="sd-stat-card">
+                    <div class="sd-stat-icon teal">✅</div>
+                    <div class="sd-stat-info">
+                        <div class="sd-stat-value"><%= stats.completedToday %></div>
+                        <div class="sd-stat-label">Completed Today</div>
+                        <div class="sd-stat-desc">Great job!</div>
+                    </div>
+                </div>
+                <div class="sd-stat-card">
+                    <div class="sd-stat-icon teal">🕐</div>
+                    <div class="sd-stat-info">
+                        <div class="sd-stat-value"><%= stats.weekTotal %></div>
+                        <div class="sd-stat-label">Total This Week</div>
+                        <div class="sd-stat-desc">Current week</div>
+                    </div>
+                </div>
+                <div class="sd-stat-card">
+                    <div class="sd-stat-icon blue">⭐</div>
+                    <div class="sd-stat-info">
+                        <div class="sd-stat-value"><%= stats.rating %></div>
+                        <div class="sd-stat-label">Customer Rating</div>
+                        <div class="sd-stat-desc">Excellent</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Row 1: Today's Schedule + Calendar -->
+            <div class="sd-grid-row">
+
+                <!-- Today's Schedule -->
+                <div class="sd-card">
+                    <div class="sd-card-header">
+                        <div class="sd-card-title">
+                            <span class="sd-card-title-icon">📆</span>
+                            Today's Schedule
+                        </div>
+                        <a class="sd-card-action" href="/views/staff-appointments">View full schedule</a>
+                    </div>
+                    <div class="sd-card-body">
+                        <% if (todayAppointments.length === 0) { %>
+                        <div class="sd-empty">
+                            <div class="sd-empty-icon">📭</div>
+                            No appointments scheduled for today
+                        </div>
+                        <% } else { %>
+                            <% todayAppointments.forEach(function(apt) { %>
+                            <div class="sd-schedule-row">
+                                <div class="sd-schedule-time"><%= apt.timeStr %></div>
+                                <div class="sd-avatar"><%= apt.clientInitials %></div>
+                                <div class="sd-schedule-info">
+                                    <div class="sd-schedule-client"><%= apt.clientName %></div>
+                                    <div class="sd-schedule-service">
+                                        <%= apt.serviceName %><% if (apt.durationMin) { %> • <%= apt.durationMin %> min<% } %>
+                                    </div>
+                                </div>
+                                <span class="sd-badge <%= apt.status.replace('_', '-') %>"><%= apt.status.replace('_', ' ') %></span>
+                            </div>
+                            <% }) %>
+                        <% } %>
+                    </div>
+                    <div class="sd-card-footer">
+                        <a href="/views/staff-appointments">View all appointments</a>
+                    </div>
+                </div>
+
+                <!-- Calendar -->
+                <div class="sd-card">
+                    <div class="sd-card-header">
+                        <div class="sd-cal-nav">
+                            <div class="sd-cal-month-label"><%= monthName %> <%= calYear %></div>
+                        </div>
+                        <button class="sd-cal-today-btn" type="button">Today</button>
+                    </div>
+                    <div class="sd-card-body">
+                        <div class="sd-calendar">
+                            <div class="sd-cal-grid">
+                                <div class="sd-cal-day-header">Sun</div>
+                                <div class="sd-cal-day-header">Mon</div>
+                                <div class="sd-cal-day-header">Tue</div>
+                                <div class="sd-cal-day-header">Wed</div>
+                                <div class="sd-cal-day-header">Thu</div>
+                                <div class="sd-cal-day-header">Fri</div>
+                                <div class="sd-cal-day-header">Sat</div>
+                                <% calendarWeeks.forEach(function(week) { %>
+                                    <% week.forEach(function(cell) { %>
+                                        <% if (cell === null) { %>
+                                            <div class="sd-cal-cell empty"></div>
+                                        <% } else { %>
+                                            <div class="sd-cal-cell <%= cell.isToday ? 'today' : '' %> <%= cell.isBusy && !cell.isToday ? 'busy' : '' %>">
+                                                <%= cell.day %>
+                                            </div>
+                                        <% } %>
+                                    <% }) %>
+                                <% }) %>
+                            </div>
+                            <div class="sd-cal-legend">
+                                <div class="sd-cal-legend-item">
+                                    <div class="sd-cal-dot busy"></div>
+                                    <span>Busy</span>
+                                </div>
+                                <div class="sd-cal-legend-item">
+                                    <div class="sd-cal-dot available"></div>
+                                    <span>Available</span>
+                                </div>
+                                <div class="sd-cal-legend-item">
+                                    <div class="sd-cal-dot dayoff"></div>
+                                    <span>Day off</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div><!-- /.sd-grid-row -->
+
+            <!-- Row 2: Upcoming Appointments + Recent Activity -->
+            <div class="sd-grid-row">
+
+                <!-- Upcoming Appointments -->
+                <div class="sd-card">
+                    <div class="sd-card-header">
+                        <div class="sd-card-title">
+                            <span class="sd-card-title-icon">🗓️</span>
+                            Upcoming Appointments
+                        </div>
+                        <a class="sd-card-action" href="/views/staff-appointments">View all</a>
+                    </div>
+                    <div class="sd-card-body">
+                        <% if (upcomingAppointments.length === 0) { %>
+                        <div class="sd-empty">
+                            <div class="sd-empty-icon">📅</div>
+                            No upcoming appointments
+                        </div>
+                        <% } else { %>
+                            <% upcomingAppointments.forEach(function(apt) { %>
+                            <div class="sd-upcoming-row">
+                                <div class="sd-upcoming-when">
+                                    <div class="sd-upcoming-day"><%= apt.dayLabel %></div>
+                                    <div class="sd-upcoming-time"><%= apt.timeStr %></div>
+                                </div>
+                                <div class="sd-avatar"><%= apt.clientInitials %></div>
+                                <div class="sd-upcoming-info">
+                                    <div class="sd-upcoming-client"><%= apt.clientName %></div>
+                                    <div class="sd-upcoming-service">
+                                        <%= apt.serviceName %><% if (apt.durationMin) { %> • <%= apt.durationMin %> min<% } %>
+                                    </div>
+                                </div>
+                                <span class="sd-badge <%= apt.status.replace('_', '-') %>"><%= apt.status.replace('_', ' ') %></span>
+                            </div>
+                            <% }) %>
+                        <% } %>
+                    </div>
+                </div>
+
+                <!-- Recent Activity -->
+                <div class="sd-card">
+                    <div class="sd-card-header">
+                        <div class="sd-card-title">
+                            <span class="sd-card-title-icon">🔄</span>
+                            Recent Activity
+                        </div>
+                    </div>
+                    <div class="sd-card-body">
+                        <% if (recentActivity.length === 0) { %>
+                        <div class="sd-empty">
+                            <div class="sd-empty-icon">📋</div>
+                            No recent activity
+                        </div>
+                        <% } else { %>
+                            <% recentActivity.forEach(function(act) { %>
+                            <div class="sd-activity-row">
+                                <div class="sd-activity-icon"><%= act.icon %></div>
+                                <div class="sd-activity-text">
+                                    <div class="sd-activity-label"><%= act.label %></div>
+                                    <div class="sd-activity-time"><%= act.timeAgo %></div>
+                                </div>
+                            </div>
+                            <% }) %>
+                        <% } %>
+                    </div>
+                </div>
+
+            </div><!-- /.sd-grid-row -->
+
+        </div><!-- /.sd-content -->
+    </main>
+</div><!-- /.dashboard -->
+</div><!-- /.dashboard-page -->
+</body>
+</html>

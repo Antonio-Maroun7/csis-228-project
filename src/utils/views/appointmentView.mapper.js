@@ -94,19 +94,47 @@ function decorateAdminAppointmentsForView(rows = []) {
       .map((w) => w.charAt(0).toUpperCase())
       .join("");
 
+    const staffInitials = (row.staff_name || "?")
+      .trim()
+      .split(/\s+/)
+      .slice(0, 2)
+      .map((w) => w.charAt(0).toUpperCase())
+      .join("");
+
+    const paymentStatusMap = {
+      completed: "paid",
+      confirmed: "paid",
+      pending: "unpaid",
+      no_show: "unpaid",
+      cancelled: "refunded",
+    };
+    const paymentStatus = paymentStatusMap[status] || "unpaid";
+
+    const aptId = `#APT-${String(row.appointment_id).padStart(5, "0")}`;
+
+    const rawDateISO =
+      rawStart && !isNaN(rawStart.getTime())
+        ? rawStart.toISOString().slice(0, 10)
+        : "";
+
     return {
       id: row.appointment_id,
+      aptId,
       clientName: row.client_name || "Unknown Client",
       clientEmail: row.client_email || "",
       clientInitials,
       staffName: row.staff_name || "TBA",
+      staffInitials,
       serviceName: row.service_name || "N/A",
+      serviceId: row.service_id || null,
       categoryName: row.category_name || "",
       dateTimeStr,
       dateStr,
       timeStr,
+      rawDateISO,
       rawStartAt: rawStart,
       status,
+      paymentStatus,
       priceLabel: formatPrice(row.price_cents || 0),
       durationMin: Number(row.duration_min || 0),
       notes: row.appointment_notes || "",

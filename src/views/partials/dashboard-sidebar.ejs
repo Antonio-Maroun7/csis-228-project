@@ -23,13 +23,16 @@
 
         <% if (role === "staff") { %>
             <a class="nav-link <%= activePage === 'staff-dashboard' ? 'active' : '' %>" href="/views/staff-dashboard">
-                <span class="nav-icon">🏠</span><span>Home</span>
+                <span class="nav-icon">🏠</span><span>Dashboard</span>
             </a>
             <a class="nav-link <%= activePage === 'staff-appointments' ? 'active' : '' %>" href="/views/staff-appointments">
-                <span class="nav-icon">📅</span><span>My Appointments</span>
+                <span class="nav-icon">📅</span><span>Appointments</span>
             </a>
             <a class="nav-link <%= activePage === 'staff-services' ? 'active' : '' %>" href="/views/staff-services">
-                <span class="nav-icon">🧾</span><span>My Services</span>
+                <span class="nav-icon">🧾</span><span>Services</span>
+            </a>
+            <a class="nav-link <%= activePage === 'staff-customers' ? 'active' : '' %>" href="/views/staff-customers">
+                <span class="nav-icon">👥</span><span>Customers</span>
             </a>
             <a class="nav-link <%= activePage === 'staff-profile' ? 'active' : '' %>" href="/views/staff-profile">
                 <span class="nav-icon">👤</span><span>Profile</span>
