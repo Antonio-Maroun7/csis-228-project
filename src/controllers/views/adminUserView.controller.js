@@ -17,7 +17,7 @@ async function renderManageUsers(req, res) {
 
     const allUsers = await UserService.getAllUsers();
 
-    return res.render("manage-users", {
+    return res.render("admin/manage-users", {
       title: "Manage Users",
       user,
       firstName,
@@ -32,7 +32,7 @@ async function renderManageUsers(req, res) {
     const user = req.user || null;
     const firstName = getFirstName(user);
 
-    return res.render("manage-users", {
+    return res.render("admin/manage-users", {
       title: "Manage Users",
       user,
       firstName,

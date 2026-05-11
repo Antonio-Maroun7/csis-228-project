@@ -317,7 +317,7 @@ async function renderStaffDashboard(req, res) {
       rating: "4.9",
     };
 
-    res.render("staff-dashboard", {
+    res.render("staff/staff-dashboard", {
       title: "Dashboard",
       role: "staff",
       activePage: "staff-dashboard",
@@ -345,7 +345,7 @@ async function renderStaffDashboard(req, res) {
       "[staffDashboardView] renderStaffDashboard error:",
       err.message,
     );
-    res.render("staff-dashboard", {
+    res.render("staff/staff-dashboard", {
       title: "Dashboard",
       role: "staff",
       activePage: "staff-dashboard",

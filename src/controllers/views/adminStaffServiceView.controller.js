@@ -87,7 +87,7 @@ async function renderAdminStaffServices(req, res) {
       categoryName: categoryMap[s.category_id] || "Unknown",
     }));
 
-    return res.render("admin-staff-services", {
+    return res.render("admin/admin-staff-services", {
       title: "Staff Services",
       user,
       firstName,
@@ -103,7 +103,7 @@ async function renderAdminStaffServices(req, res) {
   } catch (err) {
     const user = req.user || null;
     const firstName = getFirstName(user);
-    return res.render("admin-staff-services", {
+    return res.render("admin/admin-staff-services", {
       title: "Staff Services",
       user,
       firstName,

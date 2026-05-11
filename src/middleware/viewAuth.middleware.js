@@ -57,7 +57,7 @@ function requireViewRole(allowedRoles) {
     const userRole = req.user?.role || req.user?.user_role;
 
     if (!userRole || !allowedRoles.includes(userRole)) {
-      return res.status(403).render("not-authorized", {
+      return res.status(403).render("errors/not-authorized", {
         title: "Not Authorized",
         user: req.user || null,
       });

@@ -98,7 +98,7 @@ async function renderClientHome(req, res) {
     const user = await getLoggedInUser(req);
     const firstName = getFirstName(user);
 
-    return res.render("client-home", {
+    return res.render("client/client-home", {
       title: "Client Home",
       user,
       firstName,
@@ -156,7 +156,7 @@ async function renderServicesByCategory(req, res) {
     const user = await getLoggedInUser(req);
     const firstName = getFirstName(user);
 
-    return res.render("services-by-category", {
+    return res.render("client/services-by-category", {
       title: `${categoryName} Services`,
       user,
       firstName,
@@ -259,7 +259,7 @@ async function renderBookAppointment(req, res) {
 
     const todayISO = new Date().toISOString().split("T")[0];
 
-    return res.render("book-appointment", {
+    return res.render("client/book-appointment", {
       title: `Book – ${service.name}`,
       user,
       firstName,
@@ -370,7 +370,7 @@ async function renderMyAppointments(req, res) {
       cancelled: appointments.filter((a) => a.status === "cancelled").length,
     };
 
-    return res.render("my-appointments", {
+    return res.render("client/my-appointments", {
       title: "My Appointments",
       user,
       firstName,
@@ -386,7 +386,7 @@ async function renderMyAppointments(req, res) {
     const user = req.user || null;
     const firstName = getFirstName(user);
 
-    return res.render("my-appointments", {
+    return res.render("client/my-appointments", {
       title: "My Appointments",
       user,
       firstName,

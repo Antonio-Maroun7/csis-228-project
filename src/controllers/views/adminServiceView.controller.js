@@ -46,7 +46,7 @@ async function renderAdminServices(req, res) {
       name: c.name,
     }));
 
-    return res.render("admin-services", {
+    return res.render("admin/admin-services", {
       title: "Services",
       user,
       firstName,
@@ -62,7 +62,7 @@ async function renderAdminServices(req, res) {
     const user = req.user || null;
     const firstName = getFirstName(user);
 
-    return res.render("admin-services", {
+    return res.render("admin/admin-services", {
       title: "Services",
       user,
       firstName,

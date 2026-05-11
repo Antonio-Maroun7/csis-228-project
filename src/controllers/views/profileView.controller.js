@@ -29,7 +29,7 @@ async function renderProfile(req, res) {
       admin: "/views/admin-profile",
     };
 
-    return res.render("profile", {
+    return res.render("client/profile", {
       title: "Profile",
       user,
       firstName,

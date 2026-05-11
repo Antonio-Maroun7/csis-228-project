@@ -40,7 +40,7 @@ async function renderAdminAppointments(req, res) {
       cancelled: appointments.filter((a) => a.status === "cancelled").length,
     };
 
-    return res.render("admin-appointments", {
+    return res.render("admin/admin-appointments", {
       title: "All Appointments",
       user,
       firstName,
@@ -58,7 +58,7 @@ async function renderAdminAppointments(req, res) {
     const user = req.user || null;
     const firstName = getFirstName(user);
 
-    return res.render("admin-appointments", {
+    return res.render("admin/admin-appointments", {
       title: "All Appointments",
       user,
       firstName,

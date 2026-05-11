@@ -25,7 +25,7 @@ async function renderAdminCategories(req, res) {
       servicesCount: Number(c.servicesCount || 0),
     }));
 
-    return res.render("admin-categories", {
+    return res.render("admin/admin-categories", {
       title: "Categories",
       user,
       firstName,
@@ -38,7 +38,7 @@ async function renderAdminCategories(req, res) {
     const user = req.user || null;
     const firstName = getFirstName(user);
 
-    return res.render("admin-categories", {
+    return res.render("admin/admin-categories", {
       title: "Categories",
       user,
       firstName,

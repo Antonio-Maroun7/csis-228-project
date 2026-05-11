@@ -43,7 +43,7 @@ async function renderAdminDashboard(req, res) {
       allAppointments.slice(0, 10),
     );
 
-    return res.render("admin-dashboard", {
+    return res.render("admin/admin-dashboard", {
       title: "Admin Dashboard",
       user,
       firstName,
@@ -59,7 +59,7 @@ async function renderAdminDashboard(req, res) {
     const user = req.user || null;
     const firstName = getFirstName(user);
 
-    return res.render("admin-dashboard", {
+    return res.render("admin/admin-dashboard", {
       title: "Admin Dashboard",
       user,
       firstName,

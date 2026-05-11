@@ -33,13 +33,13 @@
     <main class="dashboard-page">
         <section class="dashboard">
 
-            <%- include("./partials/dashboard-sidebar", {
+            <%- include("../partials/dashboard-sidebar", {
                 role: safeRole,
                 activePage: safeActivePage
             }) %>
 
             <section class="dashboard-main">
-                <%- include("./partials/dashboard-topbar", {
+                <%- include("../partials/dashboard-topbar", {
                     breadcrumbMain:    "Home",
                     breadcrumbMiddle:  null,
                     breadcrumbMiddle2: null,

@@ -16,7 +16,7 @@ function redirectToLogin(req, res) {
 }
 
 function renderLogin(req, res) {
-  return res.render("login", {
+  return res.render("auth/login", {
     title: "Login",
     ...buildFeedbackState(req),
   });
@@ -35,7 +35,7 @@ async function login(req, res) {
 }
 
 function renderRegister(req, res) {
-  return res.render("register", {
+  return res.render("auth/register", {
     title: "Register",
     ...buildFeedbackState(req),
   });
