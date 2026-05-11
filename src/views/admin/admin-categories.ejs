@@ -26,12 +26,7 @@
 
         <div class="dashboard-content">
 
-            <% if (message) { %>
-            <div class="admin-feedback <%= messageType %>">
-                <span><%= message %></span>
-                <button class="ac-feedback-close" type="button" onclick="this.parentElement.remove()">&#x2715;</button>
-            </div>
-            <% } %>
+            <%- include("../partials/feedback", { message, messageType }) %>
 
             <!-- Page Header -->
             <div class="ac-page-header">

@@ -29,8 +29,7 @@ app.use(express.json());
 //  allows Express to read form data from the frontend.
 app.use(express.urlencoded({ extended: true }));
 
-// VERY IMPORTANT for images, css, js
-app.use(express.static("public"));
+// Serve static assets (images, css, js) from src/public/
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/", viewRoute);
@@ -41,5 +40,17 @@ app.use("/api/categories", CategoryRoute);
 app.use("/api/services", serviceRoute);
 app.use("/api/users", UserRoute);
 app.use("/api/staffServices", staffServiceRoute);
+
+// Global 404 handler — must be registered after all routes
+app.use((req, res) => {
+  const user = req.user || null;
+  res.status(404).render("errors/not-found", {
+    title: "Page Not Found",
+    user,
+    activePage: "not-found",
+    message: "The page you are looking for does not exist.",
+    messageType: "error",
+  });
+});
 
 module.exports = app;

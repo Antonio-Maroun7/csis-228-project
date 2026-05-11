@@ -26,12 +26,7 @@
 
         <div class="dashboard-content">
 
-            <% if (message) { %>
-            <div class="admin-feedback <%= messageType %>">
-                <span><%= message %></span>
-                <button class="mu-feedback-close" type="button" onclick="this.parentElement.remove()">✕</button>
-            </div>
-            <% } %>
+            <%- include("../partials/feedback", { message, messageType }) %>
 
             <!-- Page Header -->
             <div class="mu-page-header">

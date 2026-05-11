@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title><%= typeof title !== "undefined" ? title : "Page Not Found" %></title>
+
+    <link rel="stylesheet" href="/styles/not-authorized.css" />
+</head>
+
+<body>
+    <%
+        const pageUser =
+            typeof user !== "undefined" && user
+                ? user
+                : null;
+
+        const userRole =
+            pageUser && (pageUser.role || pageUser.user_role)
+                ? pageUser.role || pageUser.user_role
+                : null;
+
+        let dashboardPath = "/views/login";
+
+        if (userRole === "admin") {
+            dashboardPath = "/views/admin-dashboard";
+        } else if (userRole === "staff") {
+            dashboardPath = "/views/staff-dashboard";
+        } else if (userRole === "client") {
+            dashboardPath = "/views/client-home";
+        }
+    %>
+
+    <main class="not-authorized-page">
+        <section class="not-authorized-card">
+            <div class="visual-side">
+                <img
+                    src="/images/not-authorized.png"
+                    alt="Page not found illustration"
+                    class="not-authorized-image"
+                />
+            </div>
+
+            <div class="content-side">
+                <div class="status-badge">
+                    <span>404</span>
+                    <span>Not Found</span>
+                </div>
+
+                <h1>Page Not Found</h1>
+
+                <p class="main-description">
+                    The page you are looking for does not exist or has been moved.
+                    Please check the URL or return to your dashboard.
+                </p>
+
+                <div class="help-box">
+                    <strong>What happened?</strong>
+
+                    <span>
+                        The route you requested is not registered in this application.
+                        Make sure you followed a valid link from within the system.
+                    </span>
+                </div>
+
+                <div class="actions">
+                    <a class="primary-action" href="<%= dashboardPath %>">
+                        <%= userRole ? "Back to Dashboard" : "Go to Login" %>
+                    </a>
+
+                    <% if (userRole) { %>
+                    <a class="secondary-action" href="/views/logout">
+                        Logout
+                    </a>
+                    <% } %>
+                </div>
+
+                <p class="bottom-note">
+                    Looking for something?
+                    <a href="/views/login">Go to Login</a>
+                </p>
+            </div>
+        </section>
+    </main>
+</body>
+</html>

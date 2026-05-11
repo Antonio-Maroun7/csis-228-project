@@ -1,0 +1,11 @@
+<%
+  /* Reusable feedback banner. Pass { message, messageType } when including. */
+  const _msg     = typeof message     !== "undefined" ? message     : null;
+  const _msgType = typeof messageType !== "undefined" ? messageType : "success";
+%>
+<% if (_msg) { %>
+<div class="admin-feedback <%= _msgType %>">
+  <span><%= _msg %></span>
+  <button type="button" class="fb-close-btn" onclick="this.parentElement.remove()">&#x2715;</button>
+</div>
+<% } %>

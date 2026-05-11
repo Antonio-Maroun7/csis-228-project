@@ -26,12 +26,7 @@
 
         <div class="dashboard-content">
 
-            <% if (locals.message) { %>
-            <div class="admin-feedback <%= messageType %>">
-                <span><%= message %></span>
-                <button class="aa-feedback-close" type="button" onclick="this.parentElement.remove()">&#x2715;</button>
-            </div>
-            <% } %>
+            <%- include("../partials/feedback", { message, messageType }) %>
 
             <!-- Page Header -->
             <div class="aa-page-header">
