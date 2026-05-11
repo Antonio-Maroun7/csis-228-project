@@ -88,12 +88,14 @@
 /* ── Stat cards row ──────────────────────────────────────────── */
 .ch-stats {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
   gap: 14px;
+  align-items: stretch;
 }
 
 .ch-stat-card {
-  height: 82px;
+  min-height: 90px;
+  height: auto;
   padding: 14px 16px;
   display: flex;
   align-items: center;
@@ -136,6 +138,9 @@
 
 .ch-stat-body {
   min-width: 0;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  flex: 1;
 }
 
 .ch-stat-card strong {
