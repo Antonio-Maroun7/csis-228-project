@@ -11,6 +11,8 @@ const adminServiceView = require("../controllers/views/adminServiceView.controll
 const adminStaffServiceView = require("../controllers/views/adminStaffServiceView.controller");
 const adminAppointmentView = require("../controllers/views/adminAppointmentView.controller");
 const staffDashboardView = require("../controllers/views/staffDashboardView.controller");
+const staffAppointmentView = require("../controllers/views/staffAppointmentView.controller");
+const staffServicesView = require("../controllers/views/staffServicesView.controller");
 
 const {
   requireViewAuth,
@@ -246,6 +248,27 @@ router.get(
   requireViewAuth,
   requireViewRole(["staff"]),
   staffDashboardView.renderStaffDashboard,
+);
+
+router.get(
+  "/views/staff-appointments",
+  requireViewAuth,
+  requireViewRole(["staff"]),
+  staffAppointmentView.renderStaffAppointments,
+);
+
+router.post(
+  "/views/staff-appointments/:id/status",
+  requireViewAuth,
+  requireViewRole(["staff"]),
+  staffAppointmentView.updateStaffAppointmentStatus,
+);
+
+router.get(
+  "/views/staff-services",
+  requireViewAuth,
+  requireViewRole(["staff"]),
+  staffServicesView.renderStaffServices,
 );
 
 module.exports = router;
