@@ -385,6 +385,73 @@ class AppointmentRepository {
   }
 
   /**
+   * Returns one row per unique client who has had appointments with the given staff.
+   * Includes client info, latest appointment details, preferred service, and
+   * aggregated appointment counts needed to derive customer status.
+   * @param {number|string} staff_id
+   * @returns {Promise<Array<Object>>}
+   */
+  static async findStaffCustomersRich(staff_id) {
+    const q = `
+      SELECT
+        latest.client_id,
+        u.user_fullname     AS client_name,
+        u.user_email        AS client_email,
+        u.user_phone        AS client_phone,
+        u.user_is_active    AS client_is_active,
+        latest.appointment_start_at  AS last_appointment_at,
+        latest.appointment_status    AS last_appointment_status,
+        latest.appointment_notes     AS last_appointment_notes,
+        COALESCE(svc_ai.service_name, svc_ss.service_name) AS preferred_service_name,
+        agg.appointment_count,
+        agg.completed_count,
+        agg.pending_count,
+        agg.first_appointment_at
+      FROM (
+        SELECT DISTINCT ON (client_id)
+          client_id,
+          appointment_id,
+          appointment_start_at,
+          appointment_status,
+          appointment_notes,
+          staff_id
+        FROM appointments
+        WHERE staff_id = $1
+        ORDER BY client_id, appointment_start_at DESC
+      ) latest
+      JOIN users u ON u.user_id = latest.client_id
+      LEFT JOIN (
+        SELECT DISTINCT ON (appointment_id)
+          appointment_id, service_id
+        FROM appointment_items
+        ORDER BY appointment_id
+      ) ai ON ai.appointment_id = latest.appointment_id
+      LEFT JOIN services svc_ai ON svc_ai.service_id = ai.service_id
+      LEFT JOIN (
+        SELECT DISTINCT ON (staff_id)
+          staff_id, service_id
+        FROM staff_services
+        ORDER BY staff_id, service_id
+      ) ss_fb ON ss_fb.staff_id = latest.staff_id AND ai.appointment_id IS NULL
+      LEFT JOIN services svc_ss ON svc_ss.service_id = ss_fb.service_id
+      JOIN (
+        SELECT
+          client_id,
+          COUNT(*) AS appointment_count,
+          SUM(CASE WHEN appointment_status = 'completed' THEN 1 ELSE 0 END) AS completed_count,
+          SUM(CASE WHEN appointment_status IN ('pending', 'confirmed') THEN 1 ELSE 0 END) AS pending_count,
+          MIN(appointment_start_at) AS first_appointment_at
+        FROM appointments
+        WHERE staff_id = $1
+        GROUP BY client_id
+      ) agg ON agg.client_id = latest.client_id
+      ORDER BY latest.appointment_start_at DESC
+    `;
+    const { rows } = await pool.query(q, [staff_id]);
+    return rows;
+  }
+
+  /**
    * Returns rich appointment rows for all appointments (admin view).
    * Joins client name, staff name, service name, category, duration, and price.
    * @returns {Promise<Array<Object>>}
